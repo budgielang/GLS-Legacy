@@ -6,13 +6,99 @@ module GLSC {
         private ValueAliases: any;
         private INT_MIN: number;
 
+        // General information
+        private Name: string;
+        private Extension: string;
+        private PrintFunction: string;
+        private SemiColon: string;
+
+        // Comments
+        private CommentorBlockStart: string;
+        private CommentorBlockEnd: string;
+        private CommentorInline: string;
+
+        // Conditionals
+        private ConditionStartLeft: string;
+        private ConditionStartRight: string;
+        private ConditionContinueLeft: string;
+        private ConditionContinueRight: string;
+        private ConditionEnd: string;
+        private Elif: string;
+        private Else: string;
+        private If: string;
+
+        // Operators
+        private And: string;
+        private GreaterThan: string;
+        private GreaterThanOrEqual: string;
+        private LessThan: string;
+        private LessThanOrEqual: string;
+        private Or: string;
+
+        //Var iables
+        private VariableTypesExplicit: boolean;
+        private VariableTypesAfterName: boolean;
+        private VariableTypeMarker: string;
+        private VariableDeclare: string;
+
+        // Booleans
+        private BooleanClass: string;
+        private True: string;
+        private False: string;
+
+        // Numbers
+        private NumberClass: string;
+
+        // Strings
+        private StringClass: string;
+        private StringLength: string;
+
+        // Loops
+        private RangedForLoops: boolean;
+
+        // Arrays
+        private ArrayClass: string;
+        private ArrayLength: string;
+
+        // Functions
+        private FunctionDefine: string;
+        private FunctionDefineRight: string;
+        private FunctionDefineEnd: string;
+        private FunctionReturnsExplicit: boolean;
+
+        // Dictionaries
+        private DictionaryClass: string;
+
+        // Classes
+        private ClassConstructorName: string;
+        private ClassEnder: string;
+        private ClassFunctionsTakeThis: boolean;
+        private ClassFunctionsStart: string;
+        private ClassFunctionsThis: string;
+        private ClassMemberVariableDefault: string;
+        private ClassNewer: string;
+        private ClassPrivacy: boolean;
+        private ClassStartLeft: string;
+        private ClassStartRight: string;
+        private ClassThis: string;
+        private ClassThisAccess: string;
+
+        // File
+        private FileEndLine: string;
+        private FileStartLeft: string;
+        private FileStartRight: string;
+
+        // Main
+        private MainEndLine: string;
+        private MainStartLine: string;
+
         constructor() {
             this.printers = {
                 "class constructor end": this.ClassConstructorEnd.bind(this),
                 "class constructor start": this.ClassConstructorStart.bind(this),
                 "class end": this.ClassEnd.bind(this),
                 "class member function call": this.ClassMemberFunctionCall.bind(this),
-                "class member function get": this.ClassMemberFunctionGet.bind(this),
+                // "class member function get": this.ClassMemberFunctionGet.bind(this),
                 "class member function end": this.ClassMemberFunctionEnd.bind(this),
                 "class member function start": this.ClassMemberFunctionStart.bind(this),
                 "class member variable declare": this.ClassMemberVariableDeclare.bind(this),
@@ -124,11 +210,11 @@ module GLSC {
         }
 
         public print(functionName: string, functionArgs: string[], isInline?: boolean): any[] {
-            if (!this.geters.hasOwnProperty(functionName)) {
+            if (!this.printers.hasOwnProperty(functionName)) {
                 return ["Function not found: " + functionName, 0];
             }
 
-            return this.geters[functionName](functionArgs, isInline);
+            return this.printers[functionName](functionArgs, isInline);
         }
 
 
@@ -348,7 +434,7 @@ module GLSC {
         // e.x. i int 0 lessthan 7 increaseby 1
         public ForNumbersStart(functionArgs: string[], isInline?: boolean): any[] {
             var output: string = "for" + this.getConditionStartLeft(),
-                variableArgs: any[],
+                generalArgs: any[],
                 i: string = functionArgs[0],
                 typeName = this.getTypeAlias(functionArgs[1]),
                 initial: string = functionArgs[2],
@@ -358,8 +444,8 @@ module GLSC {
                 change: string = functionArgs[6];
 
             if (this.getRangedForLoops()) {
-                variableArgs = [i, typeName];
-                output += this.getVariableDeclare(variableArgs, false)[0];
+                generalArgs = [i, typeName];
+                output += this.getVariableDeclare(generalArgs, false)[0];
 
                 output += " in range(";
                 output += initial + ", " + boundary;
@@ -374,14 +460,14 @@ module GLSC {
 
                 output += ")";
             } else {
-                variableArgs = [i, typeName, initial];
-                output += this.getVariableDeclare(variableArgs, true)[0] + this.getSemiColon();
+                generalArgs = [i, typeName, initial];
+                output += this.getVariableDeclare(generalArgs, true)[0] + this.getSemiColon();
 
-                variableArgs = [i, comparison, boundary];
-                output += " " + this.getComparison(comparisonArgs, true)[0] + this.getSemiColon();
+                generalArgs = [i, comparison, boundary];
+                output += " " + this.getComparison(generalArgs, true)[0] + this.getSemiColon();
 
-                variableArgs = [i, direction, change];
-                output += " " + this.getOperation(operationArgs, true)[0];
+                generalArgs = [i, direction, change];
+                output += " " + this.getOperation(generalArgs, true)[0];
             }
 
             output += ConditionStartRight();
