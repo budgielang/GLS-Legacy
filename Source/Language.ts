@@ -154,6 +154,10 @@ module GLSC {
             this.INT_MIN = -9001;
         }
 
+
+        /* Gets
+        */
+
         public getName(): string {
             return this.Name;
         }
@@ -375,6 +379,234 @@ module GLSC {
         }
 
         public getMainStartLine(): string {
+            return this.MainStartLine;
+        }
+
+
+        /* Sets
+        */
+
+        public setName(): string {
+            return this.Name;
+        }
+
+        public setExtension(): string {
+            return this.Extension;
+        }
+
+        public setPrintFunction(): string {
+            return this.PrintFunction;
+        }
+
+        public setSemiColon(): string {
+            return this.SemiColon;
+        }
+
+        public setCommentorBlockStart(): string {
+            return this.CommentorBlockStart;
+        }
+
+        public setCommentorBlockEnd(): string {
+            return this.CommentorBlockEnd;
+        }
+
+        public setCommentorInline(): string {
+            return this.CommentorInline;
+        }
+
+        public setConditionStartLeft(): string {
+            return this.ConditionStartLeft;
+        }
+
+        public setConditionStartRight(): string {
+            return this.ConditionStartRight;
+        }
+
+        public setConditionContinueLeft(): string {
+            return this.ConditionContinueLeft;
+        }
+
+        public setConditionContinueRight(): string {
+            return this.ConditionContinueRight;
+        }
+
+        public setConditionEnd(): string {
+            return this.ConditionEnd;
+        }
+
+        public setElif(): string {
+            return this.Elif;
+        }
+
+        public setElse(): string {
+            return this.Else;
+        }
+
+        public setIf(): string {
+            return this.If;
+        }
+
+        public setAnd(): string {
+            return this.And;
+        }
+
+        public setGreaterThan(): string {
+            return this.GreaterThan;
+        }
+
+        public setGreaterThanOrEqual(): string {
+            return this.GreaterThanOrEqual;
+        }
+
+        public setLessThan(): string {
+            return this.LessThan;
+        }
+
+        public setLessThanOrEqual(): string {
+            return this.LessThanOrEqual;
+        }
+
+        public setOr(): string {
+            return this.Or;
+        }
+
+        public setVariableTypesExplicit(): boolean {
+            return this.VariableTypesExplicit;
+        }
+
+        public setVariableTypesAfterName(): boolean {
+            return this.VariableTypesAfterName;
+        }
+
+        public setVariableTypeMarker(): string {
+            return this.VariableTypeMarker;
+        }
+
+        public setVariableDeclareStart(): string {
+            return this.VariableDeclareStart;
+        }
+
+        public setBooleanClass(): string {
+            return this.BooleanClass;
+        }
+
+        public setTrue(): string {
+            return this.True;
+        }
+
+        public setFalse(): string {
+            return this.False;
+        }
+
+        public setNumberClass(): string {
+            return this.NumberClass;
+        }
+
+        public setStringClass(): string {
+            return this.StringClass;
+        }
+
+        public setStringLength(): string {
+            return this.StringLength;
+        }
+
+        public setRangedForLoops(): boolean {
+            return this.RangedForLoops;
+        }
+
+        public setArrayClass(): string {
+            return this.ArrayClass;
+        }
+
+        public setArrayLength(): string {
+            return this.ArrayLength;
+        }
+
+        public setFunctionDefine(): string {
+            return this.FunctionDefine;
+        }
+
+        public setFunctionDefineRight(): string {
+            return this.FunctionDefineRight;
+        }
+
+        public setFunctionDefineEnd(): string {
+            return this.FunctionDefineEnd;
+        }
+
+        public setFunctionReturnsExplicit(): boolean {
+            return this.FunctionReturnsExplicit;
+        }
+
+        public setDictionaryClass(): string {
+            return this.DictionaryClass;
+        }
+
+        public setClassConstructorName(): string {
+            return this.ClassConstructorName;
+        }
+
+        public setClassEnder(): string {
+            return this.ClassEnder;
+        }
+
+        public setClassFunctionsTakeThis(): boolean {
+            return this.ClassFunctionsTakeThis;
+        }
+
+        public setClassFunctionsStart(): string {
+            return this.ClassFunctionsStart;
+        }
+
+        public setClassFunctionsThis(): string {
+            return this.ClassFunctionsThis;
+        }
+
+        public setClassMemberVariableDefault(): string {
+            return this.ClassMemberVariableDefault;
+        }
+
+        public setClassNewer(): string {
+            return this.ClassNewer;
+        }
+
+        public setClassPrivacy(): boolean {
+            return this.ClassPrivacy;
+        }
+
+        public setClassStartLeft(): string {
+            return this.ClassStartLeft;
+        }
+
+        public setClassStartRight(): string {
+            return this.ClassStartRight;
+        }
+
+        public setClassThis(): string {
+            return this.ClassThis;
+        }
+
+        public setClassThisAccess(): string {
+            return this.ClassThisAccess;
+        }
+
+        public setFileEndLine(): string {
+            return this.FileEndLine;
+        }
+
+        public setFileStartLeft(): string {
+            return this.FileStartLeft;
+        }
+
+        public setFileStartRight(): string {
+            return this.FileStartRight;
+        }
+
+        public setMainEndLine(): string {
+            return this.MainEndLine;
+        }
+
+        public setMainStartLine(): string {
             return this.MainStartLine;
         }
 
