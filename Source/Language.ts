@@ -35,11 +35,11 @@ module GLSC {
         private LessThanOrEqual: string;
         private Or: string;
 
-        //Var iables
+        //Variables
         private VariableTypesExplicit: boolean;
         private VariableTypesAfterName: boolean;
         private VariableTypeMarker: string;
-        private VariableDeclare: string;
+        private VariableDeclareStart: string;
 
         // Booleans
         private BooleanClass: string;
@@ -154,6 +154,230 @@ module GLSC {
             this.INT_MIN = -9001;
         }
 
+        public getName(): string {
+            return this.Name;
+        }
+
+        public getExtension(): string {
+            return this.Extension;
+        }
+
+        public getPrintFunction(): string {
+            return this.PrintFunction;
+        }
+
+        public getSemiColon(): string {
+            return this.SemiColon;
+        }
+
+        public getCommentorBlockStart(): string {
+            return this.CommentorBlockStart;
+        }
+
+        public getCommentorBlockEnd(): string {
+            return this.CommentorBlockEnd;
+        }
+
+        public getCommentorInline(): string {
+            return this.CommentorInline;
+        }
+
+        public getConditionStartLeft(): string {
+            return this.ConditionStartLeft;
+        }
+
+        public getConditionStartRight(): string {
+            return this.ConditionStartRight;
+        }
+
+        public getConditionContinueLeft(): string {
+            return this.ConditionContinueLeft;
+        }
+
+        public getConditionContinueRight(): string {
+            return this.ConditionContinueRight;
+        }
+
+        public getConditionEnd(): string {
+            return this.ConditionEnd;
+        }
+
+        public getElif(): string {
+            return this.Elif;
+        }
+
+        public getElse(): string {
+            return this.Else;
+        }
+
+        public getIf(): string {
+            return this.If;
+        }
+
+        public getAnd(): string {
+            return this.And;
+        }
+
+        public getGreaterThan(): string {
+            return this.GreaterThan;
+        }
+
+        public getGreaterThanOrEqual(): string {
+            return this.GreaterThanOrEqual;
+        }
+
+        public getLessThan(): string {
+            return this.LessThan;
+        }
+
+        public getLessThanOrEqual(): string {
+            return this.LessThanOrEqual;
+        }
+
+        public getOr(): string {
+            return this.Or;
+        }
+
+        public getVariableTypesExplicit(): boolean {
+            return this.VariableTypesExplicit;
+        }
+
+        public getVariableTypesAfterName(): boolean {
+            return this.VariableTypesAfterName;
+        }
+
+        public getVariableTypeMarker(): string {
+            return this.VariableTypeMarker;
+        }
+
+        public getVariableDeclareStart(): string {
+            return this.VariableDeclareStart;
+        }
+
+        public getBooleanClass(): string {
+            return this.BooleanClass;
+        }
+
+        public getTrue(): string {
+            return this.True;
+        }
+
+        public getFalse(): string {
+            return this.False;
+        }
+
+        public getNumberClass(): string {
+            return this.NumberClass;
+        }
+
+        public getStringClass(): string {
+            return this.StringClass;
+        }
+
+        public getStringLength(): string {
+            return this.StringLength;
+        }
+
+        public getRangedForLoops(): boolean {
+            return this.RangedForLoops;
+        }
+
+        public getArrayClass(): string {
+            return this.ArrayClass;
+        }
+
+        public getArrayLength(): string {
+            return this.ArrayLength;
+        }
+
+        public getFunctionDefine(): string {
+            return this.FunctionDefine;
+        }
+
+        public getFunctionDefineRight(): string {
+            return this.FunctionDefineRight;
+        }
+
+        public getFunctionDefineEnd(): string {
+            return this.FunctionDefineEnd;
+        }
+
+        public getFunctionReturnsExplicit(): boolean {
+            return this.FunctionReturnsExplicit;
+        }
+
+        public getDictionaryClass(): string {
+            return this.DictionaryClass;
+        }
+
+        public getClassConstructorName(): string {
+            return this.ClassConstructorName;
+        }
+
+        public getClassEnder(): string {
+            return this.ClassEnder;
+        }
+
+        public getClassFunctionsTakeThis(): boolean {
+            return this.ClassFunctionsTakeThis;
+        }
+
+        public getClassFunctionsStart(): string {
+            return this.ClassFunctionsStart;
+        }
+
+        public getClassFunctionsThis(): string {
+            return this.ClassFunctionsThis;
+        }
+
+        public getClassMemberVariableDefault(): string {
+            return this.ClassMemberVariableDefault;
+        }
+
+        public getClassNewer(): string {
+            return this.ClassNewer;
+        }
+
+        public getClassPrivacy(): boolean {
+            return this.ClassPrivacy;
+        }
+
+        public getClassStartLeft(): string {
+            return this.ClassStartLeft;
+        }
+
+        public getClassStartRight(): string {
+            return this.ClassStartRight;
+        }
+
+        public getClassThis(): string {
+            return this.ClassThis;
+        }
+
+        public getClassThisAccess(): string {
+            return this.ClassThisAccess;
+        }
+
+        public getFileEndLine(): string {
+            return this.FileEndLine;
+        }
+
+        public getFileStartLeft(): string {
+            return this.FileStartLeft;
+        }
+
+        public getFileStartRight(): string {
+            return this.FileStartRight;
+        }
+
+        public getMainEndLine(): string {
+            return this.MainEndLine;
+        }
+
+        public getMainStartLine(): string {
+            return this.MainStartLine;
+        }
+
         public AliasOrDefault(aliases: any, key: string): string {
             return aliases.hasOwnProperty(key) ? aliases[key] : key;
         }
@@ -242,7 +466,7 @@ module GLSC {
                 variableDeclarationArguments[0] = this.getClassFunctionsThis();
                 variableDeclarationArguments[1] = functionArgs[0];
 
-                output += this.getVariableDeclarePartial(variableDeclarationArguments, true)[0];
+                output += this.VariableDeclarePartial(variableDeclarationArguments, true)[0];
             }
 
             // All arguments are added using VariableDeclarePartial
@@ -255,19 +479,19 @@ module GLSC {
                     variableDeclarationArguments[0] = functionArgs[i];
                     variableDeclarationArguments[1] = functionArgs[i + 1];
 
-                    output += this.getVariableDeclarePartial(variableDeclarationArguments, true)[0] + ", ";
+                    output += this.VariableDeclarePartial(variableDeclarationArguments, true)[0] + ", ";
                 }
 
                 // The last argument does not have the last ", " at the end
                 output = output.substr(0, output.length - 2);
             }
 
-            output += ")" + FunctionDefineRight();
+            output += ")" + this.getFunctionDefineRight();
             return [output, 1];
         }
 
         public ClassEnd(functionArgs: string[], isInline?: boolean): any[] {
-            return [this.getClassEnd(), -1];
+            return [this.getClassEnder(), -1];
         }
 
         // string variable, string function, [, string argumentName, string argumentType, ... ]
@@ -276,7 +500,7 @@ module GLSC {
                 i: number;
 
             if (functionArgs.length > 2) {
-                for (i = 2; i < argumentslength - 1; i += 1) {
+                for (i = 2; i < functionArgs.length - 1; i += 1) {
                     output + functionArgs[i] + ", ";
                 }
                 output += arguments[i];
@@ -309,7 +533,7 @@ module GLSC {
                 variableDeclarationArguments[0] = this.getClassFunctionsThis();
                 variableDeclarationArguments[1] = functionArgs[0];
 
-                output += this.getVariableDeclarePartial(variableDeclarationArguments, true)[0];
+                output += this.VariableDeclarePartial(variableDeclarationArguments, true)[0];
             }
 
             // All arguments are added using VariableDeclarePartial
@@ -322,7 +546,7 @@ module GLSC {
                     variableDeclarationArguments[0] = functionArgs[i];
                     variableDeclarationArguments[1] = functionArgs[i + 1];
 
-                    output += this.getVariableDeclarePartial(variableDeclarationArguments, true)[0] + ", ";
+                    output += this.VariableDeclarePartial(variableDeclarationArguments, true)[0] + ", ";
                 }
 
                 // The last argument does not have the last ", " at the end
@@ -361,7 +585,7 @@ module GLSC {
 
         // string name[, string argumentName, string argumentType, ...]
         public ClassNew(functionArgs: string[], isInline?: boolean): any[] {
-            var output: string = this.getClassNew() + arguments[0] + "(",
+            var output: string = this.getClassNewer() + arguments[0] + "(",
                 i: number;
 
             if (functionArgs.length > 1) {
@@ -411,7 +635,7 @@ module GLSC {
 
         public FileEnd(functionArgs: string[], isInline?: boolean): any[] {
             var output: string = this.getFileEndLine();
-            return [output, output.length === 0 ? this.getINT_MIN : -1];
+            return [output, output.length === 0 ? this.INT_MIN : -1];
         }
 
         // string name
@@ -420,7 +644,7 @@ module GLSC {
                 right: string = this.getFileStartRight();
 
             if (left.length === 0 && right.length === 0) {
-                return ["", this.getINT_MIN];
+                return ["", this.INT_MIN];
             }
 
             return [left + functionArgs[0] + right, 1];
@@ -445,7 +669,7 @@ module GLSC {
 
             if (this.getRangedForLoops()) {
                 generalArgs = [i, typeName];
-                output += this.getVariableDeclare(generalArgs, false)[0];
+                output += this.VariableDeclare(generalArgs, false)[0];
 
                 output += " in range(";
                 output += initial + ", " + boundary;
@@ -461,16 +685,16 @@ module GLSC {
                 output += ")";
             } else {
                 generalArgs = [i, typeName, initial];
-                output += this.getVariableDeclare(generalArgs, true)[0] + this.getSemiColon();
+                output += this.VariableDeclare(generalArgs, true)[0] + this.getSemiColon();
 
                 generalArgs = [i, comparison, boundary];
-                output += " " + this.getComparison(generalArgs, true)[0] + this.getSemiColon();
+                output += " " + this.Comparison(generalArgs, true)[0] + this.getSemiColon();
 
                 generalArgs = [i, direction, change];
-                output += " " + this.getOperation(generalArgs, true)[0];
+                output += " " + this.Operation(generalArgs, true)[0];
             }
 
-            output += ConditionStartRight();
+            output += this.getConditionStartRight();
 
             return [output, 1];
         }
@@ -518,7 +742,7 @@ module GLSC {
                     variableDeclarationArguments[0] = functionArgs[i];
                     variableDeclarationArguments[1] = functionArgs[i + 1];
 
-                    output += this.getVariableDeclarePartial(variableDeclarationArguments, true)[0] + ", ";
+                    output += this.VariableDeclarePartial(variableDeclarationArguments, true)[0] + ", ";
                 }
             }
 
@@ -555,7 +779,7 @@ module GLSC {
         }
 
         public MainEnd(functionArgs: string[], isInline?: boolean): any[] {
-            return [this.getMainEndLine(), thisMainStartLine().length === 0 ? 0 : -1];
+            return [this.getMainEndLine(), this.getMainStartLine().length === 0 ? 0 : -1];
         }
 
         public MainStart(functionArgs: string[], isInline?: boolean): any[] {
@@ -600,7 +824,7 @@ module GLSC {
         public VariableDeclare(functionArgs: string[], isInline?: boolean): any[] {
             var variableDeclared: any[] = this.VariableDeclarePartial(functionArgs, isInline);
 
-            variableDeclared[0] = this.getVariableDeclare() + variableDeclared[0];
+            variableDeclared[0] = this.getVariableDeclareStart() + variableDeclared[0];
 
             return variableDeclared;
         }
