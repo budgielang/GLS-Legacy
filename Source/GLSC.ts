@@ -41,7 +41,6 @@ module GLS {
                 } catch (error) {
                     console.warn("Warning on line", i, error);
                     output += "\n" + this.generateTabs(numTabs) + "Error: " + error;
-                    throw error;
                     continue;
                 }
 
