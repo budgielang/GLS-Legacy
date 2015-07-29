@@ -175,6 +175,12 @@ var GLS;
         Language.prototype.getFunctionReturnsExplicit = function () {
             return this.FunctionReturnsExplicit;
         };
+        Language.prototype.getFunctionTypeMarker = function () {
+            return this.FunctionTypeMarker;
+        };
+        Language.prototype.getFunctionTypeAfterName = function () {
+            return this.FunctionTypeAfterName;
+        };
         Language.prototype.getDictionaryClass = function () {
             return this.DictionaryClass;
         };
@@ -383,6 +389,14 @@ var GLS;
             this.FunctionReturnsExplicit = value;
             return this;
         };
+        Language.prototype.setFunctionTypeAfterName = function (value) {
+            this.FunctionTypeAfterName = value;
+            return this;
+        };
+        Language.prototype.setFunctionTypeMarker = function (value) {
+            this.FunctionTypeMarker = value;
+            return this;
+        };
         Language.prototype.setDictionaryClass = function (value) {
             this.DictionaryClass = value;
             return this;
@@ -564,8 +578,8 @@ var GLS;
         Language.prototype.ClassMemberFunctionStart = function (functionArgs, isInline) {
             this.requireArgumentsLength("ClassMemberFunctionStart", functionArgs, 4);
             var output = this.getClassFunctionsStart(), variableDeclarationArguments = [], i;
-            if (this.getFunctionReturnsExplicit()) {
-                output = functionArgs[3] + " ";
+            if (this.getFunctionReturnsExplicit() && !this.getFunctionTypeAfterName()) {
+                output = this.getTypeAlias(functionArgs[3]) + " ";
             }
             if (this.getClassPrivacy()) {
                 output = functionArgs[1] + " " + output;
@@ -589,7 +603,11 @@ var GLS;
                 // The last argument does not have the last ", " at the end
                 output = output.substr(0, output.length - 2);
             }
-            output += ")" + this.getFunctionDefineRight();
+            output += ")";
+            if (this.getFunctionReturnsExplicit() && this.getFunctionTypeAfterName()) {
+                output += this.getFunctionTypeMarker() + this.getTypeAlias(functionArgs[3]);
+            }
+            output += this.getFunctionDefineRight();
             return [output, 1];
         };
         // string name, string visibility, string type
@@ -636,6 +654,9 @@ var GLS;
                 output = output.substr(0, output.length - 2);
             }
             output += ")";
+            if (!isInline) {
+                output += this.getSemiColon();
+            }
             return [output, 0];
         };
         // [string message, ...]
@@ -734,12 +755,12 @@ var GLS;
         Language.prototype.FunctionEnd = function (functionArgs, isInline) {
             return [this.getFunctionDefineEnd(), -1];
         };
-        // string name, stirng return[, string argumentName, string argumentType, ...]
+        // string name, string return[, string argumentName, string argumentType, ...]
         Language.prototype.FunctionStart = function (functionArgs, isInline) {
             this.requireArgumentsLength("FunctionStart", functionArgs, 2);
             var output = "", variableDeclarationArguments = [], i;
-            if (this.getFunctionReturnsExplicit() && functionArgs[1] !== "") {
-                output += functionArgs[1] + " ";
+            if (this.getFunctionReturnsExplicit() && !this.getFunctionTypeAfterName()) {
+                output += this.getTypeAlias(functionArgs[1]) + " ";
             }
             output += this.getFunctionDefine() + functionArgs[0] + "(";
             // All arguments are added using VariableDeclarePartial
@@ -749,8 +770,14 @@ var GLS;
                     variableDeclarationArguments[1] = functionArgs[i + 1];
                     output += this.VariableDeclarePartial(variableDeclarationArguments, true)[0] + ", ";
                 }
+                // The last argument does not have the last ", " at the end
+                output = output.substr(0, output.length - 2);
             }
-            output += ")" + this.getFunctionDefineRight();
+            output += ")";
+            if (this.getFunctionReturnsExplicit() && this.getFunctionTypeAfterName()) {
+                output += this.getFunctionTypeMarker() + this.getTypeAlias(functionArgs[1]);
+            }
+            output += this.getFunctionDefineRight();
             return [output, 1];
         };
         // string value

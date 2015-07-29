@@ -65,6 +65,8 @@ module GLS {
         private FunctionDefineRight: string;
         private FunctionDefineEnd: string;
         private FunctionReturnsExplicit: boolean;
+        private FunctionTypeAfterName: boolean;
+        private FunctionTypeMarker: string;
 
         // Dictionaries
         private DictionaryClass: string;
@@ -309,6 +311,14 @@ module GLS {
 
         public getFunctionReturnsExplicit(): boolean {
             return this.FunctionReturnsExplicit;
+        }
+
+        public getFunctionTypeMarker(): string {
+            return this.FunctionTypeMarker;
+        }
+
+        public getFunctionTypeAfterName(): boolean {
+            return this.FunctionTypeAfterName;
         }
 
         public getDictionaryClass(): string {
@@ -577,6 +587,16 @@ module GLS {
             return this;
         }
 
+        public setFunctionTypeAfterName(value: boolean): Language {
+            this.FunctionTypeAfterName = value;
+            return this;
+        }
+
+        public setFunctionTypeMarker(value: string): Language {
+            this.FunctionTypeMarker = value;
+            return this;
+        }
+
         public setDictionaryClass(value: string): Language {
             this.DictionaryClass = value;
             return this;
@@ -820,8 +840,8 @@ module GLS {
                 variableDeclarationArguments: string[] = [],
                 i: number;
 
-            if (this.getFunctionReturnsExplicit()) {
-                output = functionArgs[3] + " ";
+            if (this.getFunctionReturnsExplicit() && !this.getFunctionTypeAfterName()) {
+                output = this.getTypeAlias(functionArgs[3]) + " ";
             }
 
             if (this.getClassPrivacy()) {
@@ -854,7 +874,13 @@ module GLS {
                 output = output.substr(0, output.length - 2);
             }
 
-            output += ")" + this.getFunctionDefineRight();
+            output += ")";
+
+            if (this.getFunctionReturnsExplicit() && this.getFunctionTypeAfterName()) {
+                output += this.getFunctionTypeMarker() + this.getTypeAlias(functionArgs[3]);
+            }
+
+            output += this.getFunctionDefineRight();
             return [output, 1];
         }
 
@@ -924,6 +950,11 @@ module GLS {
             }
 
             output += ")";
+
+            if (!isInline) {
+                output += this.getSemiColon();
+            }
+
             return [output, 0];
         }
 
@@ -1069,7 +1100,7 @@ module GLS {
             return [this.getFunctionDefineEnd(), -1];
         }
 
-        // string name, stirng return[, string argumentName, string argumentType, ...]
+        // string name, string return[, string argumentName, string argumentType, ...]
         public FunctionStart(functionArgs: string[], isInline?: boolean): any[] {
             this.requireArgumentsLength("FunctionStart", functionArgs, 2);
 
@@ -1077,8 +1108,8 @@ module GLS {
                 variableDeclarationArguments: string[] = [],
                 i: number;
 
-            if (this.getFunctionReturnsExplicit() && functionArgs[1] !== "") {
-                output += functionArgs[1] + " ";
+            if (this.getFunctionReturnsExplicit() && !this.getFunctionTypeAfterName()) {
+                output += this.getTypeAlias(functionArgs[1]) + " ";
             }
 
             output += this.getFunctionDefine() + functionArgs[0] + "(";
@@ -1091,9 +1122,18 @@ module GLS {
 
                     output += this.VariableDeclarePartial(variableDeclarationArguments, true)[0] + ", ";
                 }
+
+                // The last argument does not have the last ", " at the end
+                output = output.substr(0, output.length - 2);
             }
 
-            output += ")" + this.getFunctionDefineRight();
+            output += ")";
+
+            if (this.getFunctionReturnsExplicit() && this.getFunctionTypeAfterName()) {
+                output += this.getFunctionTypeMarker() + this.getTypeAlias(functionArgs[1]);
+            }
+
+            output += this.getFunctionDefineRight();
             return [output, 1];
         }
 
