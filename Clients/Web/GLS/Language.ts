@@ -794,9 +794,15 @@ module GLS {
 
             if (functionArgs.length > 2) {
                 for (i = 2; i < functionArgs.length - 1; i += 1) {
-                    output + functionArgs[i] + ", ";
+                    output += functionArgs[i] + ", ";
                 }
                 output += functionArgs[i];
+            }
+
+            output += ")";
+
+            if (!isInline) {
+                output += this.getSemiColon();
             }
 
             return [output, 0];
@@ -853,11 +859,20 @@ module GLS {
         }
 
 
-        // string visibility, string name, string type
+        // string name, string visibility, string type
         public ClassMemberVariableDeclare(functionArgs: string[], isInline?: boolean): any[] {
             this.requireArgumentsLength("ClassMemberVariableDeclare", functionArgs, 3);
 
-            return ["NOPE LOL", 0];
+            var variableDeclarationArgs: string[] = [functionArgs[0], functionArgs[2]],
+                variableDeclared: any[] = this.VariableDeclarePartial(variableDeclarationArgs, isInline);
+
+            variableDeclared[0] = functionArgs[1] + " " + variableDeclared[0];
+
+            if (!isInline) {
+                variableDeclared[0] += this.getSemiColon();
+            }
+
+            return variableDeclared;
         }
 
         // string name

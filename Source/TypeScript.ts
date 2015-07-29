@@ -7,6 +7,7 @@ module GLS.Languages {
         .setClassConstructorName("constructor")
         .setClassEnder("}")
         .setClassFunctionsTakeThis(false)
+        .setClassFunctionsStart("")
         .setClassNewer("new ")
         .setClassPrivacy(true)
         .setClassStartLeft("class ")
