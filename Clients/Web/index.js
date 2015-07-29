@@ -6,6 +6,7 @@ document.onreadystatechange = function () {
     var source = document.getElementById("source"),
         resultContainer = document.getElementById("resultContainer"),
         resultTexter = document.getElementById("resultTexter"),
+        languageSelect = document.getElementById("languageSelectElement"),
         converter = new GLS.GLSC(),
         original = "",
         language;
@@ -32,11 +33,11 @@ document.onreadystatechange = function () {
     }
 
     function convertSourceToResult() {
-        try {
-            if (source.value === original) {
-                return;
-            }
+        if (source.value === original) {
+            return;
+        }
 
+        try {
             original = source.value;
             resultTexter.innerText = converter.parseCommands(language, original.split("\n"));
             localStorage.setItem("original", original);
@@ -46,10 +47,31 @@ document.onreadystatechange = function () {
         }
     }
 
-    function setLanguage(languageName) {
+    function checkLanguageDefault() {
+        var value = localStorage.getItem("language"),
+            i;
+
+        if (value) {
+            for (i = 0; i < languageSelect.options.length; i += 1) {
+                if (languageSelect.options[i].value === value) {
+                    languageSelect.selectedIndex = i;
+                    break;
+                }
+            }
+        }
+    }
+
+    function setLanguage() {
+        var languageName = languageSelect.value.replace("#", "Sharp");
+
         language = GLS.Languages[languageName];
         resultContainer.className = "container language-" + languageName.toLowerCase();
         resultTexter.className = "container language-" + languageName.toLowerCase();
+
+        original = "";
+        convertSourceToResult();
+        localStorage.setItem("language", languageName);
+
         Prism.highlightAll();
     }
 
@@ -72,7 +94,8 @@ document.onreadystatechange = function () {
         window.onresize = resizeAreas;
         resizeAreas();
 
-        setLanguage("CSharp");
+        checkLanguageDefault();
+        setLanguage();
 
         source.onchange = source.onkeydown = source.onmousedown = convertSourceToResult;
 
@@ -82,6 +105,8 @@ document.onreadystatechange = function () {
         }
 
         document.getElementById("selecter").onclick = selectText;
+
+        languageSelect.onchange = setLanguage;
 
         setInterval(convertSourceToResult, 77);
     })();

@@ -13,16 +13,20 @@
 <body>
     <textarea id="source" class="container"></textarea>
 
-    <div id="selecter">
-        <span id="selecterText">
-            select all
-        </span>
+    <div id="languageSelect">
+        <select id="languageSelectElement">
+            <option>C#</option>
+            <option>TypeScript</option>
+        </select>
     </div>
 
     <pre id="resultContainer" class="container language-typescript">
-    <code id="resultTexter" class="language-typescript">
-        </code>
+    <code id="resultTexter" class="language-typescript"></code>
     </pre>
+
+    <div id="selecter">
+        select<br />all
+    </div>
 
     <script src="GLS/Language.js" type="text/javascript"></script>
     <script src="GLS/TypeScript.js" type="text/javascript"></script>
