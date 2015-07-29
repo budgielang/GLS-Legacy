@@ -53,6 +53,21 @@ document.onreadystatechange = function () {
         Prism.highlightAll();
     }
 
+    function selectText() {
+        var range;
+
+        if (document.selection) {
+            range = document.body.createTextRange();
+            range.moveToElementText(resultTexter);
+            range.select();
+        } else if (window.getSelection) {
+            range = document.createRange();
+            range.selectNode(resultTexter);
+            window.getSelection().empty();
+            window.getSelection().addRange(range);
+        }
+    }
+
     (function Main() {
         window.onresize = resizeAreas;
         resizeAreas();
@@ -65,6 +80,8 @@ document.onreadystatechange = function () {
         if (source.value) {
             convertSourceToResult();
         }
+
+        document.getElementById("selecter").onclick = selectText;
 
         setInterval(convertSourceToResult, 77);
     })();
