@@ -1,0 +1,42 @@
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+}
+
+textarea {
+    position: absolute;
+    min-width: 98%;
+    border: 1px solid black;
+}
+
+    textarea#source {
+        top: 3px;
+        right: 3px;
+        left: 3px;
+    }
+
+    textarea#result {
+        left: 3px;
+        bottom: 3px;
+        right: 3px;
+    }
+
+@media screen and (min-width: 819px) {
+    textarea {
+        top: 3px;
+        right: auto;
+        bottom: 3px;
+        left: auto;
+        width: auto;
+        min-width: unset;
+    }
+
+    textarea#result {
+        left: auto;
+        right: 3px;
+    }
+}
