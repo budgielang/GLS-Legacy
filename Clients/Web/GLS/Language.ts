@@ -973,6 +973,7 @@ module GLS {
                 return ["", this.INT_MIN];
             }
 
+            console.log("File start", left + functionArgs[0] + right);
             return [left + functionArgs[0] + right, 1];
         }
 
@@ -1175,7 +1176,7 @@ module GLS {
         public VariableDeclarePartial(functionArgs: string[], isInline?: boolean): any[] {
             this.requireArgumentsLength("VariableDeclarePartial", functionArgs, 2);
 
-            var output: string;
+            var output: string = "";
 
             if (this.getVariableTypesExplicit()) {
                 if (this.getVariableTypesAfterName()) {

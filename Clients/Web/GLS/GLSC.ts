@@ -120,7 +120,7 @@ module GLS {
 
         private generateTabs(numTabs: number): string {
             var numTabsActual: number = numTabs * 4,
-                output: string = " ",
+                output: string = "",
                 i: number;
 
             for (i = 0; i < numTabsActual; i += 1) {

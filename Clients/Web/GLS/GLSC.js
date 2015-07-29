@@ -83,7 +83,7 @@ var GLS;
         /* Private utilities
         */
         GLSC.prototype.generateTabs = function (numTabs) {
-            var numTabsActual = numTabs * 4, output = " ", i;
+            var numTabsActual = numTabs * 4, output = "", i;
             for (i = 0; i < numTabsActual; i += 1) {
                 output += " ";
             }

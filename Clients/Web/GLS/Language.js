@@ -670,6 +670,7 @@ var GLS;
             if (left.length === 0 && right.length === 0) {
                 return ["", this.INT_MIN];
             }
+            console.log("File start", left + functionArgs[0] + right);
             return [left + functionArgs[0] + right, 1];
         };
         Language.prototype.ForEnd = function (functionArgs, isInline) {
@@ -807,7 +808,7 @@ var GLS;
         // string name, string type[, string value]
         Language.prototype.VariableDeclarePartial = function (functionArgs, isInline) {
             this.requireArgumentsLength("VariableDeclarePartial", functionArgs, 2);
-            var output;
+            var output = "";
             if (this.getVariableTypesExplicit()) {
                 if (this.getVariableTypesAfterName()) {
                     output += functionArgs[0] + this.getVariableTypeMarker() + this.getTypeAlias(arguments[1]);

@@ -1175,7 +1175,7 @@ module GLS {
         public VariableDeclarePartial(functionArgs: string[], isInline?: boolean): any[] {
             this.requireArgumentsLength("VariableDeclarePartial", functionArgs, 2);
 
-            var output: string;
+            var output: string = "";
 
             if (this.getVariableTypesExplicit()) {
                 if (this.getVariableTypesAfterName()) {
