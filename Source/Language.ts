@@ -1,4 +1,4 @@
-module GLSC {
+module GLS {
     export class Language {
         private printers: any;
         private OperationAliases: any;
@@ -108,6 +108,7 @@ module GLSC {
                 "class start": this.ClassStart.bind(this),
                 "comment block": this.CommentBlock.bind(this),
                 "comment line": this.CommentLine.bind(this),
+                "comment inline": this.CommentInline.bind(this),
                 "comparison": this.Comparison.bind(this),
                 "file end": this.FileEnd.bind(this),
                 "file start": this.FileStart.bind(this),
@@ -858,6 +859,15 @@ module GLSC {
 
             output += functionArgs[i];
             return [output, 0];
+        }
+
+        // [string message, ...]
+        public CommentInline(functionArgs: string[], isInline?: boolean): any[] {
+            var result: any[] = this.CommentLine(functionArgs, isInline);
+
+            result[1] = this.INT_MIN;
+
+            return result;
         }
 
         // string left, string comparison, string right

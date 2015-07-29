@@ -1,4 +1,4 @@
-module GLSC {
+module GLS {
     export class GLSC {
         private Languages: any;
         private SearchEnds: any;
@@ -15,6 +15,10 @@ module GLSC {
         }
 
         public parseCommands(language: Language, commandsRaw: string[]): string {
+            if (commandsRaw.length === 0 || (commandsRaw.length === 1 && commandsRaw[0].length === 0)) {
+                return "";
+            }
+
             var output: string = "",
                 command: any[],
                 numTabs: number = 0,
@@ -22,11 +26,11 @@ module GLSC {
 
             // The first line will never start with a newline, or be initially tabbed
             try {
-                command = this.parseCommand(language, commandsRaw[i], false);
+                command = this.parseCommand(language, commandsRaw[0], false);
                 output += command[0];
                 numTabs += command[1];
             } catch (error) {
-                console.warn("Warning on line", i);
+                console.warn("Warning on line", 0, error);
                 output += "\n" + this.generateTabs(numTabs) + "Error: " + error;
             }
 
@@ -35,8 +39,9 @@ module GLSC {
                 try {
                     command = this.parseCommand(language, commandsRaw[i], false);
                 } catch (error) {
-                    console.warn("Warning on line", i);
+                    console.warn("Warning on line", i, error);
                     output += "\n" + this.generateTabs(numTabs) + "Error: " + error;
+                    throw error;
                     continue;
                 }
 
@@ -87,7 +92,7 @@ module GLSC {
         }
 
         public parseArguments(language: Language, argumentsRaw: string, isInline?: boolean): string[] {
-            var arguments: string[],
+            var argumentsConverted: string[] = [],
                 argument: string,
                 starter: string,
                 end: number,
@@ -107,17 +112,21 @@ module GLSC {
                     end = this.findNextSpace(argumentsRaw, i);
                 }
 
+                if (end === -1) {
+                    end = argumentsRaw.length;
+                }
+
                 argument = argumentsRaw.substr(i, end - i);
 
                 if (starter === '{') {
                     argument = this.parseCommand(language, argument, true)[0];
                 }
 
-                arguments.push(argument);
+                argumentsConverted.push(argument);
                 i = end;
             }
 
-            return arguments;
+            return argumentsConverted;
         }
 
 
@@ -137,7 +146,7 @@ module GLSC {
         }
 
         private isStringSpace(text: string): boolean {
-            for (var i: number; i < text.length; i += 1) {
+            for (var i: number = 0; i < text.length; i += 1) {
                 if (!this.isCharacterSpace(text[i])) {
                     return false;
                 }
@@ -200,7 +209,7 @@ module GLSC {
         private trimStringRight(text: string): string {
             for (var i: number = text.length - 1; i >= 0; i -= 1) {
                 if (!this.isCharacterSpace(text[i])) {
-                    return text.substr(0, i);
+                    return text.substr(0, i + 1);
                 }
             }
 
