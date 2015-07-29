@@ -766,7 +766,7 @@ module GLS {
                     output += ", ";
                 }
 
-                for (i = 1; i < arguments.length; i += 2) {
+                for (i = 1; i < functionArgs.length; i += 2) {
                     variableDeclarationArguments[0] = functionArgs[i];
                     variableDeclarationArguments[1] = functionArgs[i + 1];
 
@@ -796,7 +796,7 @@ module GLS {
                 for (i = 2; i < functionArgs.length - 1; i += 1) {
                     output + functionArgs[i] + ", ";
                 }
-                output += arguments[i];
+                output += functionArgs[i];
             }
 
             return [output, 0];
@@ -896,7 +896,7 @@ module GLS {
         public ClassNew(functionArgs: string[], isInline?: boolean): any[] {
             this.requireArgumentsLength("ClassNew", functionArgs, 1);
 
-            var output: string = this.getClassNewer() + arguments[0] + "(",
+            var output: string = this.getClassNewer() + functionArgs[0] + "(",
                 i: number;
 
             if (functionArgs.length > 1) {
@@ -954,7 +954,7 @@ module GLS {
         public Comparison(functionArgs: string[], isInline?: boolean): any[] {
             this.requireArgumentsLength("Comparison", functionArgs, 3);
 
-            return [functionArgs[0] + " " + this.getOperationAlias(arguments[1]) + " " + functionArgs[2], 0];
+            return [functionArgs[0] + " " + this.getOperationAlias(functionArgs[1]) + " " + functionArgs[2], 0];
         }
 
         public FileEnd(functionArgs: string[], isInline?: boolean): any[] {
@@ -973,7 +973,6 @@ module GLS {
                 return ["", this.INT_MIN];
             }
 
-            console.log("File start", left + functionArgs[0] + right);
             return [left + functionArgs[0] + right, 1];
         }
 
@@ -1180,9 +1179,9 @@ module GLS {
 
             if (this.getVariableTypesExplicit()) {
                 if (this.getVariableTypesAfterName()) {
-                    output += functionArgs[0] + this.getVariableTypeMarker() + this.getTypeAlias(arguments[1]);
+                    output += functionArgs[0] + this.getVariableTypeMarker() + this.getTypeAlias(functionArgs[1]);
                 } else {
-                    output += this.getTypeAlias(arguments[1]) + " " + functionArgs[0];
+                    output += this.getTypeAlias(functionArgs[1]) + " " + functionArgs[0];
                 }
             } else {
                 output += functionArgs[0];

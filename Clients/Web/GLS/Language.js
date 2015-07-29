@@ -527,7 +527,7 @@ var GLS;
                 if (this.getClassFunctionsTakeThis()) {
                     output += ", ";
                 }
-                for (i = 1; i < arguments.length; i += 2) {
+                for (i = 1; i < functionArgs.length; i += 2) {
                     variableDeclarationArguments[0] = functionArgs[i];
                     variableDeclarationArguments[1] = functionArgs[i + 1];
                     output += this.VariableDeclarePartial(variableDeclarationArguments, true)[0] + ", ";
@@ -549,7 +549,7 @@ var GLS;
                 for (i = 2; i < functionArgs.length - 1; i += 1) {
                     output + functionArgs[i] + ", ";
                 }
-                output += arguments[i];
+                output += functionArgs[i];
             }
             return [output, 0];
         };
@@ -618,7 +618,7 @@ var GLS;
         // string name[, string argumentName, string argumentType, ...]
         Language.prototype.ClassNew = function (functionArgs, isInline) {
             this.requireArgumentsLength("ClassNew", functionArgs, 1);
-            var output = this.getClassNewer() + arguments[0] + "(", i;
+            var output = this.getClassNewer() + functionArgs[0] + "(", i;
             if (functionArgs.length > 1) {
                 for (i = 1; i < functionArgs.length; i += 1) {
                     output += functionArgs[i] + ", ";
@@ -657,7 +657,7 @@ var GLS;
         // string left, string comparison, string right
         Language.prototype.Comparison = function (functionArgs, isInline) {
             this.requireArgumentsLength("Comparison", functionArgs, 3);
-            return [functionArgs[0] + " " + this.getOperationAlias(arguments[1]) + " " + functionArgs[2], 0];
+            return [functionArgs[0] + " " + this.getOperationAlias(functionArgs[1]) + " " + functionArgs[2], 0];
         };
         Language.prototype.FileEnd = function (functionArgs, isInline) {
             var output = this.getFileEndLine();
@@ -670,7 +670,6 @@ var GLS;
             if (left.length === 0 && right.length === 0) {
                 return ["", this.INT_MIN];
             }
-            console.log("File start", left + functionArgs[0] + right);
             return [left + functionArgs[0] + right, 1];
         };
         Language.prototype.ForEnd = function (functionArgs, isInline) {
@@ -811,10 +810,10 @@ var GLS;
             var output = "";
             if (this.getVariableTypesExplicit()) {
                 if (this.getVariableTypesAfterName()) {
-                    output += functionArgs[0] + this.getVariableTypeMarker() + this.getTypeAlias(arguments[1]);
+                    output += functionArgs[0] + this.getVariableTypeMarker() + this.getTypeAlias(functionArgs[1]);
                 }
                 else {
-                    output += this.getTypeAlias(arguments[1]) + " " + functionArgs[0];
+                    output += this.getTypeAlias(functionArgs[1]) + " " + functionArgs[0];
                 }
             }
             else {
