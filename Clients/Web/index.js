@@ -57,7 +57,7 @@ document.onreadystatechange = function () {
         window.onresize = resizeAreas;
         resizeAreas();
 
-        setLanguage("TypeScript");
+        setLanguage("CSharp");
 
         source.onchange = source.onkeydown = source.onmousedown = convertSourceToResult;
 
