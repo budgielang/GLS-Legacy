@@ -1,4 +1,4 @@
-document.onreadystatechange = function () {
+document.onreadystatechange = function (event) {
     if (event.target.readyState !== "complete") {
         return;
     }
