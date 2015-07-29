@@ -10,33 +10,40 @@ html, body {
 textarea {
     position: absolute;
     min-width: 98%;
-    border: 1px solid black;
+    border: 0 solid black;
 }
 
     textarea#source {
-        top: 3px;
-        right: 3px;
-        left: 3px;
+        top: 0;
+        right: 0;
+        left: 0;
+        border-width: 0 0 1px 0;
     }
 
     textarea#result {
-        left: 3px;
-        bottom: 3px;
-        right: 3px;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        border-width: 1px 0 0 0;
     }
 
 @media screen and (min-width: 819px) {
     textarea {
-        top: 3px;
+        top: 0;
         right: auto;
-        bottom: 3px;
+        bottom: 0;
         left: auto;
         width: auto;
         min-width: unset;
     }
 
+    textarea#source {
+        border-width: 0 1px 0 0; 
+    }
+
     textarea#result {
         left: auto;
-        right: 3px;
+        right: 0;
+        border-width: 0 0 0 1px;
     }
 }

@@ -387,228 +387,284 @@ module GLS {
         /* Sets
         */
 
-        public setName(): string {
-            return this.Name;
+        public setName(value: string): Language {
+            this.Name = value;
+            return this;
         }
 
-        public setExtension(): string {
-            return this.Extension;
+        public setExtension(value: string): Language {
+            this.Extension = value;
+            return this;
         }
 
-        public setPrintFunction(): string {
-            return this.PrintFunction;
+        public setPrintFunction(value: string): Language {
+            this.PrintFunction = value;
+            return this;
         }
 
-        public setSemiColon(): string {
-            return this.SemiColon;
+        public setSemiColon(value: string): Language {
+            this.SemiColon = value;
+            return this;
         }
 
-        public setCommentorBlockStart(): string {
-            return this.CommentorBlockStart;
+        public setCommentorBlockStart(value: string): Language {
+            this.CommentorBlockStart = value;
+            return this;
         }
 
-        public setCommentorBlockEnd(): string {
-            return this.CommentorBlockEnd;
+        public setCommentorBlockEnd(value: string): Language {
+            this.CommentorBlockEnd = value;
+            return this;
         }
 
-        public setCommentorInline(): string {
-            return this.CommentorInline;
+        public setCommentorInline(value: string): Language {
+            this.CommentorInline = value;
+            return this;
         }
 
-        public setConditionStartLeft(): string {
-            return this.ConditionStartLeft;
+        public setConditionStartLeft(value: string): Language {
+            this.ConditionStartLeft = value;
+            return this;
         }
 
-        public setConditionStartRight(): string {
-            return this.ConditionStartRight;
+        public setConditionStartRight(value: string): Language {
+            this.ConditionStartRight = value;
+            return this;
         }
 
-        public setConditionContinueLeft(): string {
-            return this.ConditionContinueLeft;
+        public setConditionContinueLeft(value: string): Language {
+            this.ConditionContinueLeft = value;
+            return this;
         }
 
-        public setConditionContinueRight(): string {
-            return this.ConditionContinueRight;
+        public setConditionContinueRight(value: string): Language {
+            this.ConditionContinueRight = value;
+            return this;
         }
 
-        public setConditionEnd(): string {
-            return this.ConditionEnd;
+        public setConditionEnd(value: string): Language {
+            this.ConditionEnd = value;
+            return this;
         }
 
-        public setElif(): string {
-            return this.Elif;
+        public setElif(value: string): Language {
+            this.Elif = value;
+            return this;
         }
 
-        public setElse(): string {
-            return this.Else;
+        public setElse(value: string): Language {
+            this.Else = value;
+            return this;
         }
 
-        public setIf(): string {
-            return this.If;
+        public setIf(value: string): Language {
+            this.If = value;
+            return this;
         }
 
-        public setAnd(): string {
-            return this.And;
+        public setAnd(value: string): Language {
+            this.And = value;
+            return this;
         }
 
-        public setGreaterThan(): string {
-            return this.GreaterThan;
+        public setGreaterThan(value: string): Language {
+            this.GreaterThan = value;
+            return this;
         }
 
-        public setGreaterThanOrEqual(): string {
-            return this.GreaterThanOrEqual;
+        public setGreaterThanOrEqual(value: string): Language {
+            this.GreaterThanOrEqual = value;
+            return this;
         }
 
-        public setLessThan(): string {
-            return this.LessThan;
+        public setLessThan(value: string): Language {
+            this.LessThan = value;
+            return this;
         }
 
-        public setLessThanOrEqual(): string {
-            return this.LessThanOrEqual;
+        public setLessThanOrEqual(value: string): Language {
+            this.LessThanOrEqual = value;
+            return this;
         }
 
-        public setOr(): string {
-            return this.Or;
+        public setOr(value: string): Language {
+            this.Or = value;
+            return this;
         }
 
-        public setVariableTypesExplicit(): boolean {
-            return this.VariableTypesExplicit;
+        public setVariableTypesExplicit(value: boolean): Language {
+            this.VariableTypesExplicit = value;
+            return this;
         }
 
-        public setVariableTypesAfterName(): boolean {
-            return this.VariableTypesAfterName;
+        public setVariableTypesAfterName(value: boolean): Language {
+            this.VariableTypesAfterName = value;
+            return this;
         }
 
-        public setVariableTypeMarker(): string {
-            return this.VariableTypeMarker;
+        public setVariableTypeMarker(value: string): Language {
+            this.VariableTypeMarker = value;
+            return this;
         }
 
-        public setVariableDeclareStart(): string {
-            return this.VariableDeclareStart;
+        public setVariableDeclareStart(value: string): Language {
+            this.VariableDeclareStart = value;
+            return this;
         }
 
-        public setBooleanClass(): string {
-            return this.BooleanClass;
+        public setBooleanClass(value: string): Language {
+            this.BooleanClass = value;
+            return this;
         }
 
-        public setTrue(): string {
-            return this.True;
+        public setTrue(value: string): Language {
+            this.True = value;
+            return this;
         }
 
-        public setFalse(): string {
-            return this.False;
+        public setFalse(value: string): Language {
+            this.False = value;
+            return this;
         }
 
-        public setNumberClass(): string {
-            return this.NumberClass;
+        public setNumberClass(value: string): Language {
+            this.NumberClass = value;
+            return this;
         }
 
-        public setStringClass(): string {
-            return this.StringClass;
+        public setStringClass(value: string): Language {
+            this.StringClass = value;
+            return this;
         }
 
-        public setStringLength(): string {
-            return this.StringLength;
+        public setStringLength(value: string): Language {
+            this.StringLength = value;
+            return this;
         }
 
-        public setRangedForLoops(): boolean {
-            return this.RangedForLoops;
+        public setRangedForLoops(value: boolean): Language {
+            this.RangedForLoops = value;
+            return this;
         }
 
-        public setArrayClass(): string {
-            return this.ArrayClass;
+        public setArrayClass(value: string): Language {
+            this.ArrayClass = value;
+            return this;
         }
 
-        public setArrayLength(): string {
-            return this.ArrayLength;
+        public setArrayLength(value: string): Language {
+            this.ArrayLength = value;
+            return this;
         }
 
-        public setFunctionDefine(): string {
-            return this.FunctionDefine;
+        public setFunctionDefine(value: string): Language {
+            this.FunctionDefine = value;
+            return this;
         }
 
-        public setFunctionDefineRight(): string {
-            return this.FunctionDefineRight;
+        public setFunctionDefineRight(value: string): Language {
+            this.FunctionDefineRight = value;
+            return this;
         }
 
-        public setFunctionDefineEnd(): string {
-            return this.FunctionDefineEnd;
+        public setFunctionDefineEnd(value: string): Language {
+            this.FunctionDefineEnd = value;
+            return this;
         }
 
-        public setFunctionReturnsExplicit(): boolean {
-            return this.FunctionReturnsExplicit;
+        public setFunctionReturnsExplicit(value: boolean): Language {
+            this.FunctionReturnsExplicit = value;
+            return this;
         }
 
-        public setDictionaryClass(): string {
-            return this.DictionaryClass;
+        public setDictionaryClass(value: string): Language {
+            this.DictionaryClass = value;
+            return this;
         }
 
-        public setClassConstructorName(): string {
-            return this.ClassConstructorName;
+        public setClassConstructorName(value: string): Language {
+            this.ClassConstructorName = value;
+            return this;
         }
 
-        public setClassEnder(): string {
-            return this.ClassEnder;
+        public setClassEnder(value: string): Language {
+            this.ClassEnder = value;
+            return this;
         }
 
-        public setClassFunctionsTakeThis(): boolean {
-            return this.ClassFunctionsTakeThis;
+        public setClassFunctionsTakeThis(value: boolean): Language {
+            this.ClassFunctionsTakeThis = value;
+            return this;
         }
 
-        public setClassFunctionsStart(): string {
-            return this.ClassFunctionsStart;
+        public setClassFunctionsStart(value: string): Language {
+            this.ClassFunctionsStart = value;
+            return this;
         }
 
-        public setClassFunctionsThis(): string {
-            return this.ClassFunctionsThis;
+        public setClassFunctionsThis(value: string): Language {
+            this.ClassFunctionsThis = value;
+            return this;
         }
 
-        public setClassMemberVariableDefault(): string {
-            return this.ClassMemberVariableDefault;
+        public setClassMemberVariableDefault(value: string): Language {
+            this.ClassMemberVariableDefault = value;
+            return this;
         }
 
-        public setClassNewer(): string {
-            return this.ClassNewer;
+        public setClassNewer(value: string): Language {
+            this.ClassNewer = value;
+            return this;
         }
 
-        public setClassPrivacy(): boolean {
-            return this.ClassPrivacy;
+        public setClassPrivacy(value: boolean): Language {
+            this.ClassPrivacy = value;
+            return this;
         }
 
-        public setClassStartLeft(): string {
-            return this.ClassStartLeft;
+        public setClassStartLeft(value: string): Language {
+            this.ClassStartLeft = value;
+            return this;
         }
 
-        public setClassStartRight(): string {
-            return this.ClassStartRight;
+        public setClassStartRight(value: string): Language {
+            this.ClassStartRight = value;
+            return this;
         }
 
-        public setClassThis(): string {
-            return this.ClassThis;
+        public setClassThis(value: string): Language {
+            this.ClassThis = value;
+            return this;
         }
 
-        public setClassThisAccess(): string {
-            return this.ClassThisAccess;
+        public setClassThisAccess(value: string): Language {
+            this.ClassThisAccess = value;
+            return this;
         }
 
-        public setFileEndLine(): string {
-            return this.FileEndLine;
+        public setFileEndLine(value: string): Language {
+            this.FileEndLine = value;
+            return this;
         }
 
-        public setFileStartLeft(): string {
-            return this.FileStartLeft;
+        public setFileStartLeft(value: string): Language {
+            this.FileStartLeft = value;
+            return this;
         }
 
-        public setFileStartRight(): string {
-            return this.FileStartRight;
+        public setFileStartRight(value: string): Language {
+            this.FileStartRight = value;
+            return this;
         }
 
-        public setMainEndLine(): string {
-            return this.MainEndLine;
+        public setMainEndLine(value: string): Language {
+            this.MainEndLine = value;
+            return this;
         }
 
-        public setMainStartLine(): string {
-            return this.MainStartLine;
+        public setMainStartLine(value: string): Language {
+            this.MainStartLine = value;
+            return this;
         }
 
         public AliasOrDefault(aliases: any, key: string): string {
@@ -969,7 +1025,7 @@ module GLS {
         // string name, stirng return[, string argumentName, string argumentType, ...]
         public FunctionStart(functionArgs: string[], isInline?: boolean): any[] {
             var output: string = "",
-                variableDeclarationArguments: string[],
+                variableDeclarationArguments: string[] = [],
                 i: number;
 
             if (this.getFunctionReturnsExplicit() && functionArgs[1] !== "") {

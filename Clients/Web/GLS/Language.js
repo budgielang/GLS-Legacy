@@ -231,173 +231,229 @@ var GLS;
         };
         /* Sets
         */
-        Language.prototype.setName = function () {
-            return this.Name;
+        Language.prototype.setName = function (value) {
+            this.Name = value;
+            return this;
         };
-        Language.prototype.setExtension = function () {
-            return this.Extension;
+        Language.prototype.setExtension = function (value) {
+            this.Extension = value;
+            return this;
         };
-        Language.prototype.setPrintFunction = function () {
-            return this.PrintFunction;
+        Language.prototype.setPrintFunction = function (value) {
+            this.PrintFunction = value;
+            return this;
         };
-        Language.prototype.setSemiColon = function () {
-            return this.SemiColon;
+        Language.prototype.setSemiColon = function (value) {
+            this.SemiColon = value;
+            return this;
         };
-        Language.prototype.setCommentorBlockStart = function () {
-            return this.CommentorBlockStart;
+        Language.prototype.setCommentorBlockStart = function (value) {
+            this.CommentorBlockStart = value;
+            return this;
         };
-        Language.prototype.setCommentorBlockEnd = function () {
-            return this.CommentorBlockEnd;
+        Language.prototype.setCommentorBlockEnd = function (value) {
+            this.CommentorBlockEnd = value;
+            return this;
         };
-        Language.prototype.setCommentorInline = function () {
-            return this.CommentorInline;
+        Language.prototype.setCommentorInline = function (value) {
+            this.CommentorInline = value;
+            return this;
         };
-        Language.prototype.setConditionStartLeft = function () {
-            return this.ConditionStartLeft;
+        Language.prototype.setConditionStartLeft = function (value) {
+            this.ConditionStartLeft = value;
+            return this;
         };
-        Language.prototype.setConditionStartRight = function () {
-            return this.ConditionStartRight;
+        Language.prototype.setConditionStartRight = function (value) {
+            this.ConditionStartRight = value;
+            return this;
         };
-        Language.prototype.setConditionContinueLeft = function () {
-            return this.ConditionContinueLeft;
+        Language.prototype.setConditionContinueLeft = function (value) {
+            this.ConditionContinueLeft = value;
+            return this;
         };
-        Language.prototype.setConditionContinueRight = function () {
-            return this.ConditionContinueRight;
+        Language.prototype.setConditionContinueRight = function (value) {
+            this.ConditionContinueRight = value;
+            return this;
         };
-        Language.prototype.setConditionEnd = function () {
-            return this.ConditionEnd;
+        Language.prototype.setConditionEnd = function (value) {
+            this.ConditionEnd = value;
+            return this;
         };
-        Language.prototype.setElif = function () {
-            return this.Elif;
+        Language.prototype.setElif = function (value) {
+            this.Elif = value;
+            return this;
         };
-        Language.prototype.setElse = function () {
-            return this.Else;
+        Language.prototype.setElse = function (value) {
+            this.Else = value;
+            return this;
         };
-        Language.prototype.setIf = function () {
-            return this.If;
+        Language.prototype.setIf = function (value) {
+            this.If = value;
+            return this;
         };
-        Language.prototype.setAnd = function () {
-            return this.And;
+        Language.prototype.setAnd = function (value) {
+            this.And = value;
+            return this;
         };
-        Language.prototype.setGreaterThan = function () {
-            return this.GreaterThan;
+        Language.prototype.setGreaterThan = function (value) {
+            this.GreaterThan = value;
+            return this;
         };
-        Language.prototype.setGreaterThanOrEqual = function () {
-            return this.GreaterThanOrEqual;
+        Language.prototype.setGreaterThanOrEqual = function (value) {
+            this.GreaterThanOrEqual = value;
+            return this;
         };
-        Language.prototype.setLessThan = function () {
-            return this.LessThan;
+        Language.prototype.setLessThan = function (value) {
+            this.LessThan = value;
+            return this;
         };
-        Language.prototype.setLessThanOrEqual = function () {
-            return this.LessThanOrEqual;
+        Language.prototype.setLessThanOrEqual = function (value) {
+            this.LessThanOrEqual = value;
+            return this;
         };
-        Language.prototype.setOr = function () {
-            return this.Or;
+        Language.prototype.setOr = function (value) {
+            this.Or = value;
+            return this;
         };
-        Language.prototype.setVariableTypesExplicit = function () {
-            return this.VariableTypesExplicit;
+        Language.prototype.setVariableTypesExplicit = function (value) {
+            this.VariableTypesExplicit = value;
+            return this;
         };
-        Language.prototype.setVariableTypesAfterName = function () {
-            return this.VariableTypesAfterName;
+        Language.prototype.setVariableTypesAfterName = function (value) {
+            this.VariableTypesAfterName = value;
+            return this;
         };
-        Language.prototype.setVariableTypeMarker = function () {
-            return this.VariableTypeMarker;
+        Language.prototype.setVariableTypeMarker = function (value) {
+            this.VariableTypeMarker = value;
+            return this;
         };
-        Language.prototype.setVariableDeclareStart = function () {
-            return this.VariableDeclareStart;
+        Language.prototype.setVariableDeclareStart = function (value) {
+            this.VariableDeclareStart = value;
+            return this;
         };
-        Language.prototype.setBooleanClass = function () {
-            return this.BooleanClass;
+        Language.prototype.setBooleanClass = function (value) {
+            this.BooleanClass = value;
+            return this;
         };
-        Language.prototype.setTrue = function () {
-            return this.True;
+        Language.prototype.setTrue = function (value) {
+            this.True = value;
+            return this;
         };
-        Language.prototype.setFalse = function () {
-            return this.False;
+        Language.prototype.setFalse = function (value) {
+            this.False = value;
+            return this;
         };
-        Language.prototype.setNumberClass = function () {
-            return this.NumberClass;
+        Language.prototype.setNumberClass = function (value) {
+            this.NumberClass = value;
+            return this;
         };
-        Language.prototype.setStringClass = function () {
-            return this.StringClass;
+        Language.prototype.setStringClass = function (value) {
+            this.StringClass = value;
+            return this;
         };
-        Language.prototype.setStringLength = function () {
-            return this.StringLength;
+        Language.prototype.setStringLength = function (value) {
+            this.StringLength = value;
+            return this;
         };
-        Language.prototype.setRangedForLoops = function () {
-            return this.RangedForLoops;
+        Language.prototype.setRangedForLoops = function (value) {
+            this.RangedForLoops = value;
+            return this;
         };
-        Language.prototype.setArrayClass = function () {
-            return this.ArrayClass;
+        Language.prototype.setArrayClass = function (value) {
+            this.ArrayClass = value;
+            return this;
         };
-        Language.prototype.setArrayLength = function () {
-            return this.ArrayLength;
+        Language.prototype.setArrayLength = function (value) {
+            this.ArrayLength = value;
+            return this;
         };
-        Language.prototype.setFunctionDefine = function () {
-            return this.FunctionDefine;
+        Language.prototype.setFunctionDefine = function (value) {
+            this.FunctionDefine = value;
+            return this;
         };
-        Language.prototype.setFunctionDefineRight = function () {
-            return this.FunctionDefineRight;
+        Language.prototype.setFunctionDefineRight = function (value) {
+            this.FunctionDefineRight = value;
+            return this;
         };
-        Language.prototype.setFunctionDefineEnd = function () {
-            return this.FunctionDefineEnd;
+        Language.prototype.setFunctionDefineEnd = function (value) {
+            this.FunctionDefineEnd = value;
+            return this;
         };
-        Language.prototype.setFunctionReturnsExplicit = function () {
-            return this.FunctionReturnsExplicit;
+        Language.prototype.setFunctionReturnsExplicit = function (value) {
+            this.FunctionReturnsExplicit = value;
+            return this;
         };
-        Language.prototype.setDictionaryClass = function () {
-            return this.DictionaryClass;
+        Language.prototype.setDictionaryClass = function (value) {
+            this.DictionaryClass = value;
+            return this;
         };
-        Language.prototype.setClassConstructorName = function () {
-            return this.ClassConstructorName;
+        Language.prototype.setClassConstructorName = function (value) {
+            this.ClassConstructorName = value;
+            return this;
         };
-        Language.prototype.setClassEnder = function () {
-            return this.ClassEnder;
+        Language.prototype.setClassEnder = function (value) {
+            this.ClassEnder = value;
+            return this;
         };
-        Language.prototype.setClassFunctionsTakeThis = function () {
-            return this.ClassFunctionsTakeThis;
+        Language.prototype.setClassFunctionsTakeThis = function (value) {
+            this.ClassFunctionsTakeThis = value;
+            return this;
         };
-        Language.prototype.setClassFunctionsStart = function () {
-            return this.ClassFunctionsStart;
+        Language.prototype.setClassFunctionsStart = function (value) {
+            this.ClassFunctionsStart = value;
+            return this;
         };
-        Language.prototype.setClassFunctionsThis = function () {
-            return this.ClassFunctionsThis;
+        Language.prototype.setClassFunctionsThis = function (value) {
+            this.ClassFunctionsThis = value;
+            return this;
         };
-        Language.prototype.setClassMemberVariableDefault = function () {
-            return this.ClassMemberVariableDefault;
+        Language.prototype.setClassMemberVariableDefault = function (value) {
+            this.ClassMemberVariableDefault = value;
+            return this;
         };
-        Language.prototype.setClassNewer = function () {
-            return this.ClassNewer;
+        Language.prototype.setClassNewer = function (value) {
+            this.ClassNewer = value;
+            return this;
         };
-        Language.prototype.setClassPrivacy = function () {
-            return this.ClassPrivacy;
+        Language.prototype.setClassPrivacy = function (value) {
+            this.ClassPrivacy = value;
+            return this;
         };
-        Language.prototype.setClassStartLeft = function () {
-            return this.ClassStartLeft;
+        Language.prototype.setClassStartLeft = function (value) {
+            this.ClassStartLeft = value;
+            return this;
         };
-        Language.prototype.setClassStartRight = function () {
-            return this.ClassStartRight;
+        Language.prototype.setClassStartRight = function (value) {
+            this.ClassStartRight = value;
+            return this;
         };
-        Language.prototype.setClassThis = function () {
-            return this.ClassThis;
+        Language.prototype.setClassThis = function (value) {
+            this.ClassThis = value;
+            return this;
         };
-        Language.prototype.setClassThisAccess = function () {
-            return this.ClassThisAccess;
+        Language.prototype.setClassThisAccess = function (value) {
+            this.ClassThisAccess = value;
+            return this;
         };
-        Language.prototype.setFileEndLine = function () {
-            return this.FileEndLine;
+        Language.prototype.setFileEndLine = function (value) {
+            this.FileEndLine = value;
+            return this;
         };
-        Language.prototype.setFileStartLeft = function () {
-            return this.FileStartLeft;
+        Language.prototype.setFileStartLeft = function (value) {
+            this.FileStartLeft = value;
+            return this;
         };
-        Language.prototype.setFileStartRight = function () {
-            return this.FileStartRight;
+        Language.prototype.setFileStartRight = function (value) {
+            this.FileStartRight = value;
+            return this;
         };
-        Language.prototype.setMainEndLine = function () {
-            return this.MainEndLine;
+        Language.prototype.setMainEndLine = function (value) {
+            this.MainEndLine = value;
+            return this;
         };
-        Language.prototype.setMainStartLine = function () {
-            return this.MainStartLine;
+        Language.prototype.setMainStartLine = function (value) {
+            this.MainStartLine = value;
+            return this;
         };
         Language.prototype.AliasOrDefault = function (aliases, key) {
             return aliases.hasOwnProperty(key) ? aliases[key] : key;
@@ -654,7 +710,7 @@ var GLS;
         };
         // string name, stirng return[, string argumentName, string argumentType, ...]
         Language.prototype.FunctionStart = function (functionArgs, isInline) {
-            var output = "", variableDeclarationArguments, i;
+            var output = "", variableDeclarationArguments = [], i;
             if (this.getFunctionReturnsExplicit() && functionArgs[1] !== "") {
                 output += functionArgs[1] + " ";
             }

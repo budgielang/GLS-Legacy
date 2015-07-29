@@ -36,27 +36,22 @@ module GLS {
 
             // The rest of the commands all might have different tabbings
             for (i = 1; i < commandsRaw.length; i += 1) {
-                //try {
+                try {
                     command = this.parseCommand(language, commandsRaw[i], false);
-                //} catch (error) {
-                //    console.warn("Warning on line", i, error);
-                //    output += "\n" + this.generateTabs(numTabs) + "Error: " + error;
-                //    throw error;
-                //    continue;
-                //}
+                } catch (error) {
+                    console.warn("Warning on line", i, error);
+                    output += "\n" + this.generateTabs(numTabs) + "Error: " + error;
+                    continue;
+                }
 
                 if (command[1] === this.INT_MIN) {
                     output += " " + command[0];
                 } else if (command[1] < 0) {
                     numTabs += command[1];
-                    if (command[0] !== "") {
-                        output += "\n" + this.generateTabs(numTabs) + command[0];
-                    }
+                    output += "\n" + this.generateTabs(numTabs) + command[0];
                 } else {
-                    if (command[0] !== "") {
-                        output += "\n" + this.generateTabs(numTabs) + command[0];
-                        numTabs += command[1];
-                    }
+                    output += "\n" + this.generateTabs(numTabs) + command[0];
+                    numTabs += command[1];
                 }
             }
 

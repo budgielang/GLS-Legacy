@@ -1025,7 +1025,7 @@ module GLS {
         // string name, stirng return[, string argumentName, string argumentType, ...]
         public FunctionStart(functionArgs: string[], isInline?: boolean): any[] {
             var output: string = "",
-                variableDeclarationArguments: string[],
+                variableDeclarationArguments: string[] = [],
                 i: number;
 
             if (this.getFunctionReturnsExplicit() && functionArgs[1] !== "") {

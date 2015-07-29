@@ -6,7 +6,7 @@ document.onreadystatechange = function () {
     var source = document.getElementById("source"),
         result = document.getElementById("result"),
         converter = new GLS.GLSC(),
-        language = new GLS.Language();
+        language = GLS.Languages.TypeScript;
 
     function resizeAreas() {
         if (document.body.clientWidth < 819) {

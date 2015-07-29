@@ -48,14 +48,10 @@ module GLS {
                     output += " " + command[0];
                 } else if (command[1] < 0) {
                     numTabs += command[1];
-                    if (command[0] !== "") {
-                        output += "\n" + this.generateTabs(numTabs) + command[0];
-                    }
+                    output += "\n" + this.generateTabs(numTabs) + command[0];
                 } else {
-                    if (command[0] !== "") {
-                        output += "\n" + this.generateTabs(numTabs) + command[0];
-                        numTabs += command[1];
-                    }
+                    output += "\n" + this.generateTabs(numTabs) + command[0];
+                    numTabs += command[1];
                 }
             }
 
