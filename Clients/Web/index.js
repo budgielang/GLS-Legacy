@@ -4,10 +4,11 @@ document.onreadystatechange = function () {
     }
 
     var source = document.getElementById("source"),
-        result = document.getElementById("result"),
+        resultContainer = document.getElementById("resultContainer"),
+        resultTexter = document.getElementById("resultTexter"),
         converter = new GLS.GLSC(),
-        language = GLS.Languages.TypeScript,
-        original = "";
+        original = "",
+        language;
 
     function resizeAreas() {
         if (document.body.clientWidth < 819) {
@@ -26,8 +27,8 @@ document.onreadystatechange = function () {
     }
 
     function setSizes(width, height) {
-        source.style.width = result.style.width = width;
-        source.style.height = result.style.height = height;
+        source.style.width = resultContainer.style.width = width;
+        source.style.height = resultContainer.style.height = height;
     }
 
     function convertSourceToResult() {
@@ -37,22 +38,34 @@ document.onreadystatechange = function () {
             }
 
             original = source.value;
-            result.value = converter.parseCommands(language, original.split("\n"));
+            resultTexter.innerText = converter.parseCommands(language, original.split("\n"));
             localStorage.setItem("original", original);
+            Prism.highlightAll();
         } catch (error) {
             console.log(error.toString());
         }
     }
 
-    window.onresize = resizeAreas;
-    resizeAreas();
-
-    source.onchange = source.onkeydown = source.onmousedown = convertSourceToResult;
-
-    source.value = localStorage.getItem("original");
-    if (source.value) {
-        convertSourceToResult();
+    function setLanguage(languageName) {
+        language = GLS.Languages[languageName];
+        resultContainer.className = "container language-" + languageName.toLowerCase();
+        resultTexter.className = "container language-" + languageName.toLowerCase();
+        Prism.highlightAll();
     }
 
-    setInterval(convertSourceToResult, 77);
+    (function Main() {
+        window.onresize = resizeAreas;
+        resizeAreas();
+
+        setLanguage("TypeScript");
+
+        source.onchange = source.onkeydown = source.onmousedown = convertSourceToResult;
+
+        source.value = localStorage.getItem("original");
+        if (source.value) {
+            convertSourceToResult();
+        }
+
+        setInterval(convertSourceToResult, 77);
+    })();
 };
