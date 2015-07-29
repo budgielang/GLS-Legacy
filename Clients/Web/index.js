@@ -25,8 +25,6 @@ document.onreadystatechange = function () {
     }
 
     function setSizes(width, height) {
-        console.log("Setting to", width, height);
-
         source.style.width = result.style.width = width;
         source.style.height = result.style.height = height;
     }

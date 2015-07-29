@@ -25,24 +25,13 @@ module GLS {
                 i: number;
 
             // The first line will never start with a newline, or be initially tabbed
-            try {
-                command = this.parseCommand(language, commandsRaw[0], false);
-                output += command[0];
-                numTabs += command[1];
-            } catch (error) {
-                console.warn("Warning on line", 0, error);
-                output += "\n" + this.generateTabs(numTabs) + "Error: " + error;
-            }
+            command = this.parseCommand(language, commandsRaw[0], false);
+            output += command[0];
+            numTabs += command[1];
 
             // The rest of the commands all might have different tabbings
             for (i = 1; i < commandsRaw.length; i += 1) {
-                try {
-                    command = this.parseCommand(language, commandsRaw[i], false);
-                } catch (error) {
-                    console.warn("Warning on line", i, error);
-                    output += "\n" + this.generateTabs(numTabs) + "Error: " + error;
-                    continue;
-                }
+                command = this.parseCommand(language, commandsRaw[i], false);
 
                 if (command[1] === this.INT_MIN) {
                     output += " " + command[0];

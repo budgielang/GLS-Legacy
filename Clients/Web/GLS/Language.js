@@ -499,7 +499,7 @@ var GLS;
         };
         Language.prototype.print = function (functionName, functionArgs, isInline) {
             if (!this.printers.hasOwnProperty(functionName)) {
-                return ["Function not found: " + functionName, 0];
+                throw new Error("Function not found: " + functionName);
             }
             return this.printers[functionName](functionArgs, isInline);
         };
