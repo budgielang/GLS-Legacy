@@ -38,6 +38,7 @@ document.onreadystatechange = function () {
 
             original = source.value;
             result.value = converter.parseCommands(language, original.split("\n"));
+            localStorage.setItem("original", original);
         } catch (error) {
             console.log(error.toString());
         }
@@ -47,6 +48,11 @@ document.onreadystatechange = function () {
     resizeAreas();
 
     source.onchange = source.onkeydown = source.onmousedown = convertSourceToResult;
+
+    source.value = localStorage.getItem("original");
+    if (source.value) {
+        convertSourceToResult();
+    }
 
     setInterval(convertSourceToResult, 77);
 };
