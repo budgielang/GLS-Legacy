@@ -510,6 +510,7 @@ var GLS;
         };
         // string name[, string argumentName, string argumentType, ...]
         Language.prototype.ClassConstructorStart = function (functionArgs, isInline) {
+            this.requireArgumentsLength("ClassConstructorStart", functionArgs, 1);
             var output = this.getClassConstructorName(), variableDeclarationArguments = [], i;
             if (output.length === 0) {
                 output = functionArgs[0];
@@ -542,6 +543,7 @@ var GLS;
         };
         // string variable, string function, [, string argumentName, string argumentType, ... ]
         Language.prototype.ClassMemberFunctionCall = function (functionArgs, isInline) {
+            this.requireArgumentsLength("ClassMemberFunctionCall", functionArgs, 2);
             var output = functionArgs[0] + "." + functionArgs[1] + "(", i;
             if (functionArgs.length > 2) {
                 for (i = 2; i < functionArgs.length - 1; i += 1) {
@@ -556,6 +558,7 @@ var GLS;
         };
         // string class, string visibility, string name, string return, [, string argumentName, string argumentType...]
         Language.prototype.ClassMemberFunctionStart = function (functionArgs, isInline) {
+            this.requireArgumentsLength("ClassMemberFunctionStart", functionArgs, 4);
             var output = this.getClassFunctionsStart(), variableDeclarationArguments = [], i;
             if (this.getFunctionReturnsExplicit()) {
                 output = functionArgs[3] + " ";
@@ -585,27 +588,36 @@ var GLS;
             output += ")" + this.getFunctionDefineRight();
             return [output, 1];
         };
-        // string name, string type
+        // string visibility, string name, string type
         Language.prototype.ClassMemberVariableDeclare = function (functionArgs, isInline) {
+            this.requireArgumentsLength("ClassMemberVariableDeclare", functionArgs, 3);
             return ["NOPE LOL", 0];
         };
         // string name
         Language.prototype.ClassMemberVariableGet = function (functionArgs, isInline) {
+            this.requireArgumentsLength("ClassMemberVariableGet", functionArgs, 1);
             return [this.getClassThis() + this.getClassThisAccess() + functionArgs[0], 0];
         };
         // string name, string value
         Language.prototype.ClassMemberVariableSet = function (functionArgs, isInline) {
+            this.requireArgumentsLength("ClasMemberVariableSet", functionArgs, 2);
             var output = this.getClassThis() + this.getClassThisAccess();
             output += functionArgs[0] + " " + this.getOperationAlias("equals") + " " + functionArgs[1];
             output += this.getSemiColon();
             return [output, 0];
         };
-        // string name
+        // string name, string visibility
         Language.prototype.ClassStart = function (functionArgs, isInline) {
-            return [this.getClassStartLeft() + functionArgs[0] + this.getClassStartRight(), 1];
+            this.requireArgumentsLength("ClassStart", functionArgs, 1);
+            var output = this.getClassStartLeft() + functionArgs[0] + this.getClassStartRight();
+            if (functionArgs.length > 1) {
+                output = functionArgs[1] + " " + output;
+            }
+            return [output, 1];
         };
         // string name[, string argumentName, string argumentType, ...]
         Language.prototype.ClassNew = function (functionArgs, isInline) {
+            this.requireArgumentsLength("ClassNew", functionArgs, 1);
             var output = this.getClassNewer() + arguments[0] + "(", i;
             if (functionArgs.length > 1) {
                 for (i = 1; i < functionArgs.length; i += 1) {
@@ -619,6 +631,7 @@ var GLS;
         };
         // [string message, ...]
         Language.prototype.CommentBlock = function (functionArgs, isInline) {
+            this.requireArgumentsLength("ClassStart", functionArgs, 1);
             var output = this.getCommentorBlockStart() + "\n", i;
             for (i = 0; i < functionArgs.length; i += 1) {
                 output += functionArgs[i] + "\n";
@@ -643,6 +656,7 @@ var GLS;
         };
         // string left, string comparison, string right
         Language.prototype.Comparison = function (functionArgs, isInline) {
+            this.requireArgumentsLength("Comparison", functionArgs, 3);
             return [functionArgs[0] + " " + this.getOperationAlias(arguments[1]) + " " + functionArgs[2], 0];
         };
         Language.prototype.FileEnd = function (functionArgs, isInline) {
@@ -651,6 +665,7 @@ var GLS;
         };
         // string name
         Language.prototype.FileStart = function (functionArgs, isInline) {
+            this.requireArgumentsLength("FileStart", functionArgs, 1);
             var left = this.getFileStartLeft(), right = this.getFileStartRight();
             if (left.length === 0 && right.length === 0) {
                 return ["", this.INT_MIN];
@@ -663,6 +678,7 @@ var GLS;
         // string i, string type, string initial, string comparison, string boundary, string direction, string change
         // e.x. i int 0 lessthan 7 increaseby 1
         Language.prototype.ForNumbersStart = function (functionArgs, isInline) {
+            this.requireArgumentsLength("ClassStart", functionArgs, 7);
             var output = "for" + this.getConditionStartLeft(), generalArgs, i = functionArgs[0], typeName = this.getTypeAlias(functionArgs[1]), initial = functionArgs[2], comparison = functionArgs[3], boundary = functionArgs[4], direction = functionArgs[5], change = functionArgs[6];
             if (this.getRangedForLoops()) {
                 generalArgs = [i, typeName];
@@ -692,6 +708,7 @@ var GLS;
         };
         // string name
         Language.prototype.FunctionCall = function (functionArgs, isInline) {
+            this.requireArgumentsLength("FunctionCall", functionArgs, 1);
             var output = functionArgs[0] + "(", i;
             if (functionArgs.length > 1) {
                 for (i = 1; i < functionArgs.length - 1; i += 1) {
@@ -710,6 +727,7 @@ var GLS;
         };
         // string name, stirng return[, string argumentName, string argumentType, ...]
         Language.prototype.FunctionStart = function (functionArgs, isInline) {
+            this.requireArgumentsLength("FunctionStart", functionArgs, 2);
             var output = "", variableDeclarationArguments = [], i;
             if (this.getFunctionReturnsExplicit() && functionArgs[1] !== "") {
                 output += functionArgs[1] + " ";
@@ -728,10 +746,12 @@ var GLS;
         };
         // string value
         Language.prototype.FunctionReturn = function (functionArgs, isInline) {
+            this.requireArgumentsLength("FunctionReturn", functionArgs, 1);
             return ["return " + functionArgs[0] + this.getSemiColon(), 0];
         };
         // string left, string operator, string right
         Language.prototype.IfConditionStart = function (functionArgs, isInline) {
+            this.requireArgumentsLength("IfConditionStart", functionArgs, 3);
             var output = "if" + this.getConditionStartLeft();
             output += functionArgs[0] + " " + this.getOperationAlias(functionArgs[1]) + " ";
             output += functionArgs[2] + this.getConditionStartRight();
@@ -742,6 +762,7 @@ var GLS;
         };
         // string variable
         Language.prototype.IfVariableStart = function (functionArgs, isInline) {
+            this.requireArgumentsLength("IfVariable", functionArgs, 1);
             var output = "if" + this.getConditionStartLeft();
             output += functionArgs[0] + this.getConditionStartRight();
             return [output, 1];
@@ -755,6 +776,7 @@ var GLS;
         };
         // string i, string direction, string difference
         Language.prototype.Operation = function (functionArgs, isInline) {
+            this.requireArgumentsLength("Operation", functionArgs, 3);
             var output = functionArgs[0] + " " + this.getOperationAlias(functionArgs[1]);
             output += " " + this.getValueAlias(functionArgs[2]);
             if (!isInline) {
@@ -777,12 +799,14 @@ var GLS;
         };
         // string name, string type[, string value]
         Language.prototype.VariableDeclare = function (functionArgs, isInline) {
+            this.requireArgumentsLength("VariableDeclare", functionArgs, 2);
             var variableDeclared = this.VariableDeclarePartial(functionArgs, isInline);
             variableDeclared[0] = this.getVariableDeclareStart() + variableDeclared[0];
             return variableDeclared;
         };
         // string name, string type[, string value]
         Language.prototype.VariableDeclarePartial = function (functionArgs, isInline) {
+            this.requireArgumentsLength("VariableDeclarePartial", functionArgs, 2);
             var output;
             if (this.getVariableTypesExplicit()) {
                 if (this.getVariableTypesAfterName()) {
@@ -795,13 +819,14 @@ var GLS;
             else {
                 output += functionArgs[0];
             }
-            if (functionArgs.length >= 3) {
+            if (functionArgs.length > 2) {
                 output += " " + this.getOperationAlias("equals") + " " + this.getValueAlias(functionArgs[2]);
             }
             return [output, 0];
         };
         // string left, string operator, string right
         Language.prototype.WhileConditionStart = function (functionArgs, isInline) {
+            this.requireArgumentsLength("WhileConditionStart", functionArgs, 3);
             var output = "while" + this.getConditionStartLeft() + functionArgs[0] + " ";
             output += this.getOperationAlias(functionArgs[1]) + " ";
             output += functionArgs[2] + this.getConditionStartRight();
@@ -812,9 +837,17 @@ var GLS;
         };
         // string variable
         Language.prototype.WhileVariableStart = function (functionArgs, isInline) {
+            this.requireArgumentsLength("WhileVariableStart", functionArgs, 1);
             var output = "while" + this.getConditionStartLeft();
             output += this.getOperationAlias(functionArgs[0]) + this.getConditionStartRight();
             return [output, 1];
+        };
+        /* Utilities
+        */
+        Language.prototype.requireArgumentsLength = function (functionName, functionArgs, amount) {
+            if (functionArgs.length < amount) {
+                throw new Error("Not enough arguments given to " + functionName + " (required: " + amount + ").");
+            }
         };
         return Language;
     })();

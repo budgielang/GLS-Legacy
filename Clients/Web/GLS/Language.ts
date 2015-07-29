@@ -740,6 +740,8 @@ module GLS {
 
         // string name[, string argumentName, string argumentType, ...]
         public ClassConstructorStart(functionArgs: string[], isInline?: boolean): any[] {
+            this.requireArgumentsLength("ClassConstructorStart", functionArgs, 1);
+
             var output: string = this.getClassConstructorName(),
                 variableDeclarationArguments: string[] = [],
                 i: number;
@@ -785,6 +787,8 @@ module GLS {
 
         // string variable, string function, [, string argumentName, string argumentType, ... ]
         public ClassMemberFunctionCall(functionArgs: string[], isInline?: boolean): any[] {
+            this.requireArgumentsLength("ClassMemberFunctionCall", functionArgs, 2);
+
             var output: string = functionArgs[0] + "." + functionArgs[1] + "(",
                 i: number;
 
@@ -804,6 +808,8 @@ module GLS {
 
         // string class, string visibility, string name, string return, [, string argumentName, string argumentType...]
         public ClassMemberFunctionStart(functionArgs: string[], isInline?: boolean): any[] {
+            this.requireArgumentsLength("ClassMemberFunctionStart", functionArgs, 4);
+
             var output: string = this.getClassFunctionsStart(),
                 variableDeclarationArguments: string[] = [],
                 i: number;
@@ -847,18 +853,24 @@ module GLS {
         }
 
 
-        // string name, string type
+        // string visibility, string name, string type
         public ClassMemberVariableDeclare(functionArgs: string[], isInline?: boolean): any[] {
+            this.requireArgumentsLength("ClassMemberVariableDeclare", functionArgs, 3);
+
             return ["NOPE LOL", 0];
         }
 
         // string name
         public ClassMemberVariableGet(functionArgs: string[], isInline?: boolean): any[] {
+            this.requireArgumentsLength("ClassMemberVariableGet", functionArgs, 1);
+
             return [this.getClassThis() + this.getClassThisAccess() + functionArgs[0], 0];
         }
 
         // string name, string value
         public ClassMemberVariableSet(functionArgs: string[], isInline?: boolean): any[] {
+            this.requireArgumentsLength("ClasMemberVariableSet", functionArgs, 2);
+
             var output: string = this.getClassThis() + this.getClassThisAccess();
 
             output += functionArgs[0] + " " + this.getOperationAlias("equals") + " " + functionArgs[1];
@@ -867,13 +879,23 @@ module GLS {
             return [output, 0];
         }
 
-        // string name
+        // string name, string visibility
         public ClassStart(functionArgs: string[], isInline?: boolean): any[] {
-            return [this.getClassStartLeft() + functionArgs[0] + this.getClassStartRight(), 1];
+            this.requireArgumentsLength("ClassStart", functionArgs, 1);
+
+            var output: string = this.getClassStartLeft() + functionArgs[0] + this.getClassStartRight();
+
+            if (functionArgs.length > 1) {
+                output = functionArgs[1] + " " + output;
+            }
+
+            return [output, 1];
         }
 
         // string name[, string argumentName, string argumentType, ...]
         public ClassNew(functionArgs: string[], isInline?: boolean): any[] {
+            this.requireArgumentsLength("ClassNew", functionArgs, 1);
+
             var output: string = this.getClassNewer() + arguments[0] + "(",
                 i: number;
 
@@ -892,6 +914,8 @@ module GLS {
 
         // [string message, ...]
         public CommentBlock(functionArgs: string[], isInline?: boolean): any[] {
+            this.requireArgumentsLength("ClassStart", functionArgs, 1);
+
             var output: string = this.getCommentorBlockStart() + "\n",
                 i: number;
 
@@ -928,6 +952,8 @@ module GLS {
 
         // string left, string comparison, string right
         public Comparison(functionArgs: string[], isInline?: boolean): any[] {
+            this.requireArgumentsLength("Comparison", functionArgs, 3);
+
             return [functionArgs[0] + " " + this.getOperationAlias(arguments[1]) + " " + functionArgs[2], 0];
         }
 
@@ -938,6 +964,8 @@ module GLS {
 
         // string name
         public FileStart(functionArgs: string[], isInline?: boolean): any[] {
+            this.requireArgumentsLength("FileStart", functionArgs, 1);
+
             var left: string = this.getFileStartLeft(),
                 right: string = this.getFileStartRight();
 
@@ -955,6 +983,8 @@ module GLS {
         // string i, string type, string initial, string comparison, string boundary, string direction, string change
         // e.x. i int 0 lessthan 7 increaseby 1
         public ForNumbersStart(functionArgs: string[], isInline?: boolean): any[] {
+            this.requireArgumentsLength("ClassStart", functionArgs, 7);
+
             var output: string = "for" + this.getConditionStartLeft(),
                 generalArgs: any[],
                 i: string = functionArgs[0],
@@ -999,6 +1029,8 @@ module GLS {
 
         // string name
         public FunctionCall(functionArgs: string[], isInline?: boolean): any[] {
+            this.requireArgumentsLength("FunctionCall", functionArgs, 1);
+
             var output: string = functionArgs[0] + "(",
                 i: number;
 
@@ -1024,6 +1056,8 @@ module GLS {
 
         // string name, stirng return[, string argumentName, string argumentType, ...]
         public FunctionStart(functionArgs: string[], isInline?: boolean): any[] {
+            this.requireArgumentsLength("FunctionStart", functionArgs, 2);
+
             var output: string = "",
                 variableDeclarationArguments: string[] = [],
                 i: number;
@@ -1050,11 +1084,15 @@ module GLS {
 
         // string value
         public FunctionReturn(functionArgs: string[], isInline?: boolean): any[] {
+            this.requireArgumentsLength("FunctionReturn", functionArgs, 1);
+
             return ["return " + functionArgs[0] + this.getSemiColon(), 0];
         }
 
         // string left, string operator, string right
         public IfConditionStart(functionArgs: string[], isInline?: boolean): any[] {
+            this.requireArgumentsLength("IfConditionStart", functionArgs, 3);
+
             var output: string = "if" + this.getConditionStartLeft();
 
             output += functionArgs[0] + " " + this.getOperationAlias(functionArgs[1]) + " ";
@@ -1069,6 +1107,8 @@ module GLS {
 
         // string variable
         public IfVariableStart(functionArgs: string[], isInline?: boolean): any[] {
+            this.requireArgumentsLength("IfVariable", functionArgs, 1);
+
             var output: string = "if" + this.getConditionStartLeft();
 
             output += functionArgs[0] + this.getConditionStartRight();
@@ -1088,6 +1128,8 @@ module GLS {
 
         // string i, string direction, string difference
         public Operation(functionArgs: string[], isInline?: boolean): any[] {
+            this.requireArgumentsLength("Operation", functionArgs, 3);
+
             var output: string = functionArgs[0] + " " + this.getOperationAlias(functionArgs[1]);
 
             output += " " + this.getValueAlias(functionArgs[2]);
@@ -1120,6 +1162,8 @@ module GLS {
 
         // string name, string type[, string value]
         public VariableDeclare(functionArgs: string[], isInline?: boolean): any[] {
+            this.requireArgumentsLength("VariableDeclare", functionArgs, 2);
+
             var variableDeclared: any[] = this.VariableDeclarePartial(functionArgs, isInline);
 
             variableDeclared[0] = this.getVariableDeclareStart() + variableDeclared[0];
@@ -1129,6 +1173,8 @@ module GLS {
 
         // string name, string type[, string value]
         public VariableDeclarePartial(functionArgs: string[], isInline?: boolean): any[] {
+            this.requireArgumentsLength("VariableDeclarePartial", functionArgs, 2);
+
             var output: string;
 
             if (this.getVariableTypesExplicit()) {
@@ -1141,7 +1187,7 @@ module GLS {
                 output += functionArgs[0];
             }
 
-            if (functionArgs.length >= 3) {
+            if (functionArgs.length > 2) {
                 output += " " + this.getOperationAlias("equals") + " " + this.getValueAlias(functionArgs[2]);
             }
 
@@ -1150,6 +1196,8 @@ module GLS {
 
         // string left, string operator, string right
         public WhileConditionStart(functionArgs: string[], isInline?: boolean): any[] {
+            this.requireArgumentsLength("WhileConditionStart", functionArgs, 3);
+
             var output: string = "while" + this.getConditionStartLeft() + functionArgs[0] + " ";
 
             output += this.getOperationAlias(functionArgs[1]) + " ";
@@ -1164,11 +1212,23 @@ module GLS {
 
         // string variable
         public WhileVariableStart(functionArgs: string[], isInline?: boolean): any[] {
+            this.requireArgumentsLength("WhileVariableStart", functionArgs, 1);
+
             var output: string = "while" + this.getConditionStartLeft();
 
             output += this.getOperationAlias(functionArgs[0]) + this.getConditionStartRight();
 
             return [output, 1];
+        }
+
+
+        /* Utilities
+        */
+
+        private requireArgumentsLength(functionName: string, functionArgs: string[], amount: number) {
+            if (functionArgs.length < amount) {
+                throw new Error("Not enough arguments given to " + functionName + " (required: " + amount + ").");
+            }
         }
     }
 }

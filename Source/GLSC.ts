@@ -55,7 +55,7 @@ module GLS {
             }
 
             var result: any[],
-                arguments: string[],
+                functionArgs: string[],
                 functionName: string,
                 argumentsRaw: string,
                 colonIndex: number;
@@ -65,12 +65,13 @@ module GLS {
             if (colonIndex !== -1) {
                 functionName = this.trimString(commandRaw.substring(0, colonIndex));
                 argumentsRaw = this.trimString(commandRaw.substring(colonIndex + 1));
-                arguments = this.parseArguments(language, argumentsRaw, isInline);
+                functionArgs = this.parseArguments(language, argumentsRaw, isInline);
             } else {
                 functionName = this.trimString(commandRaw);
+                functionArgs = [];
             }
 
-            output = language.print(functionName, arguments, isInline);
+            output = language.print(functionName, functionArgs, isInline);
 
             return output;
         }

@@ -6,7 +6,8 @@ document.onreadystatechange = function () {
     var source = document.getElementById("source"),
         result = document.getElementById("result"),
         converter = new GLS.GLSC(),
-        language = GLS.Languages.TypeScript;
+        language = GLS.Languages.TypeScript,
+        original = "";
 
     function resizeAreas() {
         if (document.body.clientWidth < 819) {
@@ -31,7 +32,12 @@ document.onreadystatechange = function () {
 
     function convertSourceToResult() {
         try {
-            result.value = converter.parseCommands(language, source.value.split("\n"));
+            if (source.value === original) {
+                return;
+            }
+
+            original = source.value;
+            result.value = converter.parseCommands(language, original.split("\n"));
         } catch (error) {
             console.log(error.toString());
         }
@@ -41,4 +47,6 @@ document.onreadystatechange = function () {
     resizeAreas();
 
     source.onchange = source.onkeydown = source.onmousedown = convertSourceToResult;
+
+    setInterval(convertSourceToResult, 77);
 };
