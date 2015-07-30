@@ -3,13 +3,31 @@ document.onreadystatechange = function (event) {
         return;
     }
 
-    var source = document.getElementById("source"),
+    var localStorage = shivLocalStorage(),
+        source = document.getElementById("source"),
         resultContainer = document.getElementById("resultContainer"),
         resultTexter = document.getElementById("resultTexter"),
         languageSelect = document.getElementById("languageSelectElement"),
         converter = new GLS.GLSC(),
         original = "",
         language;
+
+    function shivLocalStorage() {
+        if (typeof localStorage !== "undefined") {
+            return localStorage;
+        }
+
+        var shiv = {
+            "getItem": function (key) {
+                return shiv[key];
+            },
+            "setItem": function (key, value) {
+                shiv[key] = value;
+            }
+        };
+
+        return shiv;
+    }
 
     function resizeAreas() {
         if (document.body.clientWidth < 819) {
@@ -99,7 +117,7 @@ document.onreadystatechange = function (event) {
 
         source.onchange = source.onkeydown = source.onmousedown = convertSourceToResult;
 
-        source.value = localStorage.getItem("original");
+        source.value = localStorage.getItem("original") || "";
         if (source.value) {
             convertSourceToResult();
         }
