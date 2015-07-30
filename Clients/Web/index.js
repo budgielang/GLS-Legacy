@@ -13,8 +13,8 @@ document.onreadystatechange = function (event) {
         language;
 
     function shivLocalStorage() {
-        if (typeof localStorage !== "undefined") {
-            return localStorage;
+        if (typeof window.localStorage !== "undefined") {
+            return window.localStorage;
         }
 
         var shiv = {
@@ -61,7 +61,8 @@ document.onreadystatechange = function (event) {
             localStorage.setItem("original", original);
             Prism.highlightAll();
         } catch (error) {
-            console.log(error.toString());
+            // Logging errors is spammy, so it's not done...
+            // console.log(error.toString());
         }
     }
 

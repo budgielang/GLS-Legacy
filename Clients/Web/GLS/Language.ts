@@ -1223,6 +1223,10 @@ module GLS {
 
             variableDeclared[0] = this.getVariableDeclareStart() + variableDeclared[0];
 
+            if (!isInline) {
+                variableDeclared[0] = variableDeclared[0] + this.getSemiColon();
+            }
+
             return variableDeclared;
         }
 
