@@ -801,7 +801,7 @@ module GLS {
             return [output, 1];
         }
 
-        public ClassEnd(functionArgs: string[], isInline?: boolean): any[] {
+        public ClassEnd(functionArgs: string[], isInline?: boolean): any[]{
             return [this.getClassEnder(), -1];
         }
 
