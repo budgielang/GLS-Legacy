@@ -554,7 +554,7 @@ var GLS;
         };
         Language.prototype.ClassEnd = function (functionArgs, isInline) {
             var output = this.getClassEnder();
-            return [output, output.length === 0 ? this.INT_MIN : -1];
+            return [this.getClassEnder(), -1];
         };
         // string variable, string function, [, string argumentName, string argumentType, ... ]
         Language.prototype.ClassMemberFunctionCall = function (functionArgs, isInline) {

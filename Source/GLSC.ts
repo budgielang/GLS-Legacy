@@ -1,3 +1,5 @@
+/// <reference path="Language.ts" />
+
 module GLS {
     export class GLSC {
         private Languages: any;
@@ -22,7 +24,8 @@ module GLS {
             var output: string = "",
                 command: any[],
                 numTabs: number = 0,
-                i: number;
+                i: number,
+                j: number;
 
             // The first line will never start with a newline, or be initially tabbed
             command = this.parseCommand(language, commandsRaw[0], false);
@@ -33,14 +36,30 @@ module GLS {
             for (i = 1; i < commandsRaw.length; i += 1) {
                 command = this.parseCommand(language, commandsRaw[i], false);
 
-                if (command[1] === this.INT_MIN) {
-                    output += " " + command[0];
-                } else if (command[1] < 0) {
-                    numTabs += command[1];
-                    output += "\n" + this.generateTabs(numTabs) + command[0];
-                } else {
-                    output += "\n" + this.generateTabs(numTabs) + command[0];
-                    numTabs += command[1];
+                // Each command is an odd-length [string, int, ...]
+                for (j = 0; j < command.length; j += 2) {
+                    if (command[1] === this.INT_MIN) {
+                        output += " " + command[0];
+                    } else {
+                        // Just "\0" changes numTabs without adding a line
+                        if (command[j] !== "\0") {
+                            output += "\n";
+                        }
+
+                        if (command[j + 1] < 0) {
+                            numTabs += command[j + 1];
+                            output += this.generateTabs(numTabs);
+                            if (command[j] !== "\0") {
+                                output += command[j];
+                            }
+                        } else {
+                            output += this.generateTabs(numTabs);
+                            if (command[j] !== "\0") {
+                                output += command[j];
+                            }
+                            numTabs += command[j + 1];
+                        }
+                    }
                 }
             }
 

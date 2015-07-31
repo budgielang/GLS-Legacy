@@ -803,7 +803,8 @@ module GLS {
 
         public ClassEnd(functionArgs: string[], isInline?: boolean): any[]{
             var output: string = this.getClassEnder();
-            return [output, output.length === 0 ? this.INT_MIN : -1];
+
+            return [this.getClassEnder(), -1];
         }
 
         // string variable, string function, [, string argumentName, string argumentType, ... ]

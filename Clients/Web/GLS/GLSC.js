@@ -1,3 +1,4 @@
+/// <reference path="Language.ts" />
 var GLS;
 (function (GLS) {
     var GLSC = (function () {
@@ -14,23 +15,37 @@ var GLS;
             if (commandsRaw.length === 0 || (commandsRaw.length === 1 && commandsRaw[0].length === 0)) {
                 return "";
             }
-            var output = "", command, numTabs = 0, i;
+            var output = "", command, numTabs = 0, i, j;
             // The first line will never start with a newline, or be initially tabbed
             command = this.parseCommand(language, commandsRaw[0], false);
             output += command[0];
             numTabs += command[1];
             for (i = 1; i < commandsRaw.length; i += 1) {
                 command = this.parseCommand(language, commandsRaw[i], false);
-                if (command[1] === this.INT_MIN) {
-                    output += " " + command[0];
-                }
-                else if (command[1] < 0) {
-                    numTabs += command[1];
-                    output += "\n" + this.generateTabs(numTabs) + command[0];
-                }
-                else {
-                    output += "\n" + this.generateTabs(numTabs) + command[0];
-                    numTabs += command[1];
+                for (j = 0; j < command.length; j += 2) {
+                    if (command[1] === this.INT_MIN) {
+                        output += " " + command[0];
+                    }
+                    else {
+                        // Just "\0" changes numTabs without adding a line
+                        if (command[j] !== "\0") {
+                            output += "\n";
+                        }
+                        if (command[j + 1] < 0) {
+                            numTabs += command[j + 1];
+                            output += this.generateTabs(numTabs);
+                            if (command[j] !== "\0") {
+                                output += command[j];
+                            }
+                        }
+                        else {
+                            output += this.generateTabs(numTabs);
+                            if (command[j] !== "\0") {
+                                output += command[j];
+                            }
+                            numTabs += command[j + 1];
+                        }
+                    }
                 }
             }
             return output;
