@@ -8,6 +8,8 @@ module GLS.Languages {
         .setClassEnder("}")
         .setClassFunctionsTakeThis(false)
         .setClassFunctionsStart("")
+        .setClassMemberVariableDefault("")
+        .setClassMemberVariablePrivacy(true)
         .setClassNewer("new ")
         .setClassPrivacy(true)
         .setClassStartLeft("class ")

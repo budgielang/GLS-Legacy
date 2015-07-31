@@ -78,6 +78,7 @@ module GLS {
         private ClassFunctionsStart: string;
         private ClassFunctionsThis: string;
         private ClassMemberVariableDefault: string;
+        private ClassMemberVariablePrivacy: boolean;
         private ClassNewer: string;
         private ClassPrivacy: boolean;
         private ClassStartLeft: string;
@@ -347,6 +348,10 @@ module GLS {
 
         public getClassMemberVariableDefault(): string {
             return this.ClassMemberVariableDefault;
+        }
+
+        public getClassMemberVariablePrivacy(): boolean {
+            return this.ClassMemberVariablePrivacy;
         }
 
         public getClassNewer(): string {
@@ -632,6 +637,11 @@ module GLS {
             return this;
         }
 
+        public setClassMemberVariablePrivacy(value: boolean): Language {
+            this.ClassMemberVariablePrivacy = value;
+            return this;
+        }
+
         public setClassNewer(value: string): Language {
             this.ClassNewer = value;
             return this;
@@ -801,7 +811,7 @@ module GLS {
             return [output, 1];
         }
 
-        public ClassEnd(functionArgs: string[], isInline?: boolean): any[]{
+        public ClassEnd(functionArgs: string[], isInline?: boolean): any[] {
             var output: string = this.getClassEnder();
 
             return [this.getClassEnder(), -1];
@@ -891,13 +901,23 @@ module GLS {
         public ClassMemberVariableDeclare(functionArgs: string[], isInline?: boolean): any[] {
             this.requireArgumentsLength("ClassMemberVariableDeclare", functionArgs, 3);
 
-            var variableDeclarationArgs: string[] = [functionArgs[0], functionArgs[2]],
-                variableDeclared: any[] = this.VariableDeclarePartial(variableDeclarationArgs, isInline);
+            var variableDeclarationArgs: string[], // = [functionArgs[0], functionArgs[2]],
+                variableDeclared: any[];
 
-            variableDeclared[0] = functionArgs[1] + " " + variableDeclared[0];
+            if (this.getClassMemberVariableDefault() !== "") {
+                variableDeclarationArgs = [functionArgs[0], functionArgs[2], this.getClassMemberVariableDefault()];
+            } else {
+                variableDeclarationArgs = [functionArgs[0], functionArgs[2]];
+            }
+
+            variableDeclared = this.VariableDeclarePartial(variableDeclarationArgs, isInline);
 
             if (!isInline) {
-                variableDeclared[0] += this.getSemiColon();
+                variableDeclared[0] = variableDeclared[0] + this.getSemiColon();
+            }
+
+            if (this.getClassMemberVariablePrivacy()) {
+                variableDeclared[0] = functionArgs[1] + " " + variableDeclared[0];
             }
 
             return variableDeclared;

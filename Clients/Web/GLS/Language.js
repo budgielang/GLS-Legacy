@@ -202,6 +202,9 @@ var GLS;
         Language.prototype.getClassMemberVariableDefault = function () {
             return this.ClassMemberVariableDefault;
         };
+        Language.prototype.getClassMemberVariablePrivacy = function () {
+            return this.ClassMemberVariablePrivacy;
+        };
         Language.prototype.getClassNewer = function () {
             return this.ClassNewer;
         };
@@ -425,6 +428,10 @@ var GLS;
             this.ClassMemberVariableDefault = value;
             return this;
         };
+        Language.prototype.setClassMemberVariablePrivacy = function (value) {
+            this.ClassMemberVariablePrivacy = value;
+            return this;
+        };
         Language.prototype.setClassNewer = function (value) {
             this.ClassNewer = value;
             return this;
@@ -614,10 +621,19 @@ var GLS;
         // string name, string visibility, string type
         Language.prototype.ClassMemberVariableDeclare = function (functionArgs, isInline) {
             this.requireArgumentsLength("ClassMemberVariableDeclare", functionArgs, 3);
-            var variableDeclarationArgs = [functionArgs[0], functionArgs[2]], variableDeclared = this.VariableDeclarePartial(variableDeclarationArgs, isInline);
-            variableDeclared[0] = functionArgs[1] + " " + variableDeclared[0];
+            var variableDeclarationArgs, variableDeclared;
+            if (this.getClassMemberVariableDefault() !== "") {
+                variableDeclarationArgs = [functionArgs[0], functionArgs[2], this.getClassMemberVariableDefault()];
+            }
+            else {
+                variableDeclarationArgs = [functionArgs[0], functionArgs[2]];
+            }
+            variableDeclared = this.VariableDeclarePartial(variableDeclarationArgs, isInline);
             if (!isInline) {
-                variableDeclared[0] += this.getSemiColon();
+                variableDeclared[0] = variableDeclared[0] + this.getSemiColon();
+            }
+            if (this.getClassMemberVariablePrivacy()) {
+                variableDeclared[0] = functionArgs[1] + " " + variableDeclared[0];
             }
             return variableDeclared;
         };
