@@ -35,6 +35,7 @@ module GLS.Languages {
         .setFunctionTypeAfterName(true)
         .setMainEndLine("}")
         .setMainStartLine("export function Main(): void {")
+        .setToString("")
         .setRangedForLoops(false)
         .setVariableTypesExplicit(true)
         .setVariableTypesAfterName(true)

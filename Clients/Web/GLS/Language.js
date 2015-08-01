@@ -19,6 +19,7 @@ var GLS;
                 "comment line": this.CommentLine.bind(this),
                 "comment inline": this.CommentInline.bind(this),
                 "comparison": this.Comparison.bind(this),
+                "concatenate": this.Concatenate.bind(this),
                 "file end": this.FileEnd.bind(this),
                 "file start": this.FileStart.bind(this),
                 "for end": this.ForEnd.bind(this),
@@ -153,6 +154,12 @@ var GLS;
         };
         Language.prototype.getStringLength = function () {
             return this.StringLength;
+        };
+        Language.prototype.getToString = function () {
+            return this.ToString;
+        };
+        Language.prototype.getToStringAsFunction = function () {
+            return this.ToStringAsFunction;
         };
         Language.prototype.getRangedForLoops = function () {
             return this.RangedForLoops;
@@ -366,6 +373,14 @@ var GLS;
         };
         Language.prototype.setRangedForLoops = function (value) {
             this.RangedForLoops = value;
+            return this;
+        };
+        Language.prototype.setToString = function (value) {
+            this.ToString = value;
+            return this;
+        };
+        Language.prototype.setToStringAsFunction = function (value) {
+            this.ToStringAsFunction = value;
             return this;
         };
         Language.prototype.setArrayClass = function (value) {
@@ -705,6 +720,25 @@ var GLS;
         Language.prototype.Comparison = function (functionArgs, isInline) {
             this.requireArgumentsLength("Comparison", functionArgs, 3);
             return [functionArgs[0] + " " + this.getOperationAlias(functionArgs[1]) + " " + functionArgs[2], 0];
+        };
+        // string left, string right
+        Language.prototype.Concatenate = function (functionArgs, isInline) {
+            this.requireArgumentsLength("Comparison", functionArgs, 2);
+            var output;
+            if (this.getToStringAsFunction()) {
+                output = this.getToString() + "(" + functionArgs[0] + ")";
+                output += " " + this.getOperationAlias("plus") + " ";
+                output += this.getToString() + "(" + functionArgs[1] + ")";
+            }
+            else {
+                output = functionArgs[0] + this.getToString();
+                output += " " + this.getOperationAlias("plus") + " ";
+                output += functionArgs[1] + this.getToString();
+            }
+            if (!isInline) {
+                output += this.getSemiColon();
+            }
+            return [output, 0];
         };
         Language.prototype.FileEnd = function (functionArgs, isInline) {
             var output = this.getFileEndLine();

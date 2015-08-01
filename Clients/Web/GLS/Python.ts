@@ -32,6 +32,7 @@ module GLS.Languages {
         .setFunctionDefineEnd("\0")
         .setMainEndLine("\0")
         .setMainStartLine("if __name__ == '__main__':")
+        .setToString("")
         .setRangedForLoops(true)
         .setFunctionReturnsExplicit(false)
         .setVariableTypesExplicit(false)
