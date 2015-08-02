@@ -63,10 +63,10 @@ body {
     box-sizing: border-box;
 }
 
-#selecter {
+.popper {
     position: absolute;
-    bottom: 35%;
-    right: 28px;
+    right: 0;
+    margin: 28px;
     padding: 7px 11px;
     background: #333;
     text-align: center;
@@ -75,6 +75,11 @@ body {
     box-sizing: border-box;
     cursor: pointer;
     color: white;
+}
+
+#selecter {
+    bottom: 35%;
+    right: 0;
 }
 
 @media screen and (min-width: 819px) {
@@ -103,8 +108,12 @@ body {
         width: 100px;
     }
 
+    #sampler {
+        left: 35%;
+        right: auto;
+    }
+
     #selecter {
-        top: 28px;
         bottom: auto;
     }
 }
