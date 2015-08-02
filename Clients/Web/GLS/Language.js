@@ -34,6 +34,7 @@ var GLS;
                 "main end": this.MainEnd.bind(this),
                 "main start": this.MainStart.bind(this),
                 "operation": this.Operation.bind(this),
+                "parenthesis": this.Parenthesis.bind(this),
                 "print line": this.PrintLine.bind(this),
                 "variable declare": this.VariableDeclare.bind(this),
                 "variable declare partial": this.VariableDeclarePartial.bind(this),
@@ -905,6 +906,16 @@ var GLS;
             if (!isInline) {
                 output += this.getSemiColon();
             }
+            return [output, 0];
+        };
+        // [string anything, ...]
+        Language.prototype.Parenthesis = function (functionArgs, isInline) {
+            var output = "(", i;
+            for (i = 0; i < functionArgs.length - 1; i += 1) {
+                output += functionArgs[i] + ", ";
+            }
+            output += functionArgs[i];
+            output += ")";
             return [output, 0];
         };
         // [string message, ...]

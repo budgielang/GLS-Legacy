@@ -75,7 +75,7 @@ file start : SampleFile
 
         comment line : (For Loops)
         for numbers start : i int 0 lessthan 7 increaseby 1
-            print line : { concatenate : ("i plus one is ") { operation : i plus 1 } }
+            print line : { concatenate : ("i plus one is ") { parenthesis : { operation : i plus 1 } } }
         for end
 
         comment line : (Calling Functions)

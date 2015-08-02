@@ -135,6 +135,7 @@ module GLS {
                 "main end": this.MainEnd.bind(this),
                 "main start": this.MainStart.bind(this),
                 "operation": this.Operation.bind(this),
+                "parenthesis": this.Parenthesis.bind(this),
                 "print line": this.PrintLine.bind(this),
                 "variable declare": this.VariableDeclare.bind(this),
                 "variable declare partial": this.VariableDeclarePartial.bind(this),
@@ -1308,6 +1309,21 @@ module GLS {
             if (!isInline) {
                 output += this.getSemiColon();
             }
+
+            return [output, 0];
+        }
+
+        // [string anything, ...]
+        public Parenthesis(functionArgs: string[], isInline?: boolean): any[] {
+            var output: string = "(",
+                i: number;
+
+            for (i = 0; i < functionArgs.length - 1; i += 1) {
+                output += functionArgs[i] + ", ";
+            }
+
+            output += functionArgs[i];
+            output += ")";
 
             return [output, 0];
         }
