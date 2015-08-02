@@ -5,6 +5,7 @@ module GLS.Languages {
         .setPrintFunction("System.out.println")
         .setSemiColon(";")
         .setClassConstructorName("")
+        .setClassConstructorInheritedName("super")
         .setClassEnder("};")
         .setClassExtends("extends")
         .setClassFunctionsTakeThis(false)

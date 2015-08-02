@@ -370,6 +370,14 @@ module GLS {
             return this.ClassConstructorAsStatic;
         }
 
+        public getClassConstructorInheritedName(): string {
+            return this.ClassConstructorInheritedName;
+        }
+
+        public getClassConstructorInheritedShorthand(): boolean {
+            return this.ClassConstructorInheritedShorthand;
+        }
+
         public getClassConstructorName(): string {
             return this.ClassConstructorName;
         }
@@ -701,6 +709,16 @@ module GLS {
             return this;
         }
 
+        public setClassConstructorInheritedName(value: string): Language {
+            this.ClassConstructorInheritedName = value;
+            return this;
+        }
+
+        public setClassConstructorInheritedShorthand(value: boolean): Language {
+            this.ClassConstructorInheritedShorthand = value;
+            return this;
+        }
+
         public setClassConstructorName(value: string): Language {
             this.ClassConstructorName = value;
             return this;
@@ -929,7 +947,16 @@ module GLS {
 
         // [string argumentName, string argumentType, ...]
         public ClassConstructorInheritedCall(functionArgs: string[], isInline?: boolean): any[] {
-            return undefined;
+            var callingArgs: string[] = new Array<string>(functionArgs.length + 1),
+                i: number;
+
+            callingArgs[0] = this.getClassConstructorInheritedName();
+
+            for (i = 0; i < functionArgs.length; i += 1) {
+                callingArgs[i + 1] = functionArgs[i];
+            }
+
+            return this.FunctionCall(callingArgs, isInline);
         }
 
         // string name[, string superCall[, string argumentName, string argumentType, ...]]

@@ -205,6 +205,12 @@ var GLS;
         Language.prototype.getClassConstructorAsStatic = function () {
             return this.ClassConstructorAsStatic;
         };
+        Language.prototype.getClassConstructorInheritedName = function () {
+            return this.ClassConstructorInheritedName;
+        };
+        Language.prototype.getClassConstructorInheritedShorthand = function () {
+            return this.ClassConstructorInheritedShorthand;
+        };
         Language.prototype.getClassConstructorName = function () {
             return this.ClassConstructorName;
         };
@@ -464,6 +470,14 @@ var GLS;
             this.ClassConstructorAsStatic = value;
             return this;
         };
+        Language.prototype.setClassConstructorInheritedName = function (value) {
+            this.ClassConstructorInheritedName = value;
+            return this;
+        };
+        Language.prototype.setClassConstructorInheritedShorthand = function (value) {
+            this.ClassConstructorInheritedShorthand = value;
+            return this;
+        };
         Language.prototype.setClassConstructorName = function (value) {
             this.ClassConstructorName = value;
             return this;
@@ -634,7 +648,12 @@ var GLS;
         };
         // [string argumentName, string argumentType, ...]
         Language.prototype.ClassConstructorInheritedCall = function (functionArgs, isInline) {
-            return undefined;
+            var callingArgs = new Array(functionArgs.length + 1), i;
+            callingArgs[0] = this.getClassConstructorInheritedName();
+            for (i = 0; i < functionArgs.length; i += 1) {
+                callingArgs[i + 1] = functionArgs[i];
+            }
+            return this.FunctionCall(callingArgs, isInline);
         };
         // string name[, string superCall[, string argumentName, string argumentType, ...]]
         Language.prototype.ClassConstructorInheritedStart = function (functionArgs, isInline) {

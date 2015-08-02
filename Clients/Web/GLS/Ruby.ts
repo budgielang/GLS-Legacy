@@ -5,6 +5,7 @@ module GLS.Languages {
         .setPrintFunction("puts")
         .setSemiColon("")
         .setClassConstructorAsStatic(true)
+        .setClassConstructorInheritedName("super")
         .setClassConstructorName("def initialize")
         .setClassEnder("end")
         .setClassExtends("<")

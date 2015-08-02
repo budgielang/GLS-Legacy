@@ -5,6 +5,7 @@ module GLS.Languages {
         .setPrintFunction("System.Console.WriteLine")
         .setSemiColon(";")
         .setClassConstructorName("")
+        .setClassConstructorInheritedName("base")
         .setClassEnder("};")
         .setClassExtends("extends")
         .setClassFunctionsTakeThis(false)
