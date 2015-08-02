@@ -35,7 +35,7 @@ module GLS {
         private LessThanOrEqual: string;
         private Or: string;
 
-        //Variables
+        // Variables
         private VariableTypesExplicit: boolean;
         private VariableTypesAfterName: boolean;
         private VariableTypeMarker: string;
@@ -52,8 +52,8 @@ module GLS {
         // Strings
         private StringClass: string;
         private StringLength: string;
-        public ToString: string;
-        public ToStringAsFunction: boolean;
+        private ToString: string;
+        private ToStringAsFunction: boolean;
 
         // Loops
         private RangedForLoops: boolean;
@@ -75,6 +75,10 @@ module GLS {
 
         // Dictionaries
         private DictionaryClass: string;
+        private DictionaryNewLeft: string;
+        private DictionaryNewRight: string;
+        private DictionaryTypeLeft: string;
+        private DictionaryTypeRight: string;
 
         // Classes
         private ClassConstructorAsStatic: boolean;
