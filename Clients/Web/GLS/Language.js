@@ -542,27 +542,26 @@ var GLS;
         };
         /* Array & Template parsing
         */
-        Language.prototype.parseName = function (text) {
-            if (this.nameContainsArray(text)) {
-                return this.parseNameWithArray(text);
+        Language.prototype.parseType = function (text) {
+            if (this.typeontainsArray(text)) {
+                return this.parseTypeWithArray(text);
             }
-            if (this.nameContainsTemplate(text)) {
-                return this.parseNameWithTemplate(text);
+            if (this.typeContainsTemplate(text)) {
+                return this.parseTypeWithTemplate(text);
             }
             return text;
         };
-        Language.prototype.nameContainsArray = function (text) {
+        Language.prototype.typeontainsArray = function (text) {
             return name.indexOf("[") !== -1;
         };
-        Language.prototype.nameContainsTemplate = function (text) {
+        Language.prototype.typeContainsTemplate = function (text) {
             return text.indexOf("<") !== -1;
         };
-        Language.prototype.parseNameWithArray = function (text) {
+        Language.prototype.parseTypeWithArray = function (text) {
             var bracketIndex = text.indexOf("["), name = text.substring(0, bracketIndex), remainder = text.substring(bracketIndex);
             return this.getTypeAlias(name) + remainder;
         };
-        // Needs to be tested in console
-        Language.prototype.parseNameWithTemplate = function (text) {
+        Language.prototype.parseTypeWithTemplate = function (text) {
             var ltIndex = text.indexOf("<"), output = text.substring(0, ltIndex), i = ltIndex + 1, spaceNext;
             if (!this.getClassTemplates()) {
                 return output;
@@ -709,12 +708,12 @@ var GLS;
         // string name, string visibility, string type
         Language.prototype.ClassMemberVariableDeclare = function (functionArgs, isInline) {
             this.requireArgumentsLength("ClassMemberVariableDeclare", functionArgs, 3);
-            var variableDeclarationArgs, variableDeclared;
+            var variableType = this.parseType(functionArgs[2]), variableDeclarationArgs, variableDeclared;
             if (this.getClassMemberVariableDefault() !== "") {
-                variableDeclarationArgs = [functionArgs[0], functionArgs[2], this.getClassMemberVariableDefault()];
+                variableDeclarationArgs = [functionArgs[0], variableType, this.getClassMemberVariableDefault()];
             }
             else {
-                variableDeclarationArgs = [functionArgs[0], functionArgs[2]];
+                variableDeclarationArgs = [functionArgs[0], variableType];
             }
             variableDeclared = this.VariableDeclarePartial(variableDeclarationArgs, isInline);
             if (!isInline) {
@@ -744,7 +743,9 @@ var GLS;
         // string name, string visibility
         Language.prototype.ClassStart = function (functionArgs, isInline) {
             this.requireArgumentsLength("ClassStart", functionArgs, 1);
-            var output = this.getClassStartLeft() + functionArgs[0] + this.getClassStartRight();
+            var output = this.getClassStartLeft();
+            output += this.parseType(functionArgs[0]);
+            output += this.getClassStartRight();
             if (functionArgs.length > 1) {
                 output = functionArgs[1] + " " + output;
             }
@@ -971,7 +972,14 @@ var GLS;
         // string name, string type[, string value]
         Language.prototype.VariableDeclare = function (functionArgs, isInline) {
             this.requireArgumentsLength("VariableDeclare", functionArgs, 2);
-            var variableDeclared = this.VariableDeclarePartial(functionArgs, isInline);
+            var variableType = this.parseType(functionArgs[1]), variableDeclarationArguments, variableDeclared;
+            if (functionArgs.length == 2) {
+                variableDeclarationArguments = [functionArgs[0], variableType];
+            }
+            else {
+                variableDeclarationArguments = [functionArgs[0], variableType, functionArgs[2]];
+            }
+            variableDeclared = this.VariableDeclarePartial(functionArgs, isInline);
             variableDeclared[0] = this.getVariableDeclareStart() + variableDeclared[0];
             if (!isInline) {
                 variableDeclared[0] = variableDeclared[0] + this.getSemiColon();

@@ -55,15 +55,15 @@ document.onreadystatechange = function (event) {
             return;
         }
 
-        try {
+        //try {
             original = source.value;
             resultTexter.innerText = converter.parseCommands(language, original.split("\n"));
             localStorage.setItem("original", original);
             Prism.highlightAll();
-        } catch (error) {
-            // Logging errors is spammy, so it's not done...
-            console.log(error.toString());
-        }
+        //} catch (error) {
+        //    // Logging errors is spammy, so it's not done...
+        //    console.log(error.toString());
+        //}
     }
 
     function checkLanguageDefault() {
