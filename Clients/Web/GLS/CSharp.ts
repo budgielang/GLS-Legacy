@@ -4,7 +4,7 @@ module GLS.Languages {
         .setExtension("cs")
         .setPrintFunction("System.Console.WriteLine")
         .setSemiColon(";")
-        .setClassConstructorName("") // should default to using class name, then delete here
+        .setClassConstructorName("")
         .setClassEnder("};")
         .setClassFunctionsTakeThis(false)
         .setClassFunctionsStart("")
@@ -34,6 +34,7 @@ module GLS.Languages {
         .setFunctionTypeAfterName(false)
         .setMainEndLine("}")
         .setMainStartLine("public static void Main() {")
+        .setToString(".ToString()")
         .setRangedForLoops(false)
         .setVariableDeclareStart("")
         .setVariableTypesExplicit(true)

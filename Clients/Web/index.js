@@ -62,7 +62,7 @@ document.onreadystatechange = function (event) {
             Prism.highlightAll();
         } catch (error) {
             // Logging errors is spammy, so it's not done...
-            // console.log(error.toString());
+             console.log(error.toString());
         }
     }
 

@@ -52,6 +52,8 @@ module GLS {
         // Strings
         private StringClass: string;
         private StringLength: string;
+        public ToString: string;
+        public ToStringAsFunction: boolean;
 
         // Loops
         private RangedForLoops: boolean;
@@ -113,6 +115,7 @@ module GLS {
                 "comment line": this.CommentLine.bind(this),
                 "comment inline": this.CommentInline.bind(this),
                 "comparison": this.Comparison.bind(this),
+                "concatenate": this.Concatenate.bind(this),
                 "file end": this.FileEnd.bind(this),
                 "file start": this.FileStart.bind(this),
                 "for end": this.ForEnd.bind(this),
@@ -284,6 +287,14 @@ module GLS {
 
         public getStringLength(): string {
             return this.StringLength;
+        }
+
+        public getToString(): string {
+            return this.ToString;
+        }
+
+        public getToStringAsFunction(): boolean {
+            return this.ToStringAsFunction;
         }
 
         public getRangedForLoops(): boolean {
@@ -559,6 +570,16 @@ module GLS {
 
         public setRangedForLoops(value: boolean): Language {
             this.RangedForLoops = value;
+            return this;
+        }
+
+        public setToString(value: string): Language {
+            this.ToString = value;
+            return this;
+        }
+
+        public setToStringAsFunction(value: boolean): Language {
+            this.ToStringAsFunction = value;
             return this;
         }
 
@@ -896,7 +917,6 @@ module GLS {
             return [output, 1];
         }
 
-
         // string name, string visibility, string type
         public ClassMemberVariableDeclare(functionArgs: string[], isInline?: boolean): any[] {
             this.requireArgumentsLength("ClassMemberVariableDeclare", functionArgs, 3);
@@ -1023,6 +1043,29 @@ module GLS {
             this.requireArgumentsLength("Comparison", functionArgs, 3);
 
             return [functionArgs[0] + " " + this.getOperationAlias(functionArgs[1]) + " " + functionArgs[2], 0];
+        }
+
+        // string left, string right
+        public Concatenate(functionArgs: string[], isInline?: boolean): any[] {
+            this.requireArgumentsLength("Comparison", functionArgs, 2);
+
+            var output: string;
+            
+            if (this.getToStringAsFunction()) {
+                output = this.getToString() + "(" + functionArgs[0] + ")";
+                output += " " + this.getOperationAlias("plus") + " ";
+                output += this.getToString() + "(" + functionArgs[1] + ")";
+            } else {
+                output = functionArgs[0] + this.getToString();
+                output += " " + this.getOperationAlias("plus") + " ";
+                output += functionArgs[1] + this.getToString();
+            }
+
+            if (!isInline) {
+                output += this.getSemiColon();
+            }
+
+            return [output, 0];
         }
 
         public FileEnd(functionArgs: string[], isInline?: boolean): any[] {
