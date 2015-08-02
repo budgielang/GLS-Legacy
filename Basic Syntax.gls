@@ -5,7 +5,7 @@ file start : SampleFile
         print line : ("Hello world!")
     function end
     function start : combineStrings string a string b string
-        function return : { operation : a plus b }
+        function return : { concatenate : a b }
     function end
 
     comment line : (Class Declarations)

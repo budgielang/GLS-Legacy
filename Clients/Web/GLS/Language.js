@@ -164,6 +164,15 @@ var GLS;
         Language.prototype.getRangedForLoops = function () {
             return this.RangedForLoops;
         };
+        Language.prototype.getRangedForLoopsStart = function () {
+            return this.RangedForLoopsStart;
+        };
+        Language.prototype.getRangedForLoopsMiddle = function () {
+            return this.RangedForLoopsMiddle;
+        };
+        Language.prototype.getRangedForLoopsEnd = function () {
+            return this.RangedForLoopsEnd;
+        };
         Language.prototype.getArrayClass = function () {
             return this.ArrayClass;
         };
@@ -379,6 +388,18 @@ var GLS;
         };
         Language.prototype.setRangedForLoops = function (value) {
             this.RangedForLoops = value;
+            return this;
+        };
+        Language.prototype.setRangedForLoopsStart = function (value) {
+            this.RangedForLoopsStart = value;
+            return this;
+        };
+        Language.prototype.setRangedForLoopsMiddle = function (value) {
+            this.RangedForLoopsMiddle = value;
+            return this;
+        };
+        Language.prototype.setRangedForLoopsEnd = function (value) {
+            this.RangedForLoopsEnd = value;
             return this;
         };
         Language.prototype.setToString = function (value) {
@@ -779,25 +800,17 @@ var GLS;
         Language.prototype.ForEnd = function (functionArgs, isInline) {
             return [this.getConditionEnd(), -1];
         };
-        // string i, string type, string initial, string comparison, string boundary, string direction, string change
-        // e.x. i int 0 lessthan 7 increaseby 1
+        // string i, string type, string initial, string comparison, string boundary
+        // e.x. i int 0 lessthan 7
         Language.prototype.ForNumbersStart = function (functionArgs, isInline) {
             this.requireArgumentsLength("ClassStart", functionArgs, 7);
-            var output = "for" + this.getConditionStartLeft(), generalArgs, i = functionArgs[0], typeName = this.getTypeAlias(functionArgs[1]), initial = functionArgs[2], comparison = functionArgs[3], boundary = functionArgs[4], direction = functionArgs[5], change = functionArgs[6];
+            var output = "for" + this.getConditionStartLeft(), generalArgs, i = functionArgs[0], typeName = this.getTypeAlias(functionArgs[1]), initial = functionArgs[2], comparison = functionArgs[3], boundary = functionArgs[4], direction = "increaseby", change = "1";
             if (this.getRangedForLoops()) {
                 generalArgs = [i, typeName];
                 output += this.VariableDeclare(generalArgs, false)[0];
-                output += " in range(";
-                output += initial + ", " + boundary;
-                if (direction === "increaseby") {
-                    if (change !== "1") {
-                        output += ", " + change;
-                    }
-                }
-                else if (direction === "decreaseby") {
-                    output += ", -" + change;
-                }
-                output += ")";
+                output += this.getRangedForLoopsStart();
+                output += initial + this.getRangedForLoopsMiddle() + boundary;
+                output += this.getRangedForLoopsEnd();
             }
             else {
                 generalArgs = [i, typeName, initial];

@@ -35,11 +35,12 @@ module GLS.Languages {
         .setFunctionDefineEnd("end")
         .setMainEndLine("end")
         .setMainStartLine("if __FILE__ == $PROGRAM_NAME")
-        .setToString("")
+        .setToString(".to_s")
         .setRangedForLoops(true)
+        .setRangedForLoopsStart(" in ")
+        .setRangedForLoopsMiddle("..")
+        .setRangedForLoopsEnd("")
         .setFunctionReturnsExplicit(false)
         .setVariableTypesExplicit(false)
         .setVariableDeclareStart("")
-        .addValueAlias("False", "false")
-        .addValueAlias("True", "true");
 }

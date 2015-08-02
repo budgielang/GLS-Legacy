@@ -57,6 +57,9 @@ module GLS {
 
         // Loops
         private RangedForLoops: boolean;
+        private RangedForLoopsStart: string;
+        private RangedForLoopsMiddle: string;
+        private RangedForLoopsEnd: string;
 
         // Arrays
         private ArrayClass: string;
@@ -301,6 +304,18 @@ module GLS {
 
         public getRangedForLoops(): boolean {
             return this.RangedForLoops;
+        }
+
+        public getRangedForLoopsStart(): string {
+            return this.RangedForLoopsStart;
+        }
+
+        public getRangedForLoopsMiddle(): string {
+            return this.RangedForLoopsMiddle;
+        }
+
+        public getRangedForLoopsEnd(): string {
+            return this.RangedForLoopsEnd;
         }
 
         public getArrayClass(): string {
@@ -580,6 +595,21 @@ module GLS {
 
         public setRangedForLoops(value: boolean): Language {
             this.RangedForLoops = value;
+            return this;
+        }
+
+        public setRangedForLoopsStart(value: string): Language {
+            this.RangedForLoopsStart = value;
+            return this;
+        }
+
+        public setRangedForLoopsMiddle(value: string): Language {
+            this.RangedForLoopsMiddle = value;
+            return this;
+        }
+
+        public setRangedForLoopsEnd(value: string): Language {
+            this.RangedForLoopsEnd = value;
             return this;
         }
 
@@ -1121,8 +1151,8 @@ module GLS {
             return [this.getConditionEnd(), -1];
         }
 
-        // string i, string type, string initial, string comparison, string boundary, string direction, string change
-        // e.x. i int 0 lessthan 7 increaseby 1
+        // string i, string type, string initial, string comparison, string boundary
+        // e.x. i int 0 lessthan 7
         public ForNumbersStart(functionArgs: string[], isInline?: boolean): any[] {
             this.requireArgumentsLength("ClassStart", functionArgs, 7);
 
@@ -1133,25 +1163,16 @@ module GLS {
                 initial: string = functionArgs[2],
                 comparison: string = functionArgs[3],
                 boundary: string = functionArgs[4],
-                direction: string = functionArgs[5],
-                change: string = functionArgs[6];
+                direction: string = "increaseby",
+                change: string = "1"
 
             if (this.getRangedForLoops()) {
                 generalArgs = [i, typeName];
                 output += this.VariableDeclare(generalArgs, false)[0];
 
-                output += " in range(";
-                output += initial + ", " + boundary;
-
-                if (direction === "increaseby") {
-                    if (change !== "1") {
-                        output += ", " + change;
-                    }
-                } else if (direction === "decreaseby") {
-                    output += ", -" + change;
-                }
-
-                output += ")";
+                output += this.getRangedForLoopsStart();
+                output += initial + this.getRangedForLoopsMiddle() + boundary;
+                output += this.getRangedForLoopsEnd();
             } else {
                 generalArgs = [i, typeName, initial];
                 output += this.VariableDeclare(generalArgs, true)[0] + this.getSemiColon();
