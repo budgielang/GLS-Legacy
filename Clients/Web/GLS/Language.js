@@ -7,7 +7,6 @@ var GLS;
                 "class constructor start": this.ClassConstructorStart.bind(this),
                 "class end": this.ClassEnd.bind(this),
                 "class member function call": this.ClassMemberFunctionCall.bind(this),
-                // "class member function get": this.ClassMemberFunctionGet.bind(this),
                 "class member function end": this.ClassMemberFunctionEnd.bind(this),
                 "class member function start": this.ClassMemberFunctionStart.bind(this),
                 "class member variable declare": this.ClassMemberVariableDeclare.bind(this),
@@ -47,14 +46,14 @@ var GLS;
                 "plus": "+",
                 "minus": "-",
                 "times": "*",
-                "divided": "/",
+                "divide": "/",
                 "increaseby": "+=",
                 "decreaseby": "-=",
                 "multiplyby": "*=",
                 "divideby": "/=",
                 "lessthan": "<",
                 "greaterthan": ">",
-                "lessthanequal": ">",
+                "lessthanequal": "<=",
                 "greaterthanequal": ">="
             };
             this.TypeAliases = {};
@@ -239,6 +238,12 @@ var GLS;
         };
         Language.prototype.getClassStartRight = function () {
             return this.ClassStartRight;
+        };
+        Language.prototype.getClassTemplates = function () {
+            return this.ClassTemplates;
+        };
+        Language.prototype.getClassTemplatesBetween = function () {
+            return this.ClassTemplatesBetween;
         };
         Language.prototype.getClassThis = function () {
             return this.ClassThis;
@@ -499,6 +504,14 @@ var GLS;
             this.ClassStartRight = value;
             return this;
         };
+        Language.prototype.setClassTemplates = function (value) {
+            this.ClassTemplates = value;
+            return this;
+        };
+        Language.prototype.setClassTemplatesBetween = function (value) {
+            this.ClassTemplatesBetween = value;
+            return this;
+        };
         Language.prototype.setClassThis = function (value) {
             this.ClassThis = value;
             return this;
@@ -527,17 +540,58 @@ var GLS;
             this.MainStartLine = value;
             return this;
         };
-        Language.prototype.AliasOrDefault = function (aliases, key) {
+        /* Array & Template parsing
+        */
+        Language.prototype.parseType = function (text) {
+            if (this.typeontainsArray(text)) {
+                return this.parseTypeWithArray(text);
+            }
+            if (this.typeContainsTemplate(text)) {
+                return this.parseTypeWithTemplate(text);
+            }
+            return text;
+        };
+        Language.prototype.typeontainsArray = function (text) {
+            return name.indexOf("[") !== -1;
+        };
+        Language.prototype.typeContainsTemplate = function (text) {
+            return text.indexOf("<") !== -1;
+        };
+        Language.prototype.parseTypeWithArray = function (text) {
+            var bracketIndex = text.indexOf("["), name = text.substring(0, bracketIndex), remainder = text.substring(bracketIndex);
+            return this.getTypeAlias(name) + remainder;
+        };
+        Language.prototype.parseTypeWithTemplate = function (text) {
+            var ltIndex = text.indexOf("<"), output = text.substring(0, ltIndex), i = ltIndex + 1, spaceNext;
+            if (!this.getClassTemplates()) {
+                return output;
+            }
+            output += "<";
+            while (i < text.length) {
+                spaceNext = text.indexOf(" ", i);
+                if (spaceNext === -1) {
+                    break;
+                }
+                output += text.substring(i, spaceNext) + this.getClassTemplatesBetween();
+                i = spaceNext + 1;
+            }
+            output += text.substring(i, text.length - 1);
+            output += ">";
+            return output;
+        };
+        /* Miscellaneous
+        */
+        Language.prototype.getAliasOrDefault = function (aliases, key) {
             return aliases.hasOwnProperty(key) ? aliases[key] : key;
         };
         Language.prototype.getTypeAlias = function (key) {
-            return this.AliasOrDefault(this.TypeAliases, key);
+            return this.getAliasOrDefault(this.TypeAliases, key);
         };
         Language.prototype.getOperationAlias = function (key) {
-            return this.AliasOrDefault(this.OperationAliases, key);
+            return this.getAliasOrDefault(this.OperationAliases, key);
         };
         Language.prototype.getValueAlias = function (key) {
-            return this.AliasOrDefault(this.ValueAliases, key);
+            return this.getAliasOrDefault(this.ValueAliases, key);
         };
         Language.prototype.addTypeAlias = function (key, alias) {
             this.TypeAliases[alias] = key;
@@ -549,24 +603,6 @@ var GLS;
         };
         Language.prototype.addValueAlias = function (key, alias) {
             this.ValueAliases[alias] = key;
-            return this;
-        };
-        Language.prototype.inheritTypeAliases = function (language) {
-            for (var i in language.TypeAliases) {
-                this.addTypeAlias(language.TypeAliases[i], i);
-            }
-            return this;
-        };
-        Language.prototype.inheritOperationAliases = function (language) {
-            for (var i in language.OperationAliases) {
-                this.addOperationAlias(language.OperationAliases[i], i);
-            }
-            return this;
-        };
-        Language.prototype.inheritValueAliases = function (language) {
-            for (var i in language.ValueAliases) {
-                this.addValueAlias(language.ValueAliases[i], i);
-            }
             return this;
         };
         Language.prototype.print = function (functionName, functionArgs, isInline) {
@@ -672,12 +708,12 @@ var GLS;
         // string name, string visibility, string type
         Language.prototype.ClassMemberVariableDeclare = function (functionArgs, isInline) {
             this.requireArgumentsLength("ClassMemberVariableDeclare", functionArgs, 3);
-            var variableDeclarationArgs, variableDeclared;
+            var variableType = this.parseType(functionArgs[2]), variableDeclarationArgs, variableDeclared;
             if (this.getClassMemberVariableDefault() !== "") {
-                variableDeclarationArgs = [functionArgs[0], functionArgs[2], this.getClassMemberVariableDefault()];
+                variableDeclarationArgs = [functionArgs[0], variableType, this.getClassMemberVariableDefault()];
             }
             else {
-                variableDeclarationArgs = [functionArgs[0], functionArgs[2]];
+                variableDeclarationArgs = [functionArgs[0], variableType];
             }
             variableDeclared = this.VariableDeclarePartial(variableDeclarationArgs, isInline);
             if (!isInline) {
@@ -707,7 +743,9 @@ var GLS;
         // string name, string visibility
         Language.prototype.ClassStart = function (functionArgs, isInline) {
             this.requireArgumentsLength("ClassStart", functionArgs, 1);
-            var output = this.getClassStartLeft() + functionArgs[0] + this.getClassStartRight();
+            var output = this.getClassStartLeft();
+            output += this.parseType(functionArgs[0]);
+            output += this.getClassStartRight();
             if (functionArgs.length > 1) {
                 output = functionArgs[1] + " " + output;
             }
@@ -934,7 +972,14 @@ var GLS;
         // string name, string type[, string value]
         Language.prototype.VariableDeclare = function (functionArgs, isInline) {
             this.requireArgumentsLength("VariableDeclare", functionArgs, 2);
-            var variableDeclared = this.VariableDeclarePartial(functionArgs, isInline);
+            var variableType = this.parseType(functionArgs[1]), variableDeclarationArguments, variableDeclared;
+            if (functionArgs.length == 2) {
+                variableDeclarationArguments = [functionArgs[0], variableType];
+            }
+            else {
+                variableDeclarationArguments = [functionArgs[0], variableType, functionArgs[2]];
+            }
+            variableDeclared = this.VariableDeclarePartial(functionArgs, isInline);
             variableDeclared[0] = this.getVariableDeclareStart() + variableDeclared[0];
             if (!isInline) {
                 variableDeclared[0] = variableDeclared[0] + this.getSemiColon();

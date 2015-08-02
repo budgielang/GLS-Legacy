@@ -35,7 +35,7 @@ module GLS {
         private LessThanOrEqual: string;
         private Or: string;
 
-        //Variables
+        // Variables
         private VariableTypesExplicit: boolean;
         private VariableTypesAfterName: boolean;
         private VariableTypeMarker: string;
@@ -52,8 +52,8 @@ module GLS {
         // Strings
         private StringClass: string;
         private StringLength: string;
-        public ToString: string;
-        public ToStringAsFunction: boolean;
+        private ToString: string;
+        private ToStringAsFunction: boolean;
 
         // Loops
         private RangedForLoops: boolean;
@@ -75,6 +75,10 @@ module GLS {
 
         // Dictionaries
         private DictionaryClass: string;
+        private DictionaryNewLeft: string;
+        private DictionaryNewRight: string;
+        private DictionaryTypeLeft: string;
+        private DictionaryTypeRight: string;
 
         // Classes
         private ClassConstructorAsStatic: boolean;
@@ -90,6 +94,8 @@ module GLS {
         private ClassPrivacy: boolean;
         private ClassStartLeft: string;
         private ClassStartRight: string;
+        private ClassTemplates: boolean;
+        private ClassTemplatesBetween: string;
         private ClassThis: string;
         private ClassThisAccess: string;
 
@@ -108,7 +114,6 @@ module GLS {
                 "class constructor start": this.ClassConstructorStart.bind(this),
                 "class end": this.ClassEnd.bind(this),
                 "class member function call": this.ClassMemberFunctionCall.bind(this),
-                // "class member function get": this.ClassMemberFunctionGet.bind(this),
                 "class member function end": this.ClassMemberFunctionEnd.bind(this),
                 "class member function start": this.ClassMemberFunctionStart.bind(this),
                 "class member variable declare": this.ClassMemberVariableDeclare.bind(this),
@@ -405,6 +410,14 @@ module GLS {
 
         public getClassStartRight(): string {
             return this.ClassStartRight;
+        }
+
+        public getClassTemplates(): boolean {
+            return this.ClassTemplates;
+        }
+
+        public getClassTemplatesBetween(): string {
+            return this.ClassTemplatesBetween;
         }
 
         public getClassThis(): string {
@@ -734,6 +747,16 @@ module GLS {
             return this;
         }
 
+        public setClassTemplates(value: boolean): Language {
+            this.ClassTemplates = value;
+            return this;
+        }
+
+        public setClassTemplatesBetween(value: string): Language {
+            this.ClassTemplatesBetween = value;
+            return this;
+        }
+
         public setClassThis(value: string): Language {
             this.ClassThis = value;
             return this;
@@ -768,25 +791,85 @@ module GLS {
             this.MainStartLine = value;
             return this;
         }
+
+
+        /* Array & Template parsing
+        */
+
+        public parseType(text: string): string {
+            if (this.typeontainsArray(text)) {
+                return this.parseTypeWithArray(text);
+            }
+
+            if (this.typeContainsTemplate(text)) {
+                return this.parseTypeWithTemplate(text);
+            }
+
+            return text;
+        }
+
+        public typeontainsArray(text: string): boolean {
+            return name.indexOf("[") !== -1;
+        }
+
+        public typeContainsTemplate(text: string): boolean {
+            return text.indexOf("<") !== -1;
+        }
+
+        public parseTypeWithArray(text: string): string {
+            var bracketIndex: number = text.indexOf("["),
+                name: string = text.substring(0, bracketIndex),
+                remainder: string = text.substring(bracketIndex);
+
+            return this.getTypeAlias(name) + remainder;
+        }
+
+        public parseTypeWithTemplate(text: string): string {
+            var ltIndex: number = text.indexOf("<"),
+                output: string = text.substring(0, ltIndex),
+                i: number = ltIndex + 1,
+                spaceNext: number;
+
+            if (!this.getClassTemplates()) {
+                return output;
+            }
+
+            output += "<";
+
+            while (i < text.length) {
+                spaceNext = text.indexOf(" ", i);
+                if (spaceNext === -1) {
+                    break;
+                }
+
+                output += text.substring(i, spaceNext) + this.getClassTemplatesBetween();
+                i = spaceNext + 1;
+            }
+
+            output += text.substring(i, text.length - 1);
+            output += ">";
+
+            return output;
+        }
         
         
         /* Miscellaneous
         */
 
-        public AliasOrDefault(aliases: any, key: string): string {
+        public getAliasOrDefault(aliases: any, key: string): string {
             return aliases.hasOwnProperty(key) ? aliases[key] : key;
         }
 
         public getTypeAlias(key: string): string {
-            return this.AliasOrDefault(this.TypeAliases, key);
+            return this.getAliasOrDefault(this.TypeAliases, key);
         }
 
         public getOperationAlias(key: string): string {
-            return this.AliasOrDefault(this.OperationAliases, key);
+            return this.getAliasOrDefault(this.OperationAliases, key);
         }
 
         public getValueAlias(key: string): string {
-            return this.AliasOrDefault(this.ValueAliases, key);
+            return this.getAliasOrDefault(this.ValueAliases, key);
         }
 
         public addTypeAlias(key: string, alias: string): Language {
@@ -952,13 +1035,14 @@ module GLS {
         public ClassMemberVariableDeclare(functionArgs: string[], isInline?: boolean): any[] {
             this.requireArgumentsLength("ClassMemberVariableDeclare", functionArgs, 3);
 
-            var variableDeclarationArgs: string[], // = [functionArgs[0], functionArgs[2]],
+            var variableType = this.parseType(functionArgs[2]),
+                variableDeclarationArgs: string[],
                 variableDeclared: any[];
 
             if (this.getClassMemberVariableDefault() !== "") {
-                variableDeclarationArgs = [functionArgs[0], functionArgs[2], this.getClassMemberVariableDefault()];
+                variableDeclarationArgs = [functionArgs[0], variableType, this.getClassMemberVariableDefault()];
             } else {
-                variableDeclarationArgs = [functionArgs[0], functionArgs[2]];
+                variableDeclarationArgs = [functionArgs[0], variableType];
             }
 
             variableDeclared = this.VariableDeclarePartial(variableDeclarationArgs, isInline);
@@ -1001,7 +1085,9 @@ module GLS {
         public ClassStart(functionArgs: string[], isInline?: boolean): any[] {
             this.requireArgumentsLength("ClassStart", functionArgs, 1);
 
-            var output: string = this.getClassStartLeft() + functionArgs[0] + this.getClassStartRight();
+            var output: string = this.getClassStartLeft();
+            output += this.parseType(functionArgs[0]);
+            output += this.getClassStartRight();
 
             if (functionArgs.length > 1) {
                 output = functionArgs[1] + " " + output;
@@ -1331,8 +1417,17 @@ module GLS {
         public VariableDeclare(functionArgs: string[], isInline?: boolean): any[] {
             this.requireArgumentsLength("VariableDeclare", functionArgs, 2);
 
-            var variableDeclared: any[] = this.VariableDeclarePartial(functionArgs, isInline);
+            var variableType: string = this.parseType(functionArgs[1]),
+                variableDeclarationArguments: string[],
+                variableDeclared: any[];
 
+            if (functionArgs.length == 2) {
+                variableDeclarationArguments = [functionArgs[0], variableType];
+            } else {
+                variableDeclarationArguments = [functionArgs[0], variableType, functionArgs[2]];
+            }
+
+            variableDeclared = this.VariableDeclarePartial(functionArgs, isInline);
             variableDeclared[0] = this.getVariableDeclareStart() + variableDeclared[0];
 
             if (!isInline) {
