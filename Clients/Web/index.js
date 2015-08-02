@@ -55,15 +55,15 @@ document.onreadystatechange = function (event) {
             return;
         }
 
-        //try {
+        try {
             original = source.value;
             resultTexter.innerText = converter.parseCommands(language, original.split("\n"));
             localStorage.setItem("original", original);
             Prism.highlightAll();
-        //} catch (error) {
-        //    // Logging errors is spammy, so it's not done...
-        //    console.log(error.toString());
-        //}
+        } catch (error) {
+            // Logging errors is spammy, so it's not done...
+            console.log(error.toString());
+        }
     }
 
     function checkLanguageDefault() {
@@ -227,6 +227,14 @@ document.onreadystatechange = function (event) {
     "        class member function start : Point public getManhattanTotal int",
     "                function return : { operation : { class member variable get : x } plus { class member variable get : y } }",
     "        class member function end",
+    "    class end",
+    "    ",
+    "    class start : PointLabeled<T> public Point",
+    "        class member variable declare : label public T",
+    "        ",
+    "        class constructor start : PointLabeled x int y int label T",
+    "            ",
+    "        class constructor end",
     "    class end",
     "file end",
     "",
