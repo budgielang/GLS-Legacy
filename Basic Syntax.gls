@@ -4,7 +4,7 @@ file start : SampleFile
     function start : sayHello void
         print line : ("Hello world!")
     function end
-    function start : combineStrings string a string b string
+    function start : combineAsStrings string a string b string
         function return : { concatenate : a b }
     function end
 
@@ -80,9 +80,9 @@ file start : SampleFile
 
         comment line : (Calling Functions)
         function call : sayHello
-        function call : combineStrings "hello" "world"
-        function call : combineStrings { operation : "hello" plus (" ") } "world"
-        function call : combineStrings { function call : combineStrings "hello" "world" } "world"
+        function call : combineAsStrings "hello" "world"
+        function call : combineAsStrings { operation : "hello" plus (" ") } "world"
+        function call : combineAsStrings { function call : combineAsStrings "hello" "world" } "world"
 
         comment line : (Class Usage)
         variable declare : g Point { class new : Point 3 7 }
