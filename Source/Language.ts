@@ -768,6 +768,10 @@ module GLS {
             this.MainStartLine = value;
             return this;
         }
+        
+        
+        /* Miscellaneous
+        */
 
         public AliasOrDefault(aliases: any, key: string): string {
             return aliases.hasOwnProperty(key) ? aliases[key] : key;
@@ -797,30 +801,6 @@ module GLS {
 
         public addValueAlias(key: string, alias: string): Language {
             this.ValueAliases[alias] = key;
-            return this;
-        }
-
-        public inheritTypeAliases(language: Language): Language {
-            for (var i in language.TypeAliases) {
-                this.addTypeAlias(language.TypeAliases[i], i);
-            }
-
-            return this;
-        }
-
-        public inheritOperationAliases(language: Language): Language {
-            for (var i in language.OperationAliases) {
-                this.addOperationAlias(language.OperationAliases[i], i);
-            }
-
-            return this;
-        }
-
-        public inheritValueAliases(language: Language): Language {
-            for (var i in language.ValueAliases) {
-                this.addValueAlias(language.ValueAliases[i], i);
-            }
-
             return this;
         }
 
