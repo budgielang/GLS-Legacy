@@ -35,7 +35,7 @@ module GLS {
         private LessThanOrEqual: string;
         private Or: string;
 
-        //Variables
+        // Variables
         private VariableTypesExplicit: boolean;
         private VariableTypesAfterName: boolean;
         private VariableTypeMarker: string;
@@ -52,8 +52,8 @@ module GLS {
         // Strings
         private StringClass: string;
         private StringLength: string;
-        public ToString: string;
-        public ToStringAsFunction: boolean;
+        private ToString: string;
+        private ToStringAsFunction: boolean;
 
         // Loops
         private RangedForLoops: boolean;
@@ -75,6 +75,10 @@ module GLS {
 
         // Dictionaries
         private DictionaryClass: string;
+        private DictionaryNewLeft: string;
+        private DictionaryNewRight: string;
+        private DictionaryTypeLeft: string;
+        private DictionaryTypeRight: string;
 
         // Classes
         private ClassConstructorAsStatic: boolean;
@@ -90,6 +94,8 @@ module GLS {
         private ClassPrivacy: boolean;
         private ClassStartLeft: string;
         private ClassStartRight: string;
+        private ClassTemplates: boolean;
+        private ClassTemplatesBetween: string;
         private ClassThis: string;
         private ClassThisAccess: string;
 
@@ -108,7 +114,6 @@ module GLS {
                 "class constructor start": this.ClassConstructorStart.bind(this),
                 "class end": this.ClassEnd.bind(this),
                 "class member function call": this.ClassMemberFunctionCall.bind(this),
-                // "class member function get": this.ClassMemberFunctionGet.bind(this),
                 "class member function end": this.ClassMemberFunctionEnd.bind(this),
                 "class member function start": this.ClassMemberFunctionStart.bind(this),
                 "class member variable declare": this.ClassMemberVariableDeclare.bind(this),
@@ -149,14 +154,14 @@ module GLS {
                 "plus": "+",
                 "minus": "-",
                 "times": "*",
-                "divided": "/",
+                "divide": "/",
                 "increaseby": "+=",
                 "decreaseby": "-=",
                 "multiplyby": "*=",
                 "divideby": "/=",
                 "lessthan": "<",
                 "greaterthan": ">",
-                "lessthanequal": ">",
+                "lessthanequal": "<=",
                 "greaterthanequal": ">="
             };
 
@@ -405,6 +410,14 @@ module GLS {
 
         public getClassStartRight(): string {
             return this.ClassStartRight;
+        }
+
+        public getClassTemplates(): boolean {
+            return this.ClassTemplates;
+        }
+
+        public getClassTemplatesBetween(): string {
+            return this.ClassTemplatesBetween;
         }
 
         public getClassThis(): string {
@@ -734,6 +747,16 @@ module GLS {
             return this;
         }
 
+        public setClassTemplates(value: boolean): Language {
+            this.ClassTemplates = value;
+            return this;
+        }
+
+        public setClassTemplatesBetween(value: string): Language {
+            this.ClassTemplatesBetween = value;
+            return this;
+        }
+
         public setClassThis(value: string): Language {
             this.ClassThis = value;
             return this;
@@ -769,20 +792,85 @@ module GLS {
             return this;
         }
 
-        public AliasOrDefault(aliases: any, key: string): string {
+
+        /* Array & Template parsing
+        */
+
+        public parseName(text: string): string {
+            if (this.nameContainsArray(text)) {
+                return this.parseNameWithArray(text);
+            }
+
+            if (this.nameContainsTemplate(text)) {
+                return this.parseNameWithTemplate(text);
+            }
+
+            return text;
+        }
+
+        public nameContainsArray(text: string): boolean {
+            return name.indexOf("[") !== -1;
+        }
+
+        public nameContainsTemplate(text: string): boolean {
+            return text.indexOf("<") !== -1;
+        }
+
+        public parseNameWithArray(text: string): string {
+            var bracketIndex: number = text.indexOf("["),
+                name: string = text.substring(0, bracketIndex),
+                remainder: string = text.substring(bracketIndex);
+
+            return this.getTypeAlias(name) + remainder;
+        }
+
+        // Needs to be tested in console
+        public parseNameWithTemplate(text: string): string {
+            var ltIndex: number = text.indexOf("<"),
+                output: string = text.substring(0, ltIndex),
+                i: number = ltIndex + 1,
+                spaceNext: number;
+
+            if (!this.getClassTemplates()) {
+                return output;
+            }
+
+            output += "<";
+
+            while (i < text.length) {
+                spaceNext = text.indexOf(" ", i);
+                if (spaceNext === -1) {
+                    break;
+                }
+
+                output += text.substring(i, spaceNext) + this.getClassTemplatesBetween();
+                i = spaceNext + 1;
+            }
+
+            output += text.substring(i, text.length - 1);
+            output += ">";
+
+            return output;
+        }
+        
+        
+        /* Miscellaneous
+        */
+
+        public getAliasOrDefault(aliases: any, key: string): string {
             return aliases.hasOwnProperty(key) ? aliases[key] : key;
         }
 
         public getTypeAlias(key: string): string {
-            return this.AliasOrDefault(this.TypeAliases, key);
+            return this.getAliasOrDefault(this.TypeAliases, key);
         }
 
         public getOperationAlias(key: string): string {
-            return this.AliasOrDefault(this.OperationAliases, key);
+            return this.getAliasOrDefault(this.OperationAliases, key);
         }
 
         public getValueAlias(key: string): string {
-            return this.AliasOrDefault(this.ValueAliases, key);
+            return this.getAliasOrDefault(this.ValueAliases, key);
         }
 
         public addTypeAlias(key: string, alias: string): Language {
@@ -797,30 +885,6 @@ module GLS {
 
         public addValueAlias(key: string, alias: string): Language {
             this.ValueAliases[alias] = key;
-            return this;
-        }
-
-        public inheritTypeAliases(language: Language): Language {
-            for (var i in language.TypeAliases) {
-                this.addTypeAlias(language.TypeAliases[i], i);
-            }
-
-            return this;
-        }
-
-        public inheritOperationAliases(language: Language): Language {
-            for (var i in language.OperationAliases) {
-                this.addOperationAlias(language.OperationAliases[i], i);
-            }
-
-            return this;
-        }
-
-        public inheritValueAliases(language: Language): Language {
-            for (var i in language.ValueAliases) {
-                this.addValueAlias(language.ValueAliases[i], i);
-            }
-
             return this;
         }
 

@@ -7,7 +7,6 @@ var GLS;
                 "class constructor start": this.ClassConstructorStart.bind(this),
                 "class end": this.ClassEnd.bind(this),
                 "class member function call": this.ClassMemberFunctionCall.bind(this),
-                // "class member function get": this.ClassMemberFunctionGet.bind(this),
                 "class member function end": this.ClassMemberFunctionEnd.bind(this),
                 "class member function start": this.ClassMemberFunctionStart.bind(this),
                 "class member variable declare": this.ClassMemberVariableDeclare.bind(this),
@@ -47,14 +46,14 @@ var GLS;
                 "plus": "+",
                 "minus": "-",
                 "times": "*",
-                "divided": "/",
+                "divide": "/",
                 "increaseby": "+=",
                 "decreaseby": "-=",
                 "multiplyby": "*=",
                 "divideby": "/=",
                 "lessthan": "<",
                 "greaterthan": ">",
-                "lessthanequal": ">",
+                "lessthanequal": "<=",
                 "greaterthanequal": ">="
             };
             this.TypeAliases = {};
@@ -239,6 +238,12 @@ var GLS;
         };
         Language.prototype.getClassStartRight = function () {
             return this.ClassStartRight;
+        };
+        Language.prototype.getClassTemplates = function () {
+            return this.ClassTemplates;
+        };
+        Language.prototype.getClassTemplatesBetween = function () {
+            return this.ClassTemplatesBetween;
         };
         Language.prototype.getClassThis = function () {
             return this.ClassThis;
@@ -499,6 +504,14 @@ var GLS;
             this.ClassStartRight = value;
             return this;
         };
+        Language.prototype.setClassTemplates = function (value) {
+            this.ClassTemplates = value;
+            return this;
+        };
+        Language.prototype.setClassTemplatesBetween = function (value) {
+            this.ClassTemplatesBetween = value;
+            return this;
+        };
         Language.prototype.setClassThis = function (value) {
             this.ClassThis = value;
             return this;
@@ -527,17 +540,59 @@ var GLS;
             this.MainStartLine = value;
             return this;
         };
-        Language.prototype.AliasOrDefault = function (aliases, key) {
+        /* Array & Template parsing
+        */
+        Language.prototype.parseName = function (text) {
+            if (this.nameContainsArray(text)) {
+                return this.parseNameWithArray(text);
+            }
+            if (this.nameContainsTemplate(text)) {
+                return this.parseNameWithTemplate(text);
+            }
+            return text;
+        };
+        Language.prototype.nameContainsArray = function (text) {
+            return name.indexOf("[") !== -1;
+        };
+        Language.prototype.nameContainsTemplate = function (text) {
+            return text.indexOf("<") !== -1;
+        };
+        Language.prototype.parseNameWithArray = function (text) {
+            var bracketIndex = text.indexOf("["), name = text.substring(0, bracketIndex), remainder = text.substring(bracketIndex);
+            return this.getTypeAlias(name) + remainder;
+        };
+        // Needs to be tested in console
+        Language.prototype.parseNameWithTemplate = function (text) {
+            var ltIndex = text.indexOf("<"), output = text.substring(0, ltIndex), i = ltIndex + 1, spaceNext;
+            if (!this.getClassTemplates()) {
+                return output;
+            }
+            output += "<";
+            while (i < text.length) {
+                spaceNext = text.indexOf(" ", i);
+                if (spaceNext === -1) {
+                    break;
+                }
+                output += text.substring(i, spaceNext) + this.getClassTemplatesBetween();
+                i = spaceNext + 1;
+            }
+            output += text.substring(i, text.length - 1);
+            output += ">";
+            return output;
+        };
+        /* Miscellaneous
+        */
+        Language.prototype.getAliasOrDefault = function (aliases, key) {
             return aliases.hasOwnProperty(key) ? aliases[key] : key;
         };
         Language.prototype.getTypeAlias = function (key) {
-            return this.AliasOrDefault(this.TypeAliases, key);
+            return this.getAliasOrDefault(this.TypeAliases, key);
         };
         Language.prototype.getOperationAlias = function (key) {
-            return this.AliasOrDefault(this.OperationAliases, key);
+            return this.getAliasOrDefault(this.OperationAliases, key);
         };
         Language.prototype.getValueAlias = function (key) {
-            return this.AliasOrDefault(this.ValueAliases, key);
+            return this.getAliasOrDefault(this.ValueAliases, key);
         };
         Language.prototype.addTypeAlias = function (key, alias) {
             this.TypeAliases[alias] = key;
@@ -549,24 +604,6 @@ var GLS;
         };
         Language.prototype.addValueAlias = function (key, alias) {
             this.ValueAliases[alias] = key;
-            return this;
-        };
-        Language.prototype.inheritTypeAliases = function (language) {
-            for (var i in language.TypeAliases) {
-                this.addTypeAlias(language.TypeAliases[i], i);
-            }
-            return this;
-        };
-        Language.prototype.inheritOperationAliases = function (language) {
-            for (var i in language.OperationAliases) {
-                this.addOperationAlias(language.OperationAliases[i], i);
-            }
-            return this;
-        };
-        Language.prototype.inheritValueAliases = function (language) {
-            for (var i in language.ValueAliases) {
-                this.addValueAlias(language.ValueAliases[i], i);
-            }
             return this;
         };
         Language.prototype.print = function (functionName, functionArgs, isInline) {

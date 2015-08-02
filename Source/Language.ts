@@ -95,6 +95,7 @@ module GLS {
         private ClassStartLeft: string;
         private ClassStartRight: string;
         private ClassTemplates: boolean;
+        private ClassTemplatesBetween: string;
         private ClassThis: string;
         private ClassThisAccess: string;
 
@@ -413,6 +414,10 @@ module GLS {
 
         public getClassTemplates(): boolean {
             return this.ClassTemplates;
+        }
+
+        public getClassTemplatesBetween(): string {
+            return this.ClassTemplatesBetween;
         }
 
         public getClassThis(): string {
@@ -747,6 +752,11 @@ module GLS {
             return this;
         }
 
+        public setClassTemplatesBetween(value: string): Language {
+            this.ClassTemplatesBetween = value;
+            return this;
+        }
+
         public setClassThis(value: string): Language {
             this.ClassThis = value;
             return this;
@@ -780,6 +790,67 @@ module GLS {
         public setMainStartLine(value: string): Language {
             this.MainStartLine = value;
             return this;
+        }
+
+
+        /* Array & Template parsing
+        */
+
+        public parseName(text: string): string {
+            if (this.nameContainsArray(text)) {
+                return this.parseNameWithArray(text);
+            }
+
+            if (this.nameContainsTemplate(text)) {
+                return this.parseNameWithTemplate(text);
+            }
+
+            return text;
+        }
+
+        public nameContainsArray(text: string): boolean {
+            return name.indexOf("[") !== -1;
+        }
+
+        public nameContainsTemplate(text: string): boolean {
+            return text.indexOf("<") !== -1;
+        }
+
+        public parseNameWithArray(text: string): string {
+            var bracketIndex: number = text.indexOf("["),
+                name: string = text.substring(0, bracketIndex),
+                remainder: string = text.substring(bracketIndex);
+
+            return this.getTypeAlias(name) + remainder;
+        }
+
+        // Needs to be tested in console
+        public parseNameWithTemplate(text: string): string {
+            var ltIndex: number = text.indexOf("<"),
+                output: string = text.substring(0, ltIndex),
+                i: number = ltIndex + 1,
+                spaceNext: number;
+
+            if (!this.getClassTemplates()) {
+                return output;
+            }
+
+            output += "<";
+
+            while (i < text.length) {
+                spaceNext = text.indexOf(" ", i);
+                if (spaceNext === -1) {
+                    break;
+                }
+
+                output += text.substring(i, spaceNext) + this.getClassTemplatesBetween();
+                i = spaceNext + 1;
+            }
+
+            output += text.substring(i, text.length - 1);
+            output += ">";
+
+            return output;
         }
         
         

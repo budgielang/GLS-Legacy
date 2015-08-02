@@ -15,6 +15,8 @@ module GLS.Languages {
         .setClassPrivacy(true)
         .setClassStartLeft("class ")
         .setClassStartRight(" {")
+        .setClassTemplates(true)
+        .setClassTemplatesBetween(", ")
         .setClassThis("this")
         .setClassThisAccess(".")
         .setCommentorBlockStart("/*")
