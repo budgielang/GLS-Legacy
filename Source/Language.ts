@@ -82,8 +82,11 @@ module GLS {
 
         // Classes
         private ClassConstructorAsStatic: boolean;
+        private ClassConstructorInheritedName: string;
+        private ClassConstructorInheritedShorthand: boolean;
         private ClassConstructorName: string;
         private ClassEnder: string;
+        private ClassExtends: string;
         private ClassFunctionsTakeThis: boolean;
         private ClassFunctionsStart: string;
         private ClassFunctionsThis: string;
@@ -111,6 +114,8 @@ module GLS {
         constructor() {
             this.printers = {
                 "class constructor end": this.ClassConstructorEnd.bind(this),
+                // "class constructor inherited call": this.ClassConstructorInheritedCall.bind(this),
+                // "class constructor inherited start": this.ClassConstructorInheritedStart.bind(this),
                 "class constructor start": this.ClassConstructorStart.bind(this),
                 "class end": this.ClassEnd.bind(this),
                 "class member function call": this.ClassMemberFunctionCall.bind(this),
