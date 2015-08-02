@@ -1132,7 +1132,7 @@ module GLS {
 
             output += this.getClassStartRight();
 
-            if (functionArgs.length > 1) {
+            if (this.getClassPrivacy() && functionArgs.length > 1) {
                 output = functionArgs[1] + " " + output;
             }
 
