@@ -7,6 +7,7 @@ module GLS.Languages {
         .setClassConstructorAsStatic(true)
         .setClassConstructorName("def initialize")
         .setClassEnder("end")
+        .setClassExtends("<")
         .setClassFunctionsStart("def ")
         .setClassFunctionsTakeThis(false)
         .setClassFunctionsThis("")

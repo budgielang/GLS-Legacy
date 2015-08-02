@@ -6,6 +6,7 @@ module GLS.Languages {
         .setSemiColon("")
         .setClassConstructorName("def __init__")
         .setClassEnder("\0")
+        .setClassExtendsAsFunction(true)
         .setClassFunctionsStart("def ")
         .setClassFunctionsTakeThis(true)
         .setClassFunctionsThis("self")

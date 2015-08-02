@@ -87,6 +87,7 @@ module GLS {
         private ClassConstructorName: string;
         private ClassEnder: string;
         private ClassExtends: string;
+        private ClassExtendsAsFunction: boolean;
         private ClassFunctionsTakeThis: boolean;
         private ClassFunctionsStart: string;
         private ClassFunctionsThis: string;
@@ -114,8 +115,8 @@ module GLS {
         constructor() {
             this.printers = {
                 "class constructor end": this.ClassConstructorEnd.bind(this),
-                // "class constructor inherited call": this.ClassConstructorInheritedCall.bind(this),
-                // "class constructor inherited start": this.ClassConstructorInheritedStart.bind(this),
+                "class constructor inherited call": this.ClassConstructorInheritedCall.bind(this),
+                "class constructor inherited start": this.ClassConstructorInheritedStart.bind(this),
                 "class constructor start": this.ClassConstructorStart.bind(this),
                 "class end": this.ClassEnd.bind(this),
                 "class member function call": this.ClassMemberFunctionCall.bind(this),
@@ -375,6 +376,14 @@ module GLS {
 
         public getClassEnder(): string {
             return this.ClassEnder;
+        }
+
+        public getClassExtends(): string {
+            return this.ClassExtends;
+        }
+
+        public getClassExtendsAsFunction(): boolean {
+            return this.ClassExtendsAsFunction;
         }
 
         public getClassFunctionsTakeThis(): boolean {
@@ -702,6 +711,16 @@ module GLS {
             return this;
         }
 
+        public setClassExtends(value: string): Language {
+            this.ClassExtends = value;
+            return this;
+        }
+
+        public setClassExtendsAsFunction(value: boolean): Language {
+            this.ClassExtendsAsFunction = value;
+            return this;
+        }
+
         public setClassFunctionsTakeThis(value: boolean): Language {
             this.ClassFunctionsTakeThis = value;
             return this;
@@ -908,6 +927,16 @@ module GLS {
             return [this.getFunctionDefineEnd(), -1];
         }
 
+        // [string argumentName, string argumentType, ...]
+        public ClassConstructorInheritedCall(functionArgs: string[], isInline?: boolean): any[] {
+            return undefined;
+        }
+
+        // string name[, string superCall[, string argumentName, string argumentType, ...]]
+        public ClassConstructorInheritedStart(functionArgs: string[], isInline?: boolean): any[] {
+            return undefined;
+        }
+
         // string name[, string argumentName, string argumentType, ...]
         public ClassConstructorStart(functionArgs: string[], isInline?: boolean): any[] {
             this.requireArgumentsLength("ClassConstructorStart", functionArgs, 1);
@@ -1086,12 +1115,21 @@ module GLS {
             return [output, 0];
         }
 
-        // string name, string visibility
+        // string name[, string visibility[, string parentClass]]
         public ClassStart(functionArgs: string[], isInline?: boolean): any[] {
             this.requireArgumentsLength("ClassStart", functionArgs, 1);
 
             var output: string = this.getClassStartLeft();
             output += this.parseType(functionArgs[0]);
+
+            if (functionArgs.length > 2) {
+                if (this.getClassExtendsAsFunction()) {
+                    output += "(" + this.parseType(functionArgs[2]) + ")";
+                } else {
+                    output += " " + this.getClassExtends() + " " + this.parseType(functionArgs[2]) + " ";
+                }
+            }
+
             output += this.getClassStartRight();
 
             if (functionArgs.length > 1) {

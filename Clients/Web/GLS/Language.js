@@ -4,8 +4,8 @@ var GLS;
         function Language() {
             this.printers = {
                 "class constructor end": this.ClassConstructorEnd.bind(this),
-                // "class constructor inherited call": this.ClassConstructorInheritedCall.bind(this),
-                // "class constructor inherited start": this.ClassConstructorInheritedStart.bind(this),
+                "class constructor inherited call": this.ClassConstructorInheritedCall.bind(this),
+                "class constructor inherited start": this.ClassConstructorInheritedStart.bind(this),
                 "class constructor start": this.ClassConstructorStart.bind(this),
                 "class end": this.ClassEnd.bind(this),
                 "class member function call": this.ClassMemberFunctionCall.bind(this),
@@ -210,6 +210,12 @@ var GLS;
         };
         Language.prototype.getClassEnder = function () {
             return this.ClassEnder;
+        };
+        Language.prototype.getClassExtends = function () {
+            return this.ClassExtends;
+        };
+        Language.prototype.getClassExtendsAsFunction = function () {
+            return this.ClassExtendsAsFunction;
         };
         Language.prototype.getClassFunctionsTakeThis = function () {
             return this.ClassFunctionsTakeThis;
@@ -466,6 +472,14 @@ var GLS;
             this.ClassEnder = value;
             return this;
         };
+        Language.prototype.setClassExtends = function (value) {
+            this.ClassExtends = value;
+            return this;
+        };
+        Language.prototype.setClassExtendsAsFunction = function (value) {
+            this.ClassExtendsAsFunction = value;
+            return this;
+        };
         Language.prototype.setClassFunctionsTakeThis = function (value) {
             this.ClassFunctionsTakeThis = value;
             return this;
@@ -618,6 +632,14 @@ var GLS;
         Language.prototype.ClassConstructorEnd = function (functionArgs, isInline) {
             return [this.getFunctionDefineEnd(), -1];
         };
+        // [string argumentName, string argumentType, ...]
+        Language.prototype.ClassConstructorInheritedCall = function (functionArgs, isInline) {
+            return undefined;
+        };
+        // string name[, string superCall[, string argumentName, string argumentType, ...]]
+        Language.prototype.ClassConstructorInheritedStart = function (functionArgs, isInline) {
+            return undefined;
+        };
         // string name[, string argumentName, string argumentType, ...]
         Language.prototype.ClassConstructorStart = function (functionArgs, isInline) {
             this.requireArgumentsLength("ClassConstructorStart", functionArgs, 1);
@@ -742,11 +764,19 @@ var GLS;
             output += this.getSemiColon();
             return [output, 0];
         };
-        // string name, string visibility
+        // string name[, string visibility[, string parentClass]]
         Language.prototype.ClassStart = function (functionArgs, isInline) {
             this.requireArgumentsLength("ClassStart", functionArgs, 1);
             var output = this.getClassStartLeft();
             output += this.parseType(functionArgs[0]);
+            if (functionArgs.length > 2) {
+                if (this.getClassExtendsAsFunction()) {
+                    output += "(" + this.parseType(functionArgs[2]) + ")";
+                }
+                else {
+                    output += " " + this.getClassExtends() + " " + this.parseType(functionArgs[2]) + " ";
+                }
+            }
             output += this.getClassStartRight();
             if (functionArgs.length > 1) {
                 output = functionArgs[1] + " " + output;
