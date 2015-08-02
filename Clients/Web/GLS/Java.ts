@@ -33,7 +33,7 @@ module GLS.Languages {
         .setFunctionReturnsExplicit(true)
         .setFunctionTypeAfterName(false)
         .setMainEndLine("}")
-        .setMainStartLine("public static void main() {")
+        .setMainStartLine("public void main() {")
         .setToString("String.valueOf")
         .setToStringAsFunction(true)
         .setRangedForLoops(false)
