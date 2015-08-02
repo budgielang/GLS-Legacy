@@ -1,8 +1,13 @@
 class start : Language
     class member variable declare : printers private dictionary
-    class member variable declare : OperationAliases private dictionary;
-    class member variable declare : TypeAliases private dictionary;
-    class member variable declare : ValueAliases private dictionary;
-    class member variable declare : INT_MIN private number;
+    class member variable declare : OperationAliases private dictionary
+    class member variable declare : TypeAliases private dictionary
+    class member variable declare : ValueAliases private dictionary
+    class member variable declare : INT_MIN private number
     
+    comment line : (General information)
+    class member variable declare : Name private string
+    class member variable declare : Extension private string
+    class member variable declare : PrintFunction private string
+    class member variable declare : SemiColon private string
 class end
