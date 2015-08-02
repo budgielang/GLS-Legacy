@@ -65,7 +65,7 @@ body {
 
 #selecter {
     position: absolute;
-    top: 28px;
+    bottom: 35%;
     right: 28px;
     padding: 7px 11px;
     background: #333;
@@ -101,5 +101,10 @@ body {
     #languageSelectElement {
         margin-left: -50px;
         width: 100px;
+    }
+
+    #selecter {
+        top: 28px;
+        bottom: auto;
     }
 }
