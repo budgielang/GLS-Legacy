@@ -137,5 +137,269 @@ class start : Language
         class member variable set : INT_MIN -9001
     class constructor end
     
+    comment block : Gets
     
+    class member function start : Language public getName string
+        function return : { class member variable get : Name }
+    class member function end
+    
+    class member function start : Language public getExtension string
+        function return : { class member variable get : Extension }
+    class member function end
+    
+    class member function start : Language public getPrintFunction string
+        function return : { class member variable get : PrintFunction }
+    class member function end
+
+    class member function start : Language public getSemiColon string
+        function return : { class member variable get : SemiColon }
+    class member function end
+
+    class member function start : Language public getCommentorBlockStart string
+        function return : { class member variable get : CommentorBlockStart }
+    class member function end
+
+    class member function start : Language public getCommentorBlockEnd string
+        function return : { class member variable get : CommentorBlockEnd }
+    class member function end
+
+    class member function start : Language public getCommentorInline string
+        function return : { class member variable get : CommentorInline }
+    class member function end
+
+    class member function start : Language public getConditionStartLeft string
+        function return : { class member variable get : ConditionStartLeft }
+    class member function end
+
+    class member function start : Language public getConditionStartRight string
+        function return : { class member variable get : ConditionStartRight }
+    class member function end
+
+    class member function start : Language public getConditionContinueLeft string
+        function return : { class member variable get : ConditionContinueLeft }
+    class member function end
+
+    class member function start : Language public getConditionContinueRight string
+        function return : { class member variable get : ConditionContinueRight }
+    class member function end
+
+    class member function start : Language public getConditionEnd string
+        function return : { class member variable get : ConditionEnd }
+    class member function end
+
+    class member function start : Language public getElif string
+        function return : { class member variable get : Elif }
+    class member function end
+
+    class member function start : Language public getElse string
+        function return : { class member variable get : Else }
+    class member function end
+
+    class member function start : Language public getIf string
+        function return : { class member variable get : If }
+    class member function end
+
+    class member function start : Language public getAnd string
+        function return : { class member variable get : And }
+    class member function end
+
+    class member function start : Language public getGreaterThan string
+        function return : { class member variable get : GreaterThan }
+    class member function end
+
+    class member function start : Language public getGreaterThanOrEqual string
+        function return : { class member variable get : GreaterThanOrEqual }
+    class member function end
+
+    class member function start : Language public getLessThan string
+        function return : { class member variable get : LessThan }
+    class member function end
+
+    class member function start : Language public getLessThanOrEqual string
+        function return : { class member variable get : LessThanOrEqual }
+    class member function end
+
+    class member function start : Language public getOr string
+        function return : { class member variable get : Or }
+    class member function end
+
+    class member function start : Language public getVariableTypesExplicit boolean
+        function return : { class member variable get : VariableTypesExplicit }
+    class member function end
+
+    class member function start : Language public getVariableTypesAfterName boolean
+        function return : { class member variable get : VariableTypesAfterName }
+    class member function end
+
+    class member function start : Language public getVariableTypeMarker string
+        function return : { class member variable get : VariableTypeMarker }
+    class member function end
+
+    class member function start : Language public getVariableDeclareStart string
+        function return : { class member variable get : VariableDeclareStart }
+    class member function end
+
+    class member function start : Language public getBooleanClass string
+        function return : { class member variable get : BooleanClass }
+    class member function end
+
+    class member function start : Language public getTrue string
+        function return : { class member variable get : True }
+    class member function end
+
+    class member function start : Language public getFalse string
+        function return : { class member variable get : False }
+    class member function end
+
+    class member function start : Language public getNumberClass string
+        function return : { class member variable get : NumberClass }
+    class member function end
+
+    class member function start : Language public getStringClass string
+        function return : { class member variable get : StringClass }
+    class member function end
+
+    class member function start : Language public getStringLength string
+        function return : { class member variable get : StringLength }
+    class member function end
+
+    class member function start : Language public getToString string
+        function return : { class member variable get : ToString }
+    class member function end
+
+    class member function start : Language public getToStringAsFunction boolean
+        function return : { class member variable get : ToStringAsFunction }
+    class member function end
+
+    class member function start : Language public getRangedForLoops boolean
+        function return : { class member variable get : RangedForLoops }
+    class member function end
+
+    class member function start : Language public getRangedForLoopsStart string
+        function return : { class member variable get : RangedForLoopsStart }
+    class member function end
+
+    class member function start : Language public getRangedForLoopsMiddle string
+        function return : { class member variable get : RangedForLoopsMiddle }
+    class member function end
+
+    class member function start : Language public getRangedForLoopsEnd string
+        function return : { class member variable get : RangedForLoopsEnd }
+    class member function end
+
+    class member function start : Language public getArrayClass string
+        function return : { class member variable get : ArrayClass }
+    class member function end
+
+    class member function start : Language public getArrayLength string
+        function return : { class member variable get : ArrayLength }
+    class member function end
+
+    class member function start : Language public getFunctionDefine string
+        function return : { class member variable get : FunctionDefine }
+    class member function end
+
+    class member function start : Language public getFunctionDefineRight string
+        function return : { class member variable get : FunctionDefineRight }
+    class member function end
+
+    class member function start : Language public getFunctionDefineEnd string
+        function return : { class member variable get : FunctionDefineEnd }
+    class member function end
+
+    class member function start : Language public getFunctionReturnsExplicit boolean
+        function return : { class member variable get : FunctionReturnsExplicit }
+    class member function end
+
+    class member function start : Language public getFunctionTypeMarker string
+        function return : { class member variable get : FunctionTypeMarker }
+    class member function end
+
+    class member function start : Language public getFunctionTypeAfterName boolean
+        function return : { class member variable get : FunctionTypeAfterName }
+    class member function end
+
+    class member function start : Language public getDictionaryClass string
+        function return : { class member variable get : DictionaryClass }
+    class member function end
+
+    class member function start : Language public getClassConstructorAsStatic boolean
+        function return : { class member variable get : ClassConstructorAsStatic }
+    class member function end
+
+    class member function start : Language public getClassConstructorName string
+        function return : { class member variable get : ClassConstructorName }
+    class member function end
+
+    class member function start : Language public getClassEnder string
+        function return : { class member variable get : ClassEnder }
+    class member function end
+
+    class member function start : Language public getClassFunctionsTakeThis boolean
+        function return : { class member variable get : ClassFunctionsTakeThis }
+    class member function end
+
+    class member function start : Language public getClassFunctionsStart string
+        function return : { class member variable get : ClassFunctionsStart }
+    class member function end
+
+    class member function start : Language public getClassFunctionsThis string
+        function return : { class member variable get : ClassFunctionsThis }
+    class member function end
+
+    class member function start : Language public getClassMemberVariableDefault string
+        function return : { class member variable get : ClassMemberVariableDefault }
+    class member function end
+
+    class member function start : Language public getClassMemberVariablePrivacy boolean
+        function return : { class member variable get : ClassMemberVariablePrivacy }
+    class member function end
+
+    class member function start : Language public getClassMemberVariableStarter string
+        function return : { class member variable get : ClassMemberVariableStarter }
+    class member function end
+
+    class member function start : Language public getClassNewer string
+        function return : { class member variable get : ClassNewer }
+    class member function end
+
+    class member function start : Language public getClassPrivacy boolean
+        function return : { class member variable get : ClassPrivacy }
+    class member function end
+
+    class member function start : Language public getClassStartLeft string
+        function return : { class member variable get : ClassStartLeft }
+    class member function end
+
+    class member function start : Language public getClassStartRight string
+        function return : { class member variable get : ClassStartRight }
+    class member function end
+
+    class member function start : Language public getClassThis string
+        function return : { class member variable get : ClassThis }
+    class member function end
+
+    class member function start : Language public getClassThisAccess string
+        function return : { class member variable get : ClassThisAccess }
+    class member function end
+
+    class member function start : Language public getFileEndLine string
+        function return : { class member variable get : FileEndLine }
+    class member function end
+
+    class member function start : Language public getFileStartLeft string
+        function return : { class member variable get : FileStartLeft }
+    class member function end
+
+    class member function start : Language public getFileStartRight string
+        function return : { class member variable get : FileStartRight }
+    class member function end
+
+    class member function start : Language public getMainEndLine string
+        function return : { class member variable get : MainEndLine }
+    class member function end
+
+    class member function start : Language public getMainStartLine string
+        function return : { class member variable get : MainStartLine }
+    class member function end
 class end
