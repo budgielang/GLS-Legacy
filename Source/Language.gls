@@ -1,0 +1,792 @@
+This code isn't ready yet, and will likely change.
+
+class start : Language
+    class member variable declare : printers private dictionary
+    class member variable declare : OperationAliases private dictionary
+    class member variable declare : TypeAliases private dictionary
+    class member variable declare : ValueAliases private dictionary
+    class member variable declare : INT_MIN: private number
+
+    comment line : (General information)
+    class member variable declare : Name private string
+    class member variable declare : Extension private string
+    class member variable declare : PrintFunction private string
+    class member variable declare : SemiColon private string
+
+    comment line : Comments
+    class member variable declare : CommentorBlockStart private string
+    class member variable declare : CommentorBlockEnd private string
+    class member variable declare : CommentorInline private string
+
+    comment line : Conditionals
+    class member variable declare : ConditionStartLeft private string
+    class member variable declare : ConditionStartRight private string
+    class member variable declare : ConditionContinueLeft private string
+    class member variable declare : ConditionContinueRight private string
+    class member variable declare : ConditionEnd private string
+    class member variable declare : Elif private string
+    class member variable declare : Else private string
+    class member variable declare : If private string
+
+    comment line : Operators
+    class member variable declare : And private string
+    class member variable declare : GreaterThan private string
+    class member variable declare : GreaterThanOrEqual private string
+    class member variable declare : LessThan private string
+    class member variable declare : LessThanOrEqual private string
+    class member variable declare : Or private string
+
+    comment line : Variables
+    class member variable declare : VariableTypesExplicit private boolean
+    class member variable declare : VariableTypesAfterName private boolean
+    class member variable declare : VariableTypeMarker private string
+    class member variable declare : VariableDeclareStart private string
+
+    comment line : Booleans
+    class member variable declare : BooleanClass private string
+    class member variable declare : True private string
+    class member variable declare : False private string
+
+    comment line : Numbers
+    class member variable declare : NumberClass private string
+
+    comment line : Strings
+    class member variable declare : StringClass private string
+    class member variable declare : StringLength private string
+    class member variable declare : ToString private string
+    class member variable declare : ToStringAsFunction private boolean
+
+    comment line : Loops
+    class member variable declare : RangedForLoops private boolean
+    class member variable declare : RangedForLoopsStart private string
+    class member variable declare : RangedForLoopsMiddle private string
+    class member variable declare : RangedForLoopsEnd private string
+
+    comment line : Arrays
+    class member variable declare : ArrayClass private string
+    class member variable declare : ArrayLength private string
+
+    comment line : Functions
+    class member variable declare : FunctionDefine private string
+    class member variable declare : FunctionDefineRight private string
+    class member variable declare : FunctionDefineEnd private string
+    class member variable declare : FunctionReturnsExplicit private boolean
+    class member variable declare : FunctionTypeAfterName private boolean
+    class member variable declare : FunctionTypeMarker private string
+
+    class constructor start : Language
+        class member variable set incomplete : printers { dictionary start } 
+            dictionary key declare : (class constructor end) { class member function get : ClassConstructorEnd }
+            dictionary key declare : (class constructor start) { class member function get : ClassConstructorStart }
+            dictionary key declare : (class end) { class member function get : ClassEnd }
+            dictionary key declare : (class member function call) { class member function get : ClassMemberFunctionCall }
+            dictionary key declare : (class member function get) { class member function get : ClassMemberFunctionGet }
+            dictionary key declare : (class member function end) { class member function get : ClassMemberFunctionEnd }
+            dictionary key declare : (class member function start) { class member function get : ClassMemberFunctionStart }
+            dictionary key declare : (class member variable declare) { class member function get : ClassMemberVariableDeclare }
+            dictionary key declare : (class member variable get) { class member function get : ClassMemberVariableGet }
+            dictionary key declare : (class member variable set) { class member function get : ClassMemberVariableSet }
+            dictionary key declare : (class new) { class member function get : ClassNew }
+            dictionary key declare : (class start) { class member function get : ClassStart }
+            dictionary key declare : (comment block) { class member function get : CommentBlock }
+            dictionary key declare : (comment line) { class member function get : CommentLine }
+            dictionary key declare : (comment inline) { class member function get : CommentInline }
+            dictionary key declare : (comparison) { class member function get : Comparison }
+            dictionary key declare : (concatenate) { class member function get : Concatenate }
+            dictionary key declare : (file end) { class member function get : FileEnd }
+            dictionary key declare : (file start) { class member function get : FileStart }
+            dictionary key declare : (for end) { class member function get : ForEnd }
+            dictionary key declare : (for numbers start) { class member function get : ForNumbersStart }
+            dictionary key declare : (function call) { class member function get : FunctionCall }
+            dictionary key declare : (function end) { class member function get : FunctionEnd }
+            dictionary key declare : (function start) { class member function get : FunctionStart }
+            dictionary key declare : (function return) { class member function get : FunctionReturn }
+            dictionary key declare : (if condition start) { class member function get : IfConditionStart }
+            dictionary key declare : (if end) { class member function get : IfEnd }
+            dictionary key declare : (if variable start) { class member function get : IfVariableStart }
+            dictionary key declare : (main end) { class member function get : MainEnd }
+            dictionary key declare : (main start) { class member function get : MainStart }
+            dictionary key declare : (operation) { class member function get : Operation }
+            dictionary key declare : (parenthesis) { class member function get : Parenthesis }
+            dictionary key declare : (print line) { class member function get : PrintLine }
+            dictionary key declare : (variable declare) { class member function get : VariableDeclare }
+            dictionary key declare : (variable declare partial) { class member function get : VariableDeclarePartial }
+            dictionary key declare : (while condition start) { class member function get : WhileConditionStart }
+            dictionary key declare : (while end) { class member function get : WhileEnd }
+            dictionary key declare : (while variable start) { class member function get : WhileVariableStart.bind(this)
+        dictionary end
+        
+        class member variable set incomplete : OperationAliases { dictionary start }
+            dictionary key declare : equals "="
+            dictionary key declare : plus "+"
+            dictionary key declare : minus "-"
+            dictionary key declare : times "*"
+            dictionary key declare : divide "/"
+            dictionary key declare : increaseby "+="
+            dictionary key declare : decreaseby "-="
+            dictionary key declare : multiplyby "*="
+            dictionary key declare : divideby "/="
+            dictionary key declare : lessthan "<"
+            dictionary key declare : greaterthan ">"
+            dictionary key declare : lessthanequal "<="
+            dictionary key declare : greaterthanequal ">=" 
+        { dictionary end }
+        
+        class member variable set : TypeAliases {dictionary empty }
+        
+        class member variable set : ValueAliases { dictionary empty }
+        
+        class member variable set : INT_MIN -9001
+    class constructor end
+    
+    
+    comment block : Gets
+    
+    class member function start : Language public getName string
+        function return : { class member variable get : Name }
+    class member function end
+    
+    class member function start : Language public getExtension string
+        function return : { class member variable get : Extension }
+    class member function end
+    
+    class member function start : Language public getPrintFunction string
+        function return : { class member variable get : PrintFunction }
+    class member function end
+
+    class member function start : Language public getSemiColon string
+        function return : { class member variable get : SemiColon }
+    class member function end
+
+    class member function start : Language public getCommentorBlockStart string
+        function return : { class member variable get : CommentorBlockStart }
+    class member function end
+
+    class member function start : Language public getCommentorBlockEnd string
+        function return : { class member variable get : CommentorBlockEnd }
+    class member function end
+
+    class member function start : Language public getCommentorInline string
+        function return : { class member variable get : CommentorInline }
+    class member function end
+
+    class member function start : Language public getConditionStartLeft string
+        function return : { class member variable get : ConditionStartLeft }
+    class member function end
+
+    class member function start : Language public getConditionStartRight string
+        function return : { class member variable get : ConditionStartRight }
+    class member function end
+
+    class member function start : Language public getConditionContinueLeft string
+        function return : { class member variable get : ConditionContinueLeft }
+    class member function end
+
+    class member function start : Language public getConditionContinueRight string
+        function return : { class member variable get : ConditionContinueRight }
+    class member function end
+
+    class member function start : Language public getConditionEnd string
+        function return : { class member variable get : ConditionEnd }
+    class member function end
+
+    class member function start : Language public getElif string
+        function return : { class member variable get : Elif }
+    class member function end
+
+    class member function start : Language public getElse string
+        function return : { class member variable get : Else }
+    class member function end
+
+    class member function start : Language public getIf string
+        function return : { class member variable get : If }
+    class member function end
+
+    class member function start : Language public getAnd string
+        function return : { class member variable get : And }
+    class member function end
+
+    class member function start : Language public getGreaterThan string
+        function return : { class member variable get : GreaterThan }
+    class member function end
+
+    class member function start : Language public getGreaterThanOrEqual string
+        function return : { class member variable get : GreaterThanOrEqual }
+    class member function end
+
+    class member function start : Language public getLessThan string
+        function return : { class member variable get : LessThan }
+    class member function end
+
+    class member function start : Language public getLessThanOrEqual string
+        function return : { class member variable get : LessThanOrEqual }
+    class member function end
+
+    class member function start : Language public getOr string
+        function return : { class member variable get : Or }
+    class member function end
+
+    class member function start : Language public getVariableTypesExplicit boolean
+        function return : { class member variable get : VariableTypesExplicit }
+    class member function end
+
+    class member function start : Language public getVariableTypesAfterName boolean
+        function return : { class member variable get : VariableTypesAfterName }
+    class member function end
+
+    class member function start : Language public getVariableTypeMarker string
+        function return : { class member variable get : VariableTypeMarker }
+    class member function end
+
+    class member function start : Language public getVariableDeclareStart string
+        function return : { class member variable get : VariableDeclareStart }
+    class member function end
+
+    class member function start : Language public getBooleanClass string
+        function return : { class member variable get : BooleanClass }
+    class member function end
+
+    class member function start : Language public getTrue string
+        function return : { class member variable get : True }
+    class member function end
+
+    class member function start : Language public getFalse string
+        function return : { class member variable get : False }
+    class member function end
+
+    class member function start : Language public getNumberClass string
+        function return : { class member variable get : NumberClass }
+    class member function end
+
+    class member function start : Language public getStringClass string
+        function return : { class member variable get : StringClass }
+    class member function end
+
+    class member function start : Language public getStringLength string
+        function return : { class member variable get : StringLength }
+    class member function end
+
+    class member function start : Language public getToString string
+        function return : { class member variable get : ToString }
+    class member function end
+
+    class member function start : Language public getToStringAsFunction boolean
+        function return : { class member variable get : ToStringAsFunction }
+    class member function end
+
+    class member function start : Language public getRangedForLoops boolean
+        function return : { class member variable get : RangedForLoops }
+    class member function end
+
+    class member function start : Language public getRangedForLoopsStart string
+        function return : { class member variable get : RangedForLoopsStart }
+    class member function end
+
+    class member function start : Language public getRangedForLoopsMiddle string
+        function return : { class member variable get : RangedForLoopsMiddle }
+    class member function end
+
+    class member function start : Language public getRangedForLoopsEnd string
+        function return : { class member variable get : RangedForLoopsEnd }
+    class member function end
+
+    class member function start : Language public getArrayClass string
+        function return : { class member variable get : ArrayClass }
+    class member function end
+
+    class member function start : Language public getArrayLength string
+        function return : { class member variable get : ArrayLength }
+    class member function end
+
+    class member function start : Language public getFunctionDefine string
+        function return : { class member variable get : FunctionDefine }
+    class member function end
+
+    class member function start : Language public getFunctionDefineRight string
+        function return : { class member variable get : FunctionDefineRight }
+    class member function end
+
+    class member function start : Language public getFunctionDefineEnd string
+        function return : { class member variable get : FunctionDefineEnd }
+    class member function end
+
+    class member function start : Language public getFunctionReturnsExplicit boolean
+        function return : { class member variable get : FunctionReturnsExplicit }
+    class member function end
+
+    class member function start : Language public getFunctionTypeMarker string
+        function return : { class member variable get : FunctionTypeMarker }
+    class member function end
+
+    class member function start : Language public getFunctionTypeAfterName boolean
+        function return : { class member variable get : FunctionTypeAfterName }
+    class member function end
+
+    class member function start : Language public getDictionaryClass string
+        function return : { class member variable get : DictionaryClass }
+    class member function end
+
+    class member function start : Language public getClassConstructorAsStatic boolean
+        function return : { class member variable get : ClassConstructorAsStatic }
+    class member function end
+
+    class member function start : Language public getClassConstructorName string
+        function return : { class member variable get : ClassConstructorName }
+    class member function end
+
+    class member function start : Language public getClassEnder string
+        function return : { class member variable get : ClassEnder }
+    class member function end
+
+    class member function start : Language public getClassFunctionsTakeThis boolean
+        function return : { class member variable get : ClassFunctionsTakeThis }
+    class member function end
+
+    class member function start : Language public getClassFunctionsStart string
+        function return : { class member variable get : ClassFunctionsStart }
+    class member function end
+
+    class member function start : Language public getClassFunctionsThis string
+        function return : { class member variable get : ClassFunctionsThis }
+    class member function end
+
+    class member function start : Language public getClassMemberVariableDefault string
+        function return : { class member variable get : ClassMemberVariableDefault }
+    class member function end
+
+    class member function start : Language public getClassMemberVariablePrivacy boolean
+        function return : { class member variable get : ClassMemberVariablePrivacy }
+    class member function end
+
+    class member function start : Language public getClassMemberVariableStarter string
+        function return : { class member variable get : ClassMemberVariableStarter }
+    class member function end
+
+    class member function start : Language public getClassNewer string
+        function return : { class member variable get : ClassNewer }
+    class member function end
+
+    class member function start : Language public getClassPrivacy boolean
+        function return : { class member variable get : ClassPrivacy }
+    class member function end
+
+    class member function start : Language public getClassStartLeft string
+        function return : { class member variable get : ClassStartLeft }
+    class member function end
+
+    class member function start : Language public getClassStartRight string
+        function return : { class member variable get : ClassStartRight }
+    class member function end
+
+    class member function start : Language public getClassThis string
+        function return : { class member variable get : ClassThis }
+    class member function end
+
+    class member function start : Language public getClassThisAccess string
+        function return : { class member variable get : ClassThisAccess }
+    class member function end
+
+    class member function start : Language public getFileEndLine string
+        function return : { class member variable get : FileEndLine }
+    class member function end
+
+    class member function start : Language public getFileStartLeft string
+        function return : { class member variable get : FileStartLeft }
+    class member function end
+
+    class member function start : Language public getFileStartRight string
+        function return : { class member variable get : FileStartRight }
+    class member function end
+
+    class member function start : Language public getMainEndLine string
+        function return : { class member variable get : MainEndLine }
+    class member function end
+
+    class member function start : Language public getMainStartLine string
+        function return : { class member variable get : MainStartLine }
+    class member function end
+    
+    
+    comment block : Sets
+    
+    class member function start : Language public setName Language value string
+        class member variable set : Name value
+        function return this
+    class member function end
+
+    class member function start : Language public setExtension Language value string
+        class member variable set : Extension value
+        function return this
+    class member function end
+
+    class member function start : Language public setPrintFunction Language value string
+        class member variable set : PrintFunction value
+        function return this
+    class member function end
+
+    class member function start : Language public setSemiColon Language value string
+        class member variable set : SemiColon value
+        function return this
+    class member function end
+
+    class member function start : Language public setCommentorBlockStart Language value string
+        class member variable set : CommentorBlockStart value
+        function return this
+    class member function end
+
+    class member function start : Language public setCommentorBlockEnd Language value string
+        class member variable set : CommentorBlockEnd value
+        function return this
+    class member function end
+
+    class member function start : Language public setCommentorInline Language value string
+        class member variable set : CommentorInline value
+        function return this
+    class member function end
+
+    class member function start : Language public setConditionStartLeft Language value string
+        class member variable set : ConditionStartLeft value
+        function return this
+    class member function end
+
+    class member function start : Language public setConditionStartRight Language value string
+        class member variable set : ConditionStartRight value
+        function return this
+    class member function end
+
+    class member function start : Language public setConditionContinueLeft Language value string
+        class member variable set : ConditionContinueLeft value
+        function return this
+    class member function end
+
+    class member function start : Language public setConditionContinueRight Language value string
+        class member variable set : ConditionContinueRight value
+        function return this
+    class member function end
+
+    class member function start : Language public setConditionEnd Language value string
+        class member variable set : ConditionEnd value
+        function return this
+    class member function end
+
+    class member function start : Language public setElif Language value string
+        class member variable set : Elif value
+        function return this
+    class member function end
+
+    class member function start : Language public setElse Language value string
+        class member variable set : Else value
+        function return this
+    class member function end
+
+    class member function start : Language public setIf Language value string
+        class member variable set : If value
+        function return this
+    class member function end
+
+    class member function start : Language public setAnd Language value string
+        class member variable set : And value
+        function return this
+    class member function end
+
+    class member function start : Language public setGreaterThan Language value string
+        class member variable set : GreaterThan value
+        function return this
+    class member function end
+
+    class member function start : Language public setGreaterThanOrEqual Language value string
+        class member variable set : GreaterThanOrEqual value
+        function return this
+    class member function end
+
+    class member function start : Language public setLessThan Language value string
+        class member variable set : LessThan value
+        function return this
+    class member function end
+
+    class member function start : Language public setLessThanOrEqual Language value string
+        class member variable set : LessThanOrEqual value
+        function return this
+    class member function end
+
+    class member function start : Language public setOr Language value string
+        class member variable set : Or value
+        function return this
+    class member function end
+
+    class member function start : Language public setVariableTypesExplicit Language value boolean
+        class member variable set : VariableTypesExplicit value
+        function return this
+    class member function end
+
+    class member function start : Language public setVariableTypesAfterName Language value boolean
+        class member variable set : VariableTypesAfterName value
+        function return this
+    class member function end
+
+    class member function start : Language public setVariableTypeMarker Language value string
+        class member variable set : VariableTypeMarker value
+        function return this
+    class member function end
+
+    class member function start : Language public setVariableDeclareStart Language value string
+        class member variable set : VariableDeclareStart value
+        function return this
+    class member function end
+
+    class member function start : Language public setBooleanClass Language value string
+        class member variable set : BooleanClass value
+        function return this
+    class member function end
+
+    class member function start : Language public setTrue Language value string
+        class member variable set : True value
+        function return this
+    class member function end
+
+    class member function start : Language public setFalse Language value string
+        class member variable set : False value
+        function return this
+    class member function end
+
+    class member function start : Language public setNumberClass Language value string
+        class member variable set : NumberClass value
+        function return this
+    class member function end
+
+    class member function start : Language public setStringClass Language value string
+        class member variable set : StringClass value
+        function return this
+    class member function end
+
+    class member function start : Language public setStringLength Language value string
+        class member variable set : StringLength value
+        function return this
+    class member function end
+
+    class member function start : Language public setRangedForLoops Language value boolean
+        class member variable set : RangedForLoops value
+        function return this
+    class member function end
+
+    class member function start : Language public setRangedForLoopsStart Language value string
+        class member variable set : RangedForLoopsStart value
+        function return this
+    class member function end
+
+    class member function start : Language public setRangedForLoopsMiddle Language value string
+        class member variable set : RangedForLoopsMiddle value
+        function return this
+    class member function end
+
+    class member function start : Language public setRangedForLoopsEnd Language value string
+        class member variable set : RangedForLoopsEnd value
+        function return this
+    class member function end
+
+    class member function start : Language public setToString Language value string
+        class member variable set : ToString value
+        function return this
+    class member function end
+
+    class member function start : Language public setToStringAsFunction Language value boolean
+        class member variable set : ToStringAsFunction value
+        function return this
+    class member function end
+
+    class member function start : Language public setArrayClass Language value string
+        class member variable set : ArrayClass value
+        function return this
+    class member function end
+
+    class member function start : Language public setArrayLength Language value string
+        class member variable set : ArrayLength value
+        function return this
+    class member function end
+
+    class member function start : Language public setFunctionDefine Language value string
+        class member variable set : FunctionDefine value
+        function return this
+    class member function end
+
+    class member function start : Language public setFunctionDefineRight Language value string
+        class member variable set : FunctionDefineRight value
+        function return this
+    class member function end
+
+    class member function start : Language public setFunctionDefineEnd Language value string
+        class member variable set : FunctionDefineEnd value
+        function return this
+    class member function end
+
+    class member function start : Language public setFunctionReturnsExplicit Language value boolean
+        class member variable set : FunctionReturnsExplicit value
+        function return this
+    class member function end
+
+    class member function start : Language public setFunctionTypeAfterName Language value boolean
+        class member variable set : FunctionTypeAfterName value
+        function return this
+    class member function end
+
+    class member function start : Language public setFunctionTypeMarker Language value string
+        class member variable set : FunctionTypeMarker value
+        function return this
+    class member function end
+
+    class member function start : Language public setDictionaryClass Language value string
+        class member variable set : DictionaryClass value
+        function return this
+    class member function end
+
+    class member function start : Language public setClassConstructorAsStatic Language value boolean
+        class member variable set : ClassConstructorAsStatic value
+        function return this
+    class member function end
+
+    class member function start : Language public setClassConstructorName Language value string
+        class member variable set : ClassConstructorName value
+        function return this
+    class member function end
+
+    class member function start : Language public setClassEnder Language value string
+        class member variable set : ClassEnder value
+        function return this
+    class member function end
+
+    class member function start : Language public setClassFunctionsTakeThis Language value boolean
+        class member variable set : ClassFunctionsTakeThis value
+        function return this
+    class member function end
+
+    class member function start : Language public setClassFunctionsStart Language value string
+        class member variable set : ClassFunctionsStart value
+        function return this
+    class member function end
+
+    class member function start : Language public setClassFunctionsThis Language value string
+        class member variable set : ClassFunctionsThis value
+        function return this
+    class member function end
+
+    class member function start : Language public setClassMemberVariableDefault Language value string
+        class member variable set : ClassMemberVariableDefault value
+        function return this
+    class member function end
+
+    class member function start : Language public setClassMemberVariablePrivacy Language value boolean
+        class member variable set : ClassMemberVariablePrivacy value
+        function return this
+    class member function end
+
+    class member function start : Language public setClassMemberVariableStarter Language value string
+        class member variable set : ClassMemberVariableStarter value
+        function return this
+    class member function end
+
+    class member function start : Language public setClassNewer Language value string
+        class member variable set : ClassNewer value
+        function return this
+    class member function end
+
+    class member function start : Language public setClassPrivacy Language value boolean
+        class member variable set : ClassPrivacy value
+        function return this
+    class member function end
+
+    class member function start : Language public setClassStartLeft Language value string
+        class member variable set : ClassStartLeft value
+        function return this
+    class member function end
+
+    class member function start : Language public setClassStartRight Language value string
+        class member variable set : ClassStartRight value
+        function return this
+    class member function end
+
+    class member function start : Language public setClassThis Language value string
+        class member variable set : ClassThis value
+        function return this
+    class member function end
+
+    class member function start : Language public setClassThisAccess Language value string
+        class member variable set : ClassThisAccess value
+        function return this
+    class member function end
+
+    class member function start : Language public setFileEndLine Language value string
+        class member variable set : FileEndLine value
+        function return this
+    class member function end
+
+    class member function start : Language public setFileStartLeft Language value string
+        class member variable set : FileStartLeft value
+        function return this
+    class member function end
+
+    class member function start : Language public setFileStartRight Language value string
+        class member variable set : FileStartRight value
+        function return this
+    class member function end
+
+    class member function start : Language public setMainEndLine Language value string
+        class member variable set : MainEndLine value
+        function return this
+    class member function end
+
+    class member function start : Language public setMainStartLine Language value string
+        class member variable set : MainStartLine value
+        function return this
+    class member function end
+    
+    
+    comment block : Miscellaneous
+    
+    class member function start : Language public getAliasOrDefault string aliases dictionary key string
+        if variable start : { dictionary key check : aliases key }
+            function return : { dictionary get : key } 
+        else
+            function return : key
+        if end
+    class member function end
+    
+    class member function start : Language public getTypeAlias string key string
+        function return : { member function call : getAliasOrDefault { class member variable get : TypeAliases } key }
+    class member function end
+    
+    class member function start : Language public getOperationAlias string key string
+        function return : { member function call : getAliasOrDefault { class member variable get : OperationAliases } key }
+    class member function end
+    
+    class member function start : Language public getValueAlias string key string
+        function return : { member function call : getValueOrDefault { class member variable get : ValueAliases } key }
+    class member function end
+    
+    class member function start : Language public addTypeAlias 
+        dictionary key set : { class member variable TypeAliases } alias key
+    class member function end
+    
+    class member function start : Language public addOperationAlias 
+        dictionary key set : { class member variable OperationAliases } alias key
+    class member function end
+    
+    class member function start : Language public addTypeAlias 
+        dictionary key set : { class member variable ValueAliases } alias key
+    class member function end
+    
+    class member function start : Language public print any[] functionName string functionArgs string[] isInline boolean
+        if condition : { not : { dictionary key check : { class member variable get : printers } functionName } }
+            error throw : { operation : ("Function not found: ") add functionName }
+        if end
+        
+        function return : { function call : { dictionary get : { class member variable get : printers } functionName } functionArgs isInline } 
+    class member function end
+    
+    
+    comment block : Printers
+    
+    class member function start : Language public ClassConstructorEnd any[] functionArgs string[] isInline boolean
+        function return : { array of : { class member function call : getFunctionDefineEnd } -1 } 
+    class member function end
+    
+class end
