@@ -137,6 +137,7 @@ class start : Language
         class member variable set : INT_MIN -9001
     class constructor end
     
+    
     comment block : Gets
     
     class member function start : Language public getName string
@@ -402,6 +403,9 @@ class start : Language
     class member function start : Language public getMainStartLine string
         function return : { class member variable get : MainStartLine }
     class member function end
+    
+    
+    comment block : Sets
     
     class member function start : Language public setName Language value string
         class member variable set : Name value
@@ -733,6 +737,9 @@ class start : Language
         function return this
     class member function end
     
+    
+    comment block : Miscellaneous
+    
     class member function start : Language public getAliasOrDefault string aliases dictionary key string
         if variable start : { dictionary key check : aliases key }
             function return : { dictionary get : key } 
@@ -772,4 +779,12 @@ class start : Language
         
         function return : { function call : { dictionary get : { class member variable get : printers } functionName } functionArgs isInline } 
     class member function end
+    
+    
+    comment block : Printers
+    
+    class member function start : Language public ClassConstructorEnd any[] functionArgs string[] isInline boolean
+        function return : { array of : { class member function call : getFunctionDefineEnd } -1 } 
+    class member function end
+    
 class end
