@@ -961,7 +961,55 @@ module GLS {
 
         // string name[, string superCall[, string argumentName, string argumentType, ...]]
         public ClassConstructorInheritedStart(functionArgs: string[], isInline?: boolean): any[] {
-            return undefined;
+            this.requireArgumentsLength("ClassConstructorInheritedStart", functionArgs, 1);
+
+            if (functionArgs.length === 1) {
+                return this.ClassConstructorStart(functionArgs, isInline);
+            }
+
+            var generalCall: any[],
+                callingArgs: string[],
+                output: any[],
+                i: number;
+
+            // Populate the arguments that will be passed to the actual method
+            if (functionArgs.length > 2) {
+                callingArgs = new Array<string>(functionArgs.length - 1);
+
+                for (i = 2; i < functionArgs.length; i += 1) {
+                    callingArgs[i - 1] = functionArgs[i];
+                }
+
+                callingArgs[0] = functionArgs[0];
+            } else {
+                callingArgs = [functionArgs[0]];
+            }
+
+            generalCall = this.ClassConstructorStart(callingArgs, isInline);
+
+            if (this.getClassConstructorInheritedShorthand()) {
+                // "Shorthand" usage, like in C#, comes before FunctionDefineRight
+                output = new Array(generalCall.length);
+                output[0] = generalCall[0].substring(0, generalCall[0].length - this.getFunctionDefineRight().length);
+                output[0] += " : " + functionArgs[1] + this.getFunctionDefineRight();
+
+                for (i = 1; i < generalCall.length; i += 1) {
+                    output[i] = generalCall[i];
+                }
+            } else {
+                // In-function usage, like in Python, comes within the function
+                output = new Array(generalCall.length + 2);
+                output[output.length - 1] = 0;
+                output[generalCall.length - 1] = generalCall[generalCall.length - 1];
+
+                output[output.length - 2] = functionArgs[1];
+
+                for (i = 0; i < generalCall.length - 1; i += 1) {
+                    output[i] = generalCall[i];
+                }
+            }
+
+            return output;
         }
 
         // string name[, string argumentName, string argumentType, ...]

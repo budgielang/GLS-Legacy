@@ -6,6 +6,7 @@ module GLS.Languages {
         .setSemiColon(";")
         .setClassConstructorName("")
         .setClassConstructorInheritedName("base")
+        .setClassConstructorInheritedShorthand(true)
         .setClassEnder("};")
         .setClassExtends("extends")
         .setClassFunctionsTakeThis(false)
