@@ -74,6 +74,7 @@ module GLS {
         private DictionaryClass: string;
 
         // Classes
+        private ClassConstructorAsStatic: boolean;
         private ClassConstructorName: string;
         private ClassEnder: string;
         private ClassFunctionsTakeThis: boolean;
@@ -81,6 +82,7 @@ module GLS {
         private ClassFunctionsThis: string;
         private ClassMemberVariableDefault: string;
         private ClassMemberVariablePrivacy: boolean;
+        private ClassMemberVariableStarter: string;
         private ClassNewer: string;
         private ClassPrivacy: boolean;
         private ClassStartLeft: string;
@@ -337,6 +339,10 @@ module GLS {
             return this.DictionaryClass;
         }
 
+        public getClassConstructorAsStatic(): boolean {
+            return this.ClassConstructorAsStatic;
+        }
+
         public getClassConstructorName(): string {
             return this.ClassConstructorName;
         }
@@ -363,6 +369,10 @@ module GLS {
 
         public getClassMemberVariablePrivacy(): boolean {
             return this.ClassMemberVariablePrivacy;
+        }
+
+        public getClassMemberVariableStarter(): string {
+            return this.ClassMemberVariableStarter;
         }
 
         public getClassNewer(): string {
@@ -628,6 +638,11 @@ module GLS {
             return this;
         }
 
+        public setClassConstructorAsStatic(value: boolean): Language {
+            this.ClassConstructorAsStatic = value;
+            return this;
+        }
+
         public setClassConstructorName(value: string): Language {
             this.ClassConstructorName = value;
             return this;
@@ -660,6 +675,11 @@ module GLS {
 
         public setClassMemberVariablePrivacy(value: boolean): Language {
             this.ClassMemberVariablePrivacy = value;
+            return this;
+        }
+
+        public setClassMemberVariableStarter(value: string): Language {
+            this.ClassMemberVariableStarter = value;
             return this;
         }
 
@@ -940,6 +960,10 @@ module GLS {
                 variableDeclared[0] = functionArgs[1] + " " + variableDeclared[0];
             }
 
+            if (this.getClassMemberVariableStarter() !== "") {
+                variableDeclared[0] = this.getClassMemberVariableStarter() + variableDeclared[0];
+            }
+
             return variableDeclared;
         }
 
@@ -979,8 +1003,14 @@ module GLS {
         public ClassNew(functionArgs: string[], isInline?: boolean): any[] {
             this.requireArgumentsLength("ClassNew", functionArgs, 1);
 
-            var output: string = this.getClassNewer() + functionArgs[0] + "(",
+            var output: string,
                 i: number;
+
+            if (this.getClassConstructorAsStatic()) {
+                output = functionArgs[0] + "." + this.getClassNewer() + "(";
+            } else {
+                output = this.getClassNewer() + functionArgs[0] + "(";
+            }
 
             if (functionArgs.length > 1) {
                 for (i = 1; i < functionArgs.length; i += 1) {
@@ -1050,7 +1080,7 @@ module GLS {
             this.requireArgumentsLength("Comparison", functionArgs, 2);
 
             var output: string;
-            
+
             if (this.getToStringAsFunction()) {
                 output = this.getToString() + "(" + functionArgs[0] + ")";
                 output += " " + this.getOperationAlias("plus") + " ";

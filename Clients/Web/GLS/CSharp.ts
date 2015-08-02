@@ -10,6 +10,7 @@ module GLS.Languages {
         .setClassFunctionsStart("")
         .setClassMemberVariableDefault("")
         .setClassMemberVariablePrivacy(true)
+        .setClassMemberVariableStarter("")
         .setClassNewer("new ")
         .setClassPrivacy(true)
         .setClassStartLeft("class ")

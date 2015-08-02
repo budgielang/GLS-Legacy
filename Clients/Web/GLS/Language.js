@@ -191,6 +191,9 @@ var GLS;
         Language.prototype.getDictionaryClass = function () {
             return this.DictionaryClass;
         };
+        Language.prototype.getClassConstructorAsStatic = function () {
+            return this.ClassConstructorAsStatic;
+        };
         Language.prototype.getClassConstructorName = function () {
             return this.ClassConstructorName;
         };
@@ -211,6 +214,9 @@ var GLS;
         };
         Language.prototype.getClassMemberVariablePrivacy = function () {
             return this.ClassMemberVariablePrivacy;
+        };
+        Language.prototype.getClassMemberVariableStarter = function () {
+            return this.ClassMemberVariableStarter;
         };
         Language.prototype.getClassNewer = function () {
             return this.ClassNewer;
@@ -419,6 +425,10 @@ var GLS;
             this.DictionaryClass = value;
             return this;
         };
+        Language.prototype.setClassConstructorAsStatic = function (value) {
+            this.ClassConstructorAsStatic = value;
+            return this;
+        };
         Language.prototype.setClassConstructorName = function (value) {
             this.ClassConstructorName = value;
             return this;
@@ -445,6 +455,10 @@ var GLS;
         };
         Language.prototype.setClassMemberVariablePrivacy = function (value) {
             this.ClassMemberVariablePrivacy = value;
+            return this;
+        };
+        Language.prototype.setClassMemberVariableStarter = function (value) {
+            this.ClassMemberVariableStarter = value;
             return this;
         };
         Language.prototype.setClassNewer = function (value) {
@@ -650,6 +664,9 @@ var GLS;
             if (this.getClassMemberVariablePrivacy()) {
                 variableDeclared[0] = functionArgs[1] + " " + variableDeclared[0];
             }
+            if (this.getClassMemberVariableStarter() !== "") {
+                variableDeclared[0] = this.getClassMemberVariableStarter() + variableDeclared[0];
+            }
             return variableDeclared;
         };
         // string name
@@ -677,7 +694,13 @@ var GLS;
         // string name[, string argumentName, string argumentType, ...]
         Language.prototype.ClassNew = function (functionArgs, isInline) {
             this.requireArgumentsLength("ClassNew", functionArgs, 1);
-            var output = this.getClassNewer() + functionArgs[0] + "(", i;
+            var output, i;
+            if (this.getClassConstructorAsStatic()) {
+                output = functionArgs[0] + "." + this.getClassNewer() + "(";
+            }
+            else {
+                output = this.getClassNewer() + functionArgs[0] + "(";
+            }
             if (functionArgs.length > 1) {
                 for (i = 1; i < functionArgs.length; i += 1) {
                     output += functionArgs[i] + ", ";
