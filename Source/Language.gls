@@ -73,45 +73,69 @@ class start : Language
     class member variable declare : FunctionTypeMarker private string
 
     class constructor start : Language
-        class member variable set : printers { dictionary start }
-                dictionary key declare : (class constructor end) { class member function get : ClassConstructorEnd }
-                dictionary key declare : (class constructor start) { class member function get : ClassConstructorStart }
-                dictionary key declare : (class end) { class member function get : ClassEnd }
-                dictionary key declare : (class member function call) { class member function get : ClassMemberFunctionCall }
-                dictionary key declare : (class member function get) { class member function get : ClassMemberFunctionGet }
-                dictionary key declare : (class member function end) { class member function get : ClassMemberFunctionEnd }
-                dictionary key declare : (class member function start) { class member function get : ClassMemberFunctionStart }
-                dictionary key declare : (class member variable declare) { class member function get : ClassMemberVariableDeclare }
-                dictionary key declare : (class member variable get) { class member function get : ClassMemberVariableGet }
-                dictionary key declare : (class member variable set) { class member function get : ClassMemberVariableSet }
-                dictionary key declare : (class new) { class member function get : ClassNew }
-                dictionary key declare : (class start) { class member function get : ClassStart }
-                dictionary key declare : (comment block) { class member function get : CommentBlock }
-                dictionary key declare : (comment line) { class member function get : CommentLine }
-                dictionary key declare : (comment inline) { class member function get : CommentInline }
-                dictionary key declare : (comparison) { class member function get : Comparison }
-                dictionary key declare : (concatenate) { class member function get : Concatenate }
-                dictionary key declare : (file end) { class member function get : FileEnd }
-                dictionary key declare : (file start) { class member function get : FileStart }
-                dictionary key declare : (for end) { class member function get : ForEnd }
-                dictionary key declare : (for numbers start) { class member function get : ForNumbersStart }
-                dictionary key declare : (function call) { class member function get : FunctionCall }
-                dictionary key declare : (function end) { class member function get : FunctionEnd }
-                dictionary key declare : (function start) { class member function get : FunctionStart }
-                dictionary key declare : (function return) { class member function get : FunctionReturn }
-                dictionary key declare : (if condition start) { class member function get : IfConditionStart }
-                dictionary key declare : (if end) { class member function get : IfEnd }
-                dictionary key declare : (if variable start) { class member function get : IfVariableStart }
-                dictionary key declare : (main end) { class member function get : MainEnd }
-                dictionary key declare : (main start) { class member function get : MainStart }
-                dictionary key declare : (operation) { class member function get : Operation }
-                dictionary key declare : (parenthesis) { class member function get : Parenthesis }
-                dictionary key declare : (print line) { class member function get : PrintLine }
-                dictionary key declare : (variable declare) { class member function get : VariableDeclare }
-                dictionary key declare : (variable declare partial) { class member function get : VariableDeclarePartial }
-                dictionary key declare : (while condition start) { class member function get : WhileConditionStart }
-                dictionary key declare : (while end) { class member function get : WhileEnd }
-                dictionary key declare : (while variable start) { class member function get : WhileVariableStart.bind(this)
+        class member variable set incomplete : printers { dictionary start } 
+            dictionary key declare : (class constructor end) { class member function get : ClassConstructorEnd }
+            dictionary key declare : (class constructor start) { class member function get : ClassConstructorStart }
+            dictionary key declare : (class end) { class member function get : ClassEnd }
+            dictionary key declare : (class member function call) { class member function get : ClassMemberFunctionCall }
+            dictionary key declare : (class member function get) { class member function get : ClassMemberFunctionGet }
+            dictionary key declare : (class member function end) { class member function get : ClassMemberFunctionEnd }
+            dictionary key declare : (class member function start) { class member function get : ClassMemberFunctionStart }
+            dictionary key declare : (class member variable declare) { class member function get : ClassMemberVariableDeclare }
+            dictionary key declare : (class member variable get) { class member function get : ClassMemberVariableGet }
+            dictionary key declare : (class member variable set) { class member function get : ClassMemberVariableSet }
+            dictionary key declare : (class new) { class member function get : ClassNew }
+            dictionary key declare : (class start) { class member function get : ClassStart }
+            dictionary key declare : (comment block) { class member function get : CommentBlock }
+            dictionary key declare : (comment line) { class member function get : CommentLine }
+            dictionary key declare : (comment inline) { class member function get : CommentInline }
+            dictionary key declare : (comparison) { class member function get : Comparison }
+            dictionary key declare : (concatenate) { class member function get : Concatenate }
+            dictionary key declare : (file end) { class member function get : FileEnd }
+            dictionary key declare : (file start) { class member function get : FileStart }
+            dictionary key declare : (for end) { class member function get : ForEnd }
+            dictionary key declare : (for numbers start) { class member function get : ForNumbersStart }
+            dictionary key declare : (function call) { class member function get : FunctionCall }
+            dictionary key declare : (function end) { class member function get : FunctionEnd }
+            dictionary key declare : (function start) { class member function get : FunctionStart }
+            dictionary key declare : (function return) { class member function get : FunctionReturn }
+            dictionary key declare : (if condition start) { class member function get : IfConditionStart }
+            dictionary key declare : (if end) { class member function get : IfEnd }
+            dictionary key declare : (if variable start) { class member function get : IfVariableStart }
+            dictionary key declare : (main end) { class member function get : MainEnd }
+            dictionary key declare : (main start) { class member function get : MainStart }
+            dictionary key declare : (operation) { class member function get : Operation }
+            dictionary key declare : (parenthesis) { class member function get : Parenthesis }
+            dictionary key declare : (print line) { class member function get : PrintLine }
+            dictionary key declare : (variable declare) { class member function get : VariableDeclare }
+            dictionary key declare : (variable declare partial) { class member function get : VariableDeclarePartial }
+            dictionary key declare : (while condition start) { class member function get : WhileConditionStart }
+            dictionary key declare : (while end) { class member function get : WhileEnd }
+            dictionary key declare : (while variable start) { class member function get : WhileVariableStart.bind(this)
         dictionary end
+        
+        class member variable set incomplete : OperationAliases { dictionary start }
+            dictionary key declare : equals "="
+            dictionary key declare : plus "+"
+            dictionary key declare : minus "-"
+            dictionary key declare : times "*"
+            dictionary key declare : divide "/"
+            dictionary key declare : increaseby "+="
+            dictionary key declare : decreaseby "-="
+            dictionary key declare : multiplyby "*="
+            dictionary key declare : divideby "/="
+            dictionary key declare : lessthan "<"
+            dictionary key declare : greaterthan ">"
+            dictionary key declare : lessthanequal "<="
+            dictionary key declare : greaterthanequal ">=" 
+        { dictionary end }
+        
+        class member variable set : TypeAliases {dictionary empty }
+        
+        class member variable set : ValueAliases { dictionary empty }
+        
+        class member variable set : INT_MIN -9001
     class constructor end
+    
+    
 class end

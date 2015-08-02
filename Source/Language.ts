@@ -149,14 +149,14 @@ module GLS {
                 "plus": "+",
                 "minus": "-",
                 "times": "*",
-                "divided": "/",
+                "divide": "/",
                 "increaseby": "+=",
                 "decreaseby": "-=",
                 "multiplyby": "*=",
                 "divideby": "/=",
                 "lessthan": "<",
                 "greaterthan": ">",
-                "lessthanequal": ">",
+                "lessthanequal": "<=",
                 "greaterthanequal": ">="
             };
 
