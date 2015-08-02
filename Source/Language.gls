@@ -3,11 +3,73 @@ class start : Language
     class member variable declare : OperationAliases private dictionary
     class member variable declare : TypeAliases private dictionary
     class member variable declare : ValueAliases private dictionary
-    class member variable declare : INT_MIN private number
-    
+    class member variable declare : INT_MIN: private number
+
     comment line : (General information)
     class member variable declare : Name private string
     class member variable declare : Extension private string
     class member variable declare : PrintFunction private string
     class member variable declare : SemiColon private string
+
+    comment line : Comments
+    class member variable declare : CommentorBlockStart private string
+    class member variable declare : CommentorBlockEnd private string
+    class member variable declare : CommentorInline private string
+
+    comment line : Conditionals
+    class member variable declare : ConditionStartLeft private string
+    class member variable declare : ConditionStartRight private string
+    class member variable declare : ConditionContinueLeft private string
+    class member variable declare : ConditionContinueRight private string
+    class member variable declare : ConditionEnd private string
+    class member variable declare : Elif private string
+    class member variable declare : Else private string
+    class member variable declare : If private string
+
+    comment line : Operators
+    class member variable declare : And private string
+    class member variable declare : GreaterThan private string
+    class member variable declare : GreaterThanOrEqual private string
+    class member variable declare : LessThan private string
+    class member variable declare : LessThanOrEqual private string
+    class member variable declare : Or private string
+
+    comment line : Variables
+    class member variable declare : VariableTypesExplicit private boolean
+    class member variable declare : VariableTypesAfterName private boolean
+    class member variable declare : VariableTypeMarker private string
+    class member variable declare : VariableDeclareStart private string
+
+    comment line : Booleans
+    class member variable declare : BooleanClass private string
+    class member variable declare : True private string
+    class member variable declare : False private string
+
+    comment line : Numbers
+    class member variable declare : NumberClass private string
+
+    comment line : Strings
+    class member variable declare : StringClass private string
+    class member variable declare : StringLength private string
+    class member variable declare : ToString private string
+    class member variable declare : ToStringAsFunction private boolean
+
+    comment line : Loops
+    class member variable declare : RangedForLoops private boolean
+    class member variable declare : RangedForLoopsStart private string
+    class member variable declare : RangedForLoopsMiddle private string
+    class member variable declare : RangedForLoopsEnd private string
+
+    comment line : Arrays
+    class member variable declare : ArrayClass private string
+    class member variable declare : ArrayLength private string
+
+    comment line : Functions
+    class member variable declare : FunctionDefine private string
+    class member variable declare : FunctionDefineRight private string
+    class member variable declare : FunctionDefineEnd private string
+    class member variable declare : FunctionReturnsExplicit private boolean
+    class member variable declare : FunctionTypeAfterName private boolean
+    class member variable declare : FunctionTypeMarker private string
+
 class end
