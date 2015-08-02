@@ -113,7 +113,6 @@ module GLS {
                 "class constructor start": this.ClassConstructorStart.bind(this),
                 "class end": this.ClassEnd.bind(this),
                 "class member function call": this.ClassMemberFunctionCall.bind(this),
-                // "class member function get": this.ClassMemberFunctionGet.bind(this),
                 "class member function end": this.ClassMemberFunctionEnd.bind(this),
                 "class member function start": this.ClassMemberFunctionStart.bind(this),
                 "class member variable declare": this.ClassMemberVariableDeclare.bind(this),
@@ -787,20 +786,20 @@ module GLS {
         /* Miscellaneous
         */
 
-        public AliasOrDefault(aliases: any, key: string): string {
+        public getAliasOrDefault(aliases: any, key: string): string {
             return aliases.hasOwnProperty(key) ? aliases[key] : key;
         }
 
         public getTypeAlias(key: string): string {
-            return this.AliasOrDefault(this.TypeAliases, key);
+            return this.getAliasOrDefault(this.TypeAliases, key);
         }
 
         public getOperationAlias(key: string): string {
-            return this.AliasOrDefault(this.OperationAliases, key);
+            return this.getAliasOrDefault(this.OperationAliases, key);
         }
 
         public getValueAlias(key: string): string {
-            return this.AliasOrDefault(this.ValueAliases, key);
+            return this.getAliasOrDefault(this.ValueAliases, key);
         }
 
         public addTypeAlias(key: string, alias: string): Language {
