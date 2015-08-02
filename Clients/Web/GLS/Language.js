@@ -838,15 +838,15 @@ var GLS;
             }
             return [output, 1];
         };
-        // string name[, string argumentName, string argumentType, ...]
+        // string class[, string argumentName, string argumentType, ...]
         Language.prototype.ClassNew = function (functionArgs, isInline) {
             this.requireArgumentsLength("ClassNew", functionArgs, 1);
             var output, i;
             if (this.getClassConstructorAsStatic()) {
-                output = functionArgs[0] + "." + this.getClassNewer() + "(";
+                output = this.parseType(functionArgs[0]) + "." + this.getClassNewer() + "(";
             }
             else {
-                output = this.getClassNewer() + functionArgs[0] + "(";
+                output = this.getClassNewer() + this.parseType(functionArgs[0]) + "(";
             }
             if (functionArgs.length > 1) {
                 for (i = 1; i < functionArgs.length; i += 1) {

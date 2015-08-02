@@ -1214,7 +1214,7 @@ module GLS {
             return [output, 1];
         }
 
-        // string name[, string argumentName, string argumentType, ...]
+        // string class[, string argumentName, string argumentType, ...]
         public ClassNew(functionArgs: string[], isInline?: boolean): any[] {
             this.requireArgumentsLength("ClassNew", functionArgs, 1);
 
@@ -1222,9 +1222,9 @@ module GLS {
                 i: number;
 
             if (this.getClassConstructorAsStatic()) {
-                output = functionArgs[0] + "." + this.getClassNewer() + "(";
+                output = this.parseType(functionArgs[0]) + "." + this.getClassNewer() + "(";
             } else {
-                output = this.getClassNewer() + functionArgs[0] + "(";
+                output = this.getClassNewer() + this.parseType(functionArgs[0]) + "(";
             }
 
             if (functionArgs.length > 1) {
