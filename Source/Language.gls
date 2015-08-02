@@ -1,0 +1,8 @@
+class start : Language
+    class member variable declare : printers private dictionary
+    class member variable declare : OperationAliases private dictionary;
+    class member variable declare : TypeAliases private dictionary;
+    class member variable declare : ValueAliases private dictionary;
+    class member variable declare : INT_MIN private number;
+    
+class end
