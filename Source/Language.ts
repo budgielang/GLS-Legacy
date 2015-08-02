@@ -94,6 +94,7 @@ module GLS {
         private ClassPrivacy: boolean;
         private ClassStartLeft: string;
         private ClassStartRight: string;
+        private ClassTemplates: boolean;
         private ClassThis: string;
         private ClassThisAccess: string;
 
@@ -409,6 +410,10 @@ module GLS {
 
         public getClassStartRight(): string {
             return this.ClassStartRight;
+        }
+
+        public getClassTemplates(): boolean {
+            return this.ClassTemplates;
         }
 
         public getClassThis(): string {
@@ -735,6 +740,11 @@ module GLS {
 
         public setClassStartRight(value: string): Language {
             this.ClassStartRight = value;
+            return this;
+        }
+
+        public setClassTemplates(value: boolean): Language {
+            this.ClassTemplates = value;
             return this;
         }
 
