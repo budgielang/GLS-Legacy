@@ -25,6 +25,11 @@ var GLS;
                 "comment inline": this.CommentInline.bind(this),
                 "comparison": this.Comparison.bind(this),
                 "concatenate": this.Concatenate.bind(this),
+                "dictionary initialize": this.DictionaryInitialize.bind(this),
+                "dictionary initialize end": this.DictionaryInitializeEnd.bind(this),
+                "dictionary initialize key": this.DictionaryInitializeKey.bind(this),
+                "dictionary initialize start": this.DictionaryInitializeStart.bind(this),
+                "dictionary type": this.DictionaryType.bind(this),
                 "file end": this.FileEnd.bind(this),
                 "file start": this.FileStart.bind(this),
                 "for end": this.ForEnd.bind(this),
@@ -231,6 +236,9 @@ var GLS;
         };
         Language.prototype.getDictionaryClass = function () {
             return this.DictionaryClass;
+        };
+        Language.prototype.getDictionaryInitializationAsNew = function () {
+            return this.DictionaryInitializationAsNew;
         };
         Language.prototype.getClassConstructorAsStatic = function () {
             return this.ClassConstructorAsStatic;
@@ -527,6 +535,10 @@ var GLS;
             this.DictionaryClass = value;
             return this;
         };
+        Language.prototype.setDictionaryInitializationAsNew = function (value) {
+            this.DictionaryInitializationAsNew = value;
+            return this;
+        };
         Language.prototype.setClassConstructorAsStatic = function (value) {
             this.ClassConstructorAsStatic = value;
             return this;
@@ -657,7 +669,7 @@ var GLS;
             return this.parseType(name) + remainder;
         };
         Language.prototype.parseTypeWithTemplate = function (text) {
-            var ltIndex = text.indexOf("<"), output = text.substring(0, ltIndex), i = ltIndex + 1, spaceNext;
+            var ltIndex = text.indexOf("<"), output = text.substring(0, ltIndex), i = ltIndex + 1, templateType, spaceNext;
             if (!this.getClassTemplates()) {
                 return output;
             }
@@ -667,7 +679,12 @@ var GLS;
                 if (spaceNext === -1) {
                     break;
                 }
-                output += this.parseType(text.substring(i, spaceNext)) + this.getClassTemplatesBetween();
+                templateType = text.substring(i, spaceNext);
+                // These may have commas already (such as from DictionaryType)
+                if (templateType[templateType.length - 1] === ",") {
+                    templateType = templateType.substring(0, templateType.length - 1);
+                }
+                output += this.parseType(templateType) + this.getClassTemplatesBetween();
                 i = spaceNext + 1;
             }
             output += this.parseType(text.substring(i, text.length - 1));
@@ -1065,6 +1082,51 @@ var GLS;
             }
             if (!isInline) {
                 output += this.getSemiColon();
+            }
+            return [output, 0];
+        };
+        Language.prototype.DictionaryInitialize = function (functionArgs, isInline) {
+            return ["sup", 0];
+        };
+        Language.prototype.DictionaryInitializeEnd = function (functionArgs, isInline) {
+            var output = "}";
+            if (!isInline) {
+                output += this.getSemiColon();
+            }
+            return [output, -1];
+        };
+        Language.prototype.DictionaryInitializeKey = function (functionArgs, isInline) {
+            return ["sup", 0];
+        };
+        // string keyType, string valueType
+        Language.prototype.DictionaryInitializeStart = function (functionArgs, isInline) {
+            this.requireArgumentsLength("ClassStart", functionArgs, 2);
+            var output;
+            if (this.getDictionaryInitializationAsNew()) {
+                output = "new ";
+            }
+            else {
+                output = "";
+            }
+            output += this.DictionaryType(functionArgs, true);
+            return [output, 0];
+        };
+        // string keyType, string valueType
+        Language.prototype.DictionaryType = function (functionArgs, isInline) {
+            this.requireArgumentsLength("ClassStart", functionArgs, 2);
+            var output = "";
+            if (this.getVariableTypesExplicit()) {
+                if (this.getDictionaryInitializationAsNew()) {
+                    output = this.getDictionaryClass();
+                    if (this.getClassTemplates()) {
+                        output += "<" + this.parseType(functionArgs[0]);
+                        output += this.getClassTemplatesBetween();
+                        output += this.parseType(functionArgs[1]) + ">";
+                    }
+                }
+                else {
+                    output = this.getDictionaryClass();
+                }
             }
             return [output, 0];
         };

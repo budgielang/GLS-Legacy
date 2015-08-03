@@ -31,6 +31,7 @@ module GLS.Languages {
         .setConditionContinueLeft("} ")
         .setConditionContinueRight(" {")
         .setConditionEnd("}")
+        .setDictionaryClass("any")
         .setFileEndLine("}")
         .setFileStartLeft("module ")
         .setFileStartRight(" {")

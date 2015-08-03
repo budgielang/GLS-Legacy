@@ -82,10 +82,7 @@ module GLS {
 
         // Dictionaries
         private DictionaryClass: string;
-        private DictionaryNewLeft: string;
-        private DictionaryNewRight: string;
-        private DictionaryTypeLeft: string;
-        private DictionaryTypeRight: string;
+        private DictionaryInitializationAsNew: boolean;
 
         // Classes
         private ClassConstructorAsStatic: boolean;
@@ -144,6 +141,11 @@ module GLS {
                 "comment inline": this.CommentInline.bind(this),
                 "comparison": this.Comparison.bind(this),
                 "concatenate": this.Concatenate.bind(this),
+                "dictionary initialize": this.DictionaryInitialize.bind(this),
+                "dictionary initialize end": this.DictionaryInitializeEnd.bind(this),
+                "dictionary initialize key": this.DictionaryInitializeKey.bind(this),
+                "dictionary initialize start": this.DictionaryInitializeStart.bind(this),
+                "dictionary type": this.DictionaryType.bind(this),
                 "file end": this.FileEnd.bind(this),
                 "file start": this.FileStart.bind(this),
                 "for end": this.ForEnd.bind(this),
@@ -409,6 +411,10 @@ module GLS {
 
         public getDictionaryClass(): string {
             return this.DictionaryClass;
+        }
+
+        public getDictionaryInitializationAsNew(): boolean {
+            return this.DictionaryInitializationAsNew;
         }
 
         public getClassConstructorAsStatic(): boolean {
@@ -788,6 +794,11 @@ module GLS {
             return this;
         }
 
+        public setDictionaryInitializationAsNew(value: boolean): Language {
+            this.DictionaryInitializationAsNew = value;
+            return this;
+        }
+
         public setClassConstructorAsStatic(value: boolean): Language {
             this.ClassConstructorAsStatic = value;
             return this;
@@ -959,6 +970,7 @@ module GLS {
             var ltIndex: number = text.indexOf("<"),
                 output: string = text.substring(0, ltIndex),
                 i: number = ltIndex + 1,
+                templateType: string,
                 spaceNext: number;
 
             if (!this.getClassTemplates()) {
@@ -973,7 +985,14 @@ module GLS {
                     break;
                 }
 
-                output += this.parseType(text.substring(i, spaceNext)) + this.getClassTemplatesBetween();
+                templateType = text.substring(i, spaceNext);
+
+                // These may have commas already (such as from DictionaryType)
+                if (templateType[templateType.length - 1] === ",") {
+                    templateType = templateType.substring(0, templateType.length - 1);
+                }
+
+                output += this.parseType(templateType) + this.getClassTemplatesBetween();
                 i = spaceNext + 1;
             }
 
@@ -1523,6 +1542,65 @@ module GLS {
             }
 
             return [output, 0];
+        }
+
+        public DictionaryInitialize(functionArgs: string[], isInline?: boolean): any[] {
+            return ["sup", 0];
+        }
+
+        public DictionaryInitializeEnd(functionArgs: string[], isInline?: boolean): any[] {
+            var output: string = "}";
+
+            if (!isInline) {
+                output += this.getSemiColon();
+            }
+
+            return [output, -1];
+        }
+
+        public DictionaryInitializeKey(functionArgs: string[], isInline?: boolean): any[] {
+            return ["sup", 0];
+        }
+
+        // string keyType, string valueType
+        public DictionaryInitializeStart(functionArgs: string[], isInline?: boolean): any[] {
+            this.requireArgumentsLength("ClassStart", functionArgs, 2);
+
+            var output: string;
+
+            if (this.getDictionaryInitializationAsNew()) {
+                output = "new ";
+            } else {
+                output = "";
+            }
+
+            output += this.DictionaryType(functionArgs, true);
+
+            return [output, 0];
+        }
+
+        // string keyType, string valueType
+        public DictionaryType(functionArgs: string[], isInline?: boolean): any[] {
+            this.requireArgumentsLength("ClassStart", functionArgs, 2);
+
+            var output: string = "";
+
+            if (this.getVariableTypesExplicit()) {
+                if (this.getDictionaryInitializationAsNew()) {
+                    output = this.getDictionaryClass();
+
+                    if (this.getClassTemplates()) {
+                        output += "<" + this.parseType(functionArgs[0]);
+                        output += this.getClassTemplatesBetween();
+                        output += this.parseType(functionArgs[1]) + ">";
+                    }
+                } else {
+                    output = this.getDictionaryClass();
+                }
+            }
+
+            return [output, 0];
+
         }
 
         public FileEnd(functionArgs: string[], isInline?: boolean): any[] {

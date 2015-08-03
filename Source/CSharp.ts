@@ -33,6 +33,8 @@ module GLS.Languages {
         .setConditionContinueLeft("} ")
         .setConditionContinueRight(" {")
         .setConditionEnd("}")
+        .setDictionaryClass("Dictionary")
+        .setDictionaryInitializationAsNew(true)
         .setFileEndLine("}")
         .setFileStartLeft("public class ")
         .setFileStartRight(" {")
