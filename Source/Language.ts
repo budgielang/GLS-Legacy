@@ -1036,7 +1036,7 @@ module GLS {
             if (this.getArrayInitializationAsNewTyped()) {
                 output = "new " + arrayType + "[] { ";
             } else {
-                output = "[ ";
+                output = "[";
             }
 
             for (i = 1; i < functionArgs.length - 1; i += 1) {
@@ -1048,7 +1048,7 @@ module GLS {
             if (this.getArrayInitializationAsNewTyped()) {
                 output += " }";
             } else {
-                output += " ]";
+                output += "]";
             }
 
             return [output, 0];

@@ -711,7 +711,7 @@ var GLS;
                 output = "new " + arrayType + "[] { ";
             }
             else {
-                output = "[ ";
+                output = "[";
             }
             for (i = 1; i < functionArgs.length - 1; i += 1) {
                 output += functionArgs[i] + ", ";
@@ -721,7 +721,7 @@ var GLS;
                 output += " }";
             }
             else {
-                output += " ]";
+                output += "]";
             }
             return [output, 0];
         };
