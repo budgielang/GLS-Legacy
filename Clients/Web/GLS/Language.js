@@ -579,7 +579,7 @@ var GLS;
             if (this.typeContainsTemplate(text)) {
                 return this.parseTypeWithTemplate(text);
             }
-            return text;
+            return this.getTypeAlias(text);
         };
         Language.prototype.typeontainsArray = function (text) {
             return name.indexOf("[") !== -1;
@@ -602,10 +602,10 @@ var GLS;
                 if (spaceNext === -1) {
                     break;
                 }
-                output += text.substring(i, spaceNext) + this.getClassTemplatesBetween();
+                output += this.parseType(text.substring(i, spaceNext)) + this.getClassTemplatesBetween();
                 i = spaceNext + 1;
             }
-            output += text.substring(i, text.length - 1);
+            output += this.parseType(text.substring(i, text.length - 1));
             output += ">";
             return output;
         };
@@ -689,6 +689,9 @@ var GLS;
                 output[output.length - 1] = 0;
                 output[generalCall.length - 1] = generalCall[generalCall.length - 1];
                 output[output.length - 2] = functionArgs[1];
+                if (!isInline) {
+                    output[output.length - 2] += this.getSemiColon();
+                }
                 for (i = 0; i < generalCall.length - 1; i += 1) {
                     output[i] = generalCall[i];
                 }
@@ -1076,13 +1079,13 @@ var GLS;
         // string name, string type[, string value]
         Language.prototype.VariableDeclarePartial = function (functionArgs, isInline) {
             this.requireArgumentsLength("VariableDeclarePartial", functionArgs, 2);
-            var output = "";
+            var output = "", variableType = this.parseType(functionArgs[1]);
             if (this.getVariableTypesExplicit()) {
                 if (this.getVariableTypesAfterName()) {
                     output += functionArgs[0] + this.getVariableTypeMarker() + this.getTypeAlias(functionArgs[1]);
                 }
                 else {
-                    output += this.getTypeAlias(functionArgs[1]) + " " + functionArgs[0];
+                    output += this.getTypeAlias(variableType) + " " + functionArgs[0];
                 }
             }
             else {
