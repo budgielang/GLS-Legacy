@@ -633,7 +633,7 @@ var GLS;
         /* Array & Template parsing
         */
         Language.prototype.parseType = function (text) {
-            if (this.typeontainsArray(text)) {
+            if (this.typeContainsArray(text)) {
                 return this.parseTypeWithArray(text);
             }
             if (this.typeContainsTemplate(text)) {
@@ -641,15 +641,15 @@ var GLS;
             }
             return this.getTypeAlias(text);
         };
-        Language.prototype.typeontainsArray = function (text) {
-            return name.indexOf("[") !== -1;
+        Language.prototype.typeContainsArray = function (text) {
+            return text.indexOf("[") !== -1;
         };
         Language.prototype.typeContainsTemplate = function (text) {
             return text.indexOf("<") !== -1;
         };
         Language.prototype.parseTypeWithArray = function (text) {
             var bracketIndex = text.indexOf("["), name = text.substring(0, bracketIndex), remainder = text.substring(bracketIndex);
-            return this.getTypeAlias(name) + remainder;
+            return this.parseType(name) + remainder;
         };
         Language.prototype.parseTypeWithTemplate = function (text) {
             var ltIndex = text.indexOf("<"), output = text.substring(0, ltIndex), i = ltIndex + 1, spaceNext;

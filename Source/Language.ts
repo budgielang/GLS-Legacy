@@ -923,7 +923,7 @@ module GLS {
         */
 
         public parseType(text: string): string {
-            if (this.typeontainsArray(text)) {
+            if (this.typeContainsArray(text)) {
                 return this.parseTypeWithArray(text);
             }
 
@@ -934,8 +934,8 @@ module GLS {
             return this.getTypeAlias(text);
         }
 
-        public typeontainsArray(text: string): boolean {
-            return name.indexOf("[") !== -1;
+        public typeContainsArray(text: string): boolean {
+            return text.indexOf("[") !== -1;
         }
 
         public typeContainsTemplate(text: string): boolean {
@@ -947,7 +947,7 @@ module GLS {
                 name: string = text.substring(0, bracketIndex),
                 remainder: string = text.substring(bracketIndex);
 
-            return this.getTypeAlias(name) + remainder;
+            return this.parseType(name) + remainder;
         }
 
         public parseTypeWithTemplate(text: string): string {
