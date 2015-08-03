@@ -6,7 +6,7 @@ module GLS.Languages {
         .setSemiColon("")
         .setClassConstructorAsStatic(true)
         .setClassParentName("super")
-        .setClassConstructorName("def initialize")
+        .setClassConstructorName("initialize")
         .setClassConstructorLoose(true)
         .setClassEnder("end")
         .setClassExtends("<")
