@@ -38,9 +38,11 @@ var GLS;
                 "if variable start": this.IfVariableStart.bind(this),
                 "main end": this.MainEnd.bind(this),
                 "main start": this.MainStart.bind(this),
+                "not": this.Not.bind(this),
                 "operation": this.Operation.bind(this),
                 "parenthesis": this.Parenthesis.bind(this),
                 "print line": this.PrintLine.bind(this),
+                "value": this.Value.bind(this),
                 "variable declare": this.VariableDeclare.bind(this),
                 "variable declare partial": this.VariableDeclarePartial.bind(this),
                 "while condition start": this.WhileConditionStart.bind(this),
@@ -1179,6 +1181,11 @@ var GLS;
             var output = this.getMainStartLine();
             return [output, output.length === 0 ? 0 : 1];
         };
+        // string value
+        Language.prototype.Not = function (functionArgs, isInline) {
+            this.requireArgumentsLength("Operation", functionArgs, 1);
+            return ["!" + functionArgs[0], 0];
+        };
         // string i, string operator, string difference
         Language.prototype.Operation = function (functionArgs, isInline) {
             this.requireArgumentsLength("Operation", functionArgs, 3);
@@ -1211,6 +1218,11 @@ var GLS;
                 output += this.getSemiColon();
             }
             return [output, 0];
+        };
+        // string value
+        Language.prototype.Value = function (functionArgs, isInline) {
+            this.requireArgumentsLength("VariableDeclare", functionArgs, 1);
+            return [this.getValueAlias(functionArgs[0]), 0];
         };
         // string name, string type[, string value]
         Language.prototype.VariableDeclare = function (functionArgs, isInline) {
