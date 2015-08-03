@@ -236,7 +236,7 @@ document.onreadystatechange = function (event) {
         "    class start : PointLabeled<T> public Point",
         "        class member variable declare : label public T",
         "        ",
-        "        class constructor inherited start : PointLabeled { class constructor inherited call : x y } x int y int label T",
+        "        class constructor inherited start : PointLabeled { class constructor inherited call : Point x y } x int y int label T",
         "            class member variable set : label label",
         "        class constructor end",
         "        ",
