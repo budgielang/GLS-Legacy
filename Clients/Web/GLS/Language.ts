@@ -63,7 +63,10 @@ module GLS {
 
         // Arrays
         private ArrayClass: string;
+        private ArrayInitializationAsNew: boolean;
         private ArrayLength: string;
+        private ArrayLengthAsFunction: boolean;
+        private ArrayNegativeIndices: boolean;
 
         // Functions
         private FunctionDefine: string;
@@ -115,6 +118,9 @@ module GLS {
 
         constructor() {
             this.printers = {
+                "array initialize": this.ArrayInitialize.bind(this),
+                "array get item": this.ArrayGetItem.bind(this),
+                "array get length": this.ArrayGetLength.bind(this),
                 "class constructor end": this.ClassConstructorEnd.bind(this),
                 "class constructor inherited call": this.ClassConstructorInheritedCall.bind(this),
                 "class constructor inherited start": this.ClassConstructorInheritedStart.bind(this),
@@ -335,8 +341,20 @@ module GLS {
             return this.ArrayClass;
         }
 
+        public getArrayInitializationAsNew(): boolean {
+            return this.ArrayInitializationAsNew;
+        }
+
         public getArrayLength(): string {
             return this.ArrayLength;
+        }
+
+        public getArrayLengthAsFunction(): boolean {
+            return this.ArrayLengthAsFunction;
+        }
+
+        public getArrayNegativeIndices(): boolean {
+            return this.ArrayNegativeIndices;
         }
 
         public getFunctionDefine(): string {
@@ -674,6 +692,16 @@ module GLS {
             return this;
         }
 
+        public setArrayLengthAsFunction(value: boolean): Language {
+            this.ArrayLengthAsFunction = value;
+            return this;
+        }
+
+        public setArrayNegativeIndices(value: boolean): Language {
+            this.ArrayNegativeIndices = value;
+            return this;
+        }
+
         public setFunctionDefine(value: string): Language {
             this.FunctionDefine = value;
             return this;
@@ -950,6 +978,23 @@ module GLS {
 
         /* Printers
         */
+
+        // string name, string key
+        public ArrayInitialize(functionArgs: string[], isInline?: boolean): any[] {
+            return ["sup", 0];
+        }
+
+        public ArrayGetItem(functionArgs: string[], isInline?: boolean): any[] {
+            return ["sup", 0];
+        }
+
+        public ArrayGetLength(functionArgs: string[], isInline?: boolean): any[] {
+            return ["sup", 0];
+        }
+
+        public ArrayLookup(functionArgs: string[], isInline?: boolean): any[] {
+            return ["sup", 0];
+        }
 
         public ClassConstructorEnd(functionArgs: string[], isInline?: boolean): any[] {
             return [this.getFunctionDefineEnd(), -1];

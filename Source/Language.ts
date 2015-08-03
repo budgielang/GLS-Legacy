@@ -117,6 +117,9 @@ module GLS {
 
         constructor() {
             this.printers = {
+                "array initialize": this.ArrayInitialize.bind(this),
+                "array get item": this.ArrayGetItem.bind(this),
+                "array get length": this.ArrayGetLength.bind(this),
                 "class constructor end": this.ClassConstructorEnd.bind(this),
                 "class constructor inherited call": this.ClassConstructorInheritedCall.bind(this),
                 "class constructor inherited start": this.ClassConstructorInheritedStart.bind(this),
@@ -684,6 +687,11 @@ module GLS {
             return this;
         }
 
+        public setArrayLengthAsFunction(value: boolean): Language {
+            this.ArrayLengthAsFunction = value;
+            return this;
+        }
+
         public setFunctionDefine(value: string): Language {
             this.FunctionDefine = value;
             return this;
@@ -960,6 +968,23 @@ module GLS {
 
         /* Printers
         */
+
+        // string name, string key
+        public ArrayInitialize(functionArgs: string[], isInline?: boolean): any[] {
+            return ["sup", 0];
+        }
+
+        public ArrayGetItem(functionArgs: string[], isInline?: boolean): any[] {
+            return ["sup", 0];
+        }
+
+        public ArrayGetLength(functionArgs: string[], isInline?: boolean): any[] {
+            return ["sup", 0];
+        }
+
+        public ArrayLookup(functionArgs: string[], isInline?: boolean): any[] {
+            return ["sup", 0];
+        }
 
         public ClassConstructorEnd(functionArgs: string[], isInline?: boolean): any[] {
             return [this.getFunctionDefineEnd(), -1];

@@ -3,6 +3,9 @@ var GLS;
     var Language = (function () {
         function Language() {
             this.printers = {
+                "array initialize": this.ArrayInitialize.bind(this),
+                "array get item": this.ArrayGetItem.bind(this),
+                "array get length": this.ArrayGetLength.bind(this),
                 "class constructor end": this.ClassConstructorEnd.bind(this),
                 "class constructor inherited call": this.ClassConstructorInheritedCall.bind(this),
                 "class constructor inherited start": this.ClassConstructorInheritedStart.bind(this),
@@ -178,8 +181,17 @@ var GLS;
         Language.prototype.getArrayClass = function () {
             return this.ArrayClass;
         };
+        Language.prototype.getArrayInitializationAsNew = function () {
+            return this.ArrayInitializationAsNew;
+        };
         Language.prototype.getArrayLength = function () {
             return this.ArrayLength;
+        };
+        Language.prototype.getArrayLengthAsFunction = function () {
+            return this.ArrayLengthAsFunction;
+        };
+        Language.prototype.getArrayNegativeIndices = function () {
+            return this.ArrayNegativeIndices;
         };
         Language.prototype.getFunctionDefine = function () {
             return this.FunctionDefine;
@@ -441,6 +453,14 @@ var GLS;
             this.ArrayLength = value;
             return this;
         };
+        Language.prototype.setArrayLengthAsFunction = function (value) {
+            this.ArrayLengthAsFunction = value;
+            return this;
+        };
+        Language.prototype.setArrayNegativeIndices = function (value) {
+            this.ArrayNegativeIndices = value;
+            return this;
+        };
         Language.prototype.setFunctionDefine = function (value) {
             this.FunctionDefine = value;
             return this;
@@ -650,6 +670,19 @@ var GLS;
         };
         /* Printers
         */
+        // string name, string key
+        Language.prototype.ArrayInitialize = function (functionArgs, isInline) {
+            return ["sup", 0];
+        };
+        Language.prototype.ArrayGetItem = function (functionArgs, isInline) {
+            return ["sup", 0];
+        };
+        Language.prototype.ArrayGetLength = function (functionArgs, isInline) {
+            return ["sup", 0];
+        };
+        Language.prototype.ArrayLookup = function (functionArgs, isInline) {
+            return ["sup", 0];
+        };
         Language.prototype.ClassConstructorEnd = function (functionArgs, isInline) {
             return [this.getFunctionDefineEnd(), -1];
         };
