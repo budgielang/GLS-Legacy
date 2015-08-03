@@ -60,7 +60,10 @@ var GLS;
                 "lessthan": "<",
                 "greaterthan": ">",
                 "lessthanequal": "<=",
-                "greaterthanequal": ">="
+                "greaterthanequal": ">=",
+                "and": "&&",
+                "or": "||",
+                "mod": "%"
             };
             this.TypeAliases = {};
             this.ValueAliases = {};
