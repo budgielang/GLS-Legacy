@@ -36,6 +36,7 @@ module GLS {
         private Or: string;
 
         // Variables
+        private Undefined: string;
         private VariableTypesExplicit: boolean;
         private VariableTypesAfterName: boolean;
         private VariableTypeMarker: string;
@@ -64,6 +65,9 @@ module GLS {
         // Arrays
         private ArrayClass: string;
         private ArrayInitializationAsNew: boolean;
+        private ArrayInitializationAsNewMultiplied: boolean;
+        private ArrayInitializationAsNewStatic: boolean;
+        private ArrayInitializationAsNewTyped: boolean;
         private ArrayLength: string;
         private ArrayLengthAsFunction: boolean;
         private ArrayNegativeIndices: boolean;
@@ -119,6 +123,7 @@ module GLS {
         constructor() {
             this.printers = {
                 "array initialize": this.ArrayInitialize.bind(this),
+                "array initialize size": this.ArrayInitializeSized.bind(this),
                 "array get item": this.ArrayGetItem.bind(this),
                 "array get length": this.ArrayGetLength.bind(this),
                 "class constructor end": this.ClassConstructorEnd.bind(this),
@@ -273,6 +278,10 @@ module GLS {
             return this.Or;
         }
 
+        public getUndefined(): string {
+            return this.Undefined;
+        }
+
         public getVariableTypesExplicit(): boolean {
             return this.VariableTypesExplicit;
         }
@@ -343,6 +352,18 @@ module GLS {
 
         public getArrayInitializationAsNew(): boolean {
             return this.ArrayInitializationAsNew;
+        }
+
+        public getArrayInitializationAsNewMultiplied(): boolean {
+            return this.ArrayInitializationAsNewMultiplied;
+        }
+
+        public getArrayInitializationAsNewStatic(): boolean {
+            return this.ArrayInitializationAsNewStatic;
+        }
+
+        public getArrayInitializationAsNewTyped(): boolean {
+            return this.ArrayInitializationAsNewTyped;
         }
 
         public getArrayLength(): string {
@@ -602,6 +623,11 @@ module GLS {
             return this;
         }
 
+        public setUndefined(value: string): Language {
+            this.Undefined = value;
+            return this;
+        }
+
         public setVariableTypesExplicit(value: boolean): Language {
             this.VariableTypesExplicit = value;
             return this;
@@ -684,6 +710,26 @@ module GLS {
 
         public setArrayClass(value: string): Language {
             this.ArrayClass = value;
+            return this;
+        }
+
+        public setArrayInitializationAsNew(value: boolean): Language {
+            this.ArrayInitializationAsNew = value;
+            return this;
+        }
+
+        public setArrayInitializationAsNewMultiplied(value: boolean): Language {
+            this.ArrayInitializationAsNewMultiplied = value;
+            return this;
+        }
+
+        public setArrayInitializationAsNewTyped(value: boolean): Language {
+            this.ArrayInitializationAsNewTyped = value;
+            return this;
+        }
+
+        public setArrayInitializationAsNewStatic(value: boolean): Language {
+            this.ArrayInitializationAsNewStatic = value;
             return this;
         }
 
@@ -979,11 +1025,63 @@ module GLS {
         /* Printers
         */
 
-        // string name, string key
+        // string type[, string key, ...]
         public ArrayInitialize(functionArgs: string[], isInline?: boolean): any[] {
             this.requireArgumentsLength("ArrayInitialize", functionArgs, 1);
 
-            return ["sup", 0];
+            var arrayType: string = this.parseType(functionArgs[0]),
+                output: string,
+                i: number;
+
+            if (this.getArrayInitializationAsNewTyped()) {
+                output = "new " + arrayType + "[] { ";
+            } else {
+                output = "[ ";
+            }
+
+            for (i = 1; i < functionArgs.length - 1; i += 1) {
+                output += functionArgs[i] + ", ";
+            }
+
+            output += functionArgs[i];
+
+            if (this.getArrayInitializationAsNewTyped()) {
+                output += " }";
+            } else {
+                output += " ]";
+            }
+
+            return [output, 0];
+        }
+
+        // string type, string size
+        public ArrayInitializeSized(functionArgs: string[], isInline?: boolean): any[] {
+            this.requireArgumentsLength("ArrayInitialize", functionArgs, 2);
+
+            var arrayType: string = this.parseType(functionArgs[0]),
+                arraySize: string = functionArgs[1],
+                output: string;
+
+            if (this.getArrayInitializationAsNewMultiplied()) {
+                return this.Operation(["[" + this.getUndefined() + "]", "times", arraySize], isInline);
+            }
+
+            if (this.getArrayInitializationAsNewStatic()) {
+                output = this.getArrayClass() + ".new";
+            } else {
+                output = "new ";
+            }
+
+            if (this.getArrayInitializationAsNewTyped()) {
+                output += arrayType + "[" + arraySize + "]";
+            } else {
+                if (!this.getArrayInitializationAsNewStatic()) {
+                    output += this.getArrayClass();
+                }
+                output += "(" + arraySize + ")";
+            }
+
+            return [output, 0];
         }
 
         // string name, string index
@@ -1591,7 +1689,7 @@ module GLS {
             return [output, output.length === 0 ? 0 : 1];
         }
 
-        // string i, string direction, string difference
+        // string i, string operator, string difference
         public Operation(functionArgs: string[], isInline?: boolean): any[] {
             this.requireArgumentsLength("Operation", functionArgs, 3);
 
