@@ -4,6 +4,8 @@ module GLS.Languages {
         .setExtension("rb")
         .setPrintFunction("puts")
         .setSemiColon("")
+        .setArrayClass("")
+        .setArrayLength("length")
         .setClassConstructorAsStatic(true)
         .setClassParentName("super")
         .setClassConstructorName("initialize")

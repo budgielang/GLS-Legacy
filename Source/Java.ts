@@ -4,6 +4,7 @@ module GLS.Languages {
         .setExtension("java")
         .setPrintFunction("System.out.println")
         .setSemiColon(";")
+        .setArrayLength("length")
         .setClassConstructorName("")
         .setClassEnder("};")
         .setClassExtends("extends")

@@ -63,7 +63,9 @@ module GLS {
 
         // Arrays
         private ArrayClass: string;
+        private ArrayInitializationAsNew: boolean;
         private ArrayLength: string;
+        private ArrayLengthAsFunction: boolean;
 
         // Functions
         private FunctionDefine: string;
@@ -335,8 +337,16 @@ module GLS {
             return this.ArrayClass;
         }
 
+        public getArrayInitializationAsNew(): boolean {
+            return this.ArrayInitializationAsNew;
+        }
+
         public getArrayLength(): string {
             return this.ArrayLength;
+        }
+
+        public getArrayLengthAsFunction(): boolean {
+            return this.ArrayLengthAsFunction;
         }
 
         public getFunctionDefine(): string {

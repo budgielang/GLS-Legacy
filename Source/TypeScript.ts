@@ -4,6 +4,8 @@ module GLS.Languages {
         .setExtension("ts")
         .setPrintFunction("console.log")
         .setSemiColon(";")
+        .setArrayClass("")
+        .setArrayLength("length")
         .setClassConstructorName("constructor")
         .setClassEnder("}")
         .setClassExtends("extends")
