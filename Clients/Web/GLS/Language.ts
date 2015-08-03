@@ -82,8 +82,13 @@ module GLS {
 
         // Classes
         private ClassConstructorAsStatic: boolean;
+        private ClassParentName: string;
+        private ClassConstructorInheritedShorthand: boolean;
         private ClassConstructorName: string;
+        private ClassConstructorLoose: boolean;
         private ClassEnder: string;
+        private ClassExtends: string;
+        private ClassExtendsAsFunction: boolean;
         private ClassFunctionsTakeThis: boolean;
         private ClassFunctionsStart: string;
         private ClassFunctionsThis: string;
@@ -111,6 +116,8 @@ module GLS {
         constructor() {
             this.printers = {
                 "class constructor end": this.ClassConstructorEnd.bind(this),
+                "class constructor inherited call": this.ClassConstructorInheritedCall.bind(this),
+                "class constructor inherited start": this.ClassConstructorInheritedStart.bind(this),
                 "class constructor start": this.ClassConstructorStart.bind(this),
                 "class end": this.ClassEnd.bind(this),
                 "class member function call": this.ClassMemberFunctionCall.bind(this),
@@ -364,12 +371,28 @@ module GLS {
             return this.ClassConstructorAsStatic;
         }
 
+        public getClassConstructorInheritedShorthand(): boolean {
+            return this.ClassConstructorInheritedShorthand;
+        }
+
         public getClassConstructorName(): string {
             return this.ClassConstructorName;
         }
 
+        public getClassConstructorLoose(): boolean {
+            return this.ClassConstructorLoose;
+        }
+
         public getClassEnder(): string {
             return this.ClassEnder;
+        }
+
+        public getClassExtends(): string {
+            return this.ClassExtends;
+        }
+
+        public getClassExtendsAsFunction(): boolean {
+            return this.ClassExtendsAsFunction;
         }
 
         public getClassFunctionsTakeThis(): boolean {
@@ -398,6 +421,10 @@ module GLS {
 
         public getClassNewer(): string {
             return this.ClassNewer;
+        }
+
+        public getClassParentName(): string {
+            return this.ClassParentName;
         }
 
         public getClassPrivacy(): boolean {
@@ -687,13 +714,33 @@ module GLS {
             return this;
         }
 
+        public setClassConstructorInheritedShorthand(value: boolean): Language {
+            this.ClassConstructorInheritedShorthand = value;
+            return this;
+        }
+
         public setClassConstructorName(value: string): Language {
             this.ClassConstructorName = value;
             return this;
         }
 
+        public setClassConstructorLoose(value: boolean): Language {
+            this.ClassConstructorLoose = value;
+            return this;
+        }
+
         public setClassEnder(value: string): Language {
             this.ClassEnder = value;
+            return this;
+        }
+
+        public setClassExtends(value: string): Language {
+            this.ClassExtends = value;
+            return this;
+        }
+
+        public setClassExtendsAsFunction(value: boolean): Language {
+            this.ClassExtendsAsFunction = value;
             return this;
         }
 
@@ -729,6 +776,11 @@ module GLS {
 
         public setClassNewer(value: string): Language {
             this.ClassNewer = value;
+            return this;
+        }
+
+        public setClassParentName(value: string): Language {
+            this.ClassParentName = value;
             return this;
         }
 
@@ -805,7 +857,7 @@ module GLS {
                 return this.parseTypeWithTemplate(text);
             }
 
-            return text;
+            return this.getTypeAlias(text);
         }
 
         public typeontainsArray(text: string): boolean {
@@ -842,11 +894,11 @@ module GLS {
                     break;
                 }
 
-                output += text.substring(i, spaceNext) + this.getClassTemplatesBetween();
+                output += this.parseType(text.substring(i, spaceNext)) + this.getClassTemplatesBetween();
                 i = spaceNext + 1;
             }
 
-            output += text.substring(i, text.length - 1);
+            output += this.parseType(text.substring(i, text.length - 1));
             output += ">";
 
             return output;
@@ -903,6 +955,102 @@ module GLS {
             return [this.getFunctionDefineEnd(), -1];
         }
 
+        // string super, [string argumentName, string argumentType, ...]
+        public ClassConstructorInheritedCall(functionArgs: string[], isInline?: boolean): any[] {
+            this.requireArgumentsLength("ClassConstructorInheritedCall", functionArgs, 1);
+
+            var parentName: string = this.getClassParentName(),
+                callingArgsLength: number = functionArgs.length,
+                loopStart: number = 0,
+                callingArgs: string[],
+                callingResult: any[],
+                i: number;
+
+            // Blank parentName indicates the super's class name should be used
+            if (parentName.length === 0) {
+                parentName = this.parseType(functionArgs[0]);
+            }
+
+            if (this.getClassFunctionsTakeThis()) {
+                callingArgsLength += 1;
+                loopStart += 1;
+            }
+
+            callingArgs = new Array<string>(callingArgsLength);
+            callingArgs[0] = parentName;
+
+            if (this.getClassExtendsAsFunction()) {
+                callingArgs[0] += "." + this.getClassConstructorName();
+            }
+
+            if (this.getClassFunctionsTakeThis()) {
+                callingArgs[1] = this.getClassThis();
+            }
+
+            for (i = loopStart; i < functionArgs.length; i += 1) {
+                callingArgs[i + 1] = functionArgs[i];
+            }
+
+            return this.FunctionCall(callingArgs, isInline);
+        }
+
+        // string name[, string superCall[, string argumentName, string argumentType, ...]]
+        public ClassConstructorInheritedStart(functionArgs: string[], isInline?: boolean): any[] {
+            this.requireArgumentsLength("ClassConstructorInheritedStart", functionArgs, 1);
+
+            if (functionArgs.length === 1) {
+                return this.ClassConstructorStart(functionArgs, isInline);
+            }
+
+            var generalCall: any[],
+                callingArgs: string[],
+                output: any[],
+                i: number;
+
+            // Populate the arguments that will be passed to the actual method
+            if (functionArgs.length > 2) {
+                callingArgs = new Array<string>(functionArgs.length - 1);
+
+                for (i = 2; i < functionArgs.length; i += 1) {
+                    callingArgs[i - 1] = functionArgs[i];
+                }
+
+                callingArgs[0] = functionArgs[0];
+            } else {
+                callingArgs = [functionArgs[0]];
+            }
+
+            generalCall = this.ClassConstructorStart(callingArgs, isInline);
+
+            if (this.getClassConstructorInheritedShorthand()) {
+                // "Shorthand" usage, like in C#, comes before FunctionDefineRight
+                output = new Array(generalCall.length);
+                output[0] = generalCall[0].substring(0, generalCall[0].length - this.getFunctionDefineRight().length);
+                output[0] += " : " + functionArgs[1] + this.getFunctionDefineRight();
+
+                for (i = 1; i < generalCall.length; i += 1) {
+                    output[i] = generalCall[i];
+                }
+            } else {
+                // In-function usage, like in Python, comes within the function
+                output = new Array(generalCall.length + 2);
+                output[output.length - 1] = 0;
+                output[generalCall.length - 1] = generalCall[generalCall.length - 1];
+
+                output[output.length - 2] = functionArgs[1];
+
+                if (!isInline) {
+                    output[output.length - 2] += this.getSemiColon();
+                }
+
+                for (i = 0; i < generalCall.length - 1; i += 1) {
+                    output[i] = generalCall[i];
+                }
+            }
+
+            return output;
+        }
+
         // string name[, string argumentName, string argumentType, ...]
         public ClassConstructorStart(functionArgs: string[], isInline?: boolean): any[] {
             this.requireArgumentsLength("ClassConstructorStart", functionArgs, 1);
@@ -910,6 +1058,10 @@ module GLS {
             var output: string = this.getClassConstructorName(),
                 variableDeclarationArguments: string[] = [],
                 i: number;
+
+            if (this.getClassConstructorLoose()) {
+                output = this.getClassFunctionsStart() + output;
+            }
 
             if (output.length === 0) {
                 output = functionArgs[0];
@@ -988,7 +1140,7 @@ module GLS {
                 i: number;
 
             if (this.getFunctionReturnsExplicit() && !this.getFunctionTypeAfterName()) {
-                output = this.getTypeAlias(functionArgs[3]) + " ";
+                output = this.parseType(functionArgs[3]) + " ";
             }
 
             if (this.getClassPrivacy()) {
@@ -1024,7 +1176,7 @@ module GLS {
             output += ")";
 
             if (this.getFunctionReturnsExplicit() && this.getFunctionTypeAfterName()) {
-                output += this.getFunctionTypeMarker() + this.getTypeAlias(functionArgs[3]);
+                output += this.getFunctionTypeMarker() + this.parseType(functionArgs[3]);
             }
 
             output += this.getFunctionDefineRight();
@@ -1081,22 +1233,31 @@ module GLS {
             return [output, 0];
         }
 
-        // string name, string visibility
+        // string name[, string visibility[, string parentClass]]
         public ClassStart(functionArgs: string[], isInline?: boolean): any[] {
             this.requireArgumentsLength("ClassStart", functionArgs, 1);
 
             var output: string = this.getClassStartLeft();
             output += this.parseType(functionArgs[0]);
+
+            if (functionArgs.length > 2) {
+                if (this.getClassExtendsAsFunction()) {
+                    output += "(" + this.parseType(functionArgs[2]) + ")";
+                } else {
+                    output += " " + this.getClassExtends() + " " + this.parseType(functionArgs[2]) + " ";
+                }
+            }
+
             output += this.getClassStartRight();
 
-            if (functionArgs.length > 1) {
+            if (this.getClassPrivacy() && functionArgs.length > 1) {
                 output = functionArgs[1] + " " + output;
             }
 
             return [output, 1];
         }
 
-        // string name[, string argumentName, string argumentType, ...]
+        // string class[, string argumentName, string argumentType, ...]
         public ClassNew(functionArgs: string[], isInline?: boolean): any[] {
             this.requireArgumentsLength("ClassNew", functionArgs, 1);
 
@@ -1104,9 +1265,9 @@ module GLS {
                 i: number;
 
             if (this.getClassConstructorAsStatic()) {
-                output = functionArgs[0] + "." + this.getClassNewer() + "(";
+                output = this.parseType(functionArgs[0]) + "." + this.getClassNewer() + "(";
             } else {
-                output = this.getClassNewer() + functionArgs[0] + "(";
+                output = this.getClassNewer() + this.parseType(functionArgs[0]) + "(";
             }
 
             if (functionArgs.length > 1) {
@@ -1226,7 +1387,7 @@ module GLS {
             var output: string = "for" + this.getConditionStartLeft(),
                 generalArgs: any[],
                 i: string = functionArgs[0],
-                typeName = this.getTypeAlias(functionArgs[1]),
+                typeName = this.parseType(functionArgs[1]),
                 initial: string = functionArgs[2],
                 comparison: string = functionArgs[3],
                 boundary: string = functionArgs[4],
@@ -1292,7 +1453,7 @@ module GLS {
                 i: number;
 
             if (this.getFunctionReturnsExplicit() && !this.getFunctionTypeAfterName()) {
-                output += this.getTypeAlias(functionArgs[1]) + " ";
+                output += this.parseType(functionArgs[1]) + " ";
             }
 
             output += this.getFunctionDefine() + functionArgs[0] + "(";
@@ -1313,7 +1474,7 @@ module GLS {
             output += ")";
 
             if (this.getFunctionReturnsExplicit() && this.getFunctionTypeAfterName()) {
-                output += this.getFunctionTypeMarker() + this.getTypeAlias(functionArgs[1]);
+                output += this.getFunctionTypeMarker() + this.parseType(functionArgs[1]);
             }
 
             output += this.getFunctionDefineRight();
@@ -1441,13 +1602,14 @@ module GLS {
         public VariableDeclarePartial(functionArgs: string[], isInline?: boolean): any[] {
             this.requireArgumentsLength("VariableDeclarePartial", functionArgs, 2);
 
-            var output: string = "";
+            var output: string = "",
+                variableType: string = this.parseType(functionArgs[1]);
 
             if (this.getVariableTypesExplicit()) {
                 if (this.getVariableTypesAfterName()) {
-                    output += functionArgs[0] + this.getVariableTypeMarker() + this.getTypeAlias(functionArgs[1]);
+                    output += functionArgs[0] + this.getVariableTypeMarker() + this.parseType(functionArgs[1]);
                 } else {
-                    output += this.getTypeAlias(functionArgs[1]) + " " + functionArgs[0];
+                    output += this.parseType(variableType) + " " + functionArgs[0];
                 }
             } else {
                 output += functionArgs[0];

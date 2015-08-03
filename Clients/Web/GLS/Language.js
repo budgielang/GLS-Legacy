@@ -4,6 +4,8 @@ var GLS;
         function Language() {
             this.printers = {
                 "class constructor end": this.ClassConstructorEnd.bind(this),
+                "class constructor inherited call": this.ClassConstructorInheritedCall.bind(this),
+                "class constructor inherited start": this.ClassConstructorInheritedStart.bind(this),
                 "class constructor start": this.ClassConstructorStart.bind(this),
                 "class end": this.ClassEnd.bind(this),
                 "class member function call": this.ClassMemberFunctionCall.bind(this),
@@ -203,11 +205,23 @@ var GLS;
         Language.prototype.getClassConstructorAsStatic = function () {
             return this.ClassConstructorAsStatic;
         };
+        Language.prototype.getClassConstructorInheritedShorthand = function () {
+            return this.ClassConstructorInheritedShorthand;
+        };
         Language.prototype.getClassConstructorName = function () {
             return this.ClassConstructorName;
         };
+        Language.prototype.getClassConstructorLoose = function () {
+            return this.ClassConstructorLoose;
+        };
         Language.prototype.getClassEnder = function () {
             return this.ClassEnder;
+        };
+        Language.prototype.getClassExtends = function () {
+            return this.ClassExtends;
+        };
+        Language.prototype.getClassExtendsAsFunction = function () {
+            return this.ClassExtendsAsFunction;
         };
         Language.prototype.getClassFunctionsTakeThis = function () {
             return this.ClassFunctionsTakeThis;
@@ -229,6 +243,9 @@ var GLS;
         };
         Language.prototype.getClassNewer = function () {
             return this.ClassNewer;
+        };
+        Language.prototype.getClassParentName = function () {
+            return this.ClassParentName;
         };
         Language.prototype.getClassPrivacy = function () {
             return this.ClassPrivacy;
@@ -456,12 +473,28 @@ var GLS;
             this.ClassConstructorAsStatic = value;
             return this;
         };
+        Language.prototype.setClassConstructorInheritedShorthand = function (value) {
+            this.ClassConstructorInheritedShorthand = value;
+            return this;
+        };
         Language.prototype.setClassConstructorName = function (value) {
             this.ClassConstructorName = value;
             return this;
         };
+        Language.prototype.setClassConstructorLoose = function (value) {
+            this.ClassConstructorLoose = value;
+            return this;
+        };
         Language.prototype.setClassEnder = function (value) {
             this.ClassEnder = value;
+            return this;
+        };
+        Language.prototype.setClassExtends = function (value) {
+            this.ClassExtends = value;
+            return this;
+        };
+        Language.prototype.setClassExtendsAsFunction = function (value) {
+            this.ClassExtendsAsFunction = value;
             return this;
         };
         Language.prototype.setClassFunctionsTakeThis = function (value) {
@@ -490,6 +523,10 @@ var GLS;
         };
         Language.prototype.setClassNewer = function (value) {
             this.ClassNewer = value;
+            return this;
+        };
+        Language.prototype.setClassParentName = function (value) {
+            this.ClassParentName = value;
             return this;
         };
         Language.prototype.setClassPrivacy = function (value) {
@@ -549,7 +586,7 @@ var GLS;
             if (this.typeContainsTemplate(text)) {
                 return this.parseTypeWithTemplate(text);
             }
-            return text;
+            return this.getTypeAlias(text);
         };
         Language.prototype.typeontainsArray = function (text) {
             return name.indexOf("[") !== -1;
@@ -572,10 +609,10 @@ var GLS;
                 if (spaceNext === -1) {
                     break;
                 }
-                output += text.substring(i, spaceNext) + this.getClassTemplatesBetween();
+                output += this.parseType(text.substring(i, spaceNext)) + this.getClassTemplatesBetween();
                 i = spaceNext + 1;
             }
-            output += text.substring(i, text.length - 1);
+            output += this.parseType(text.substring(i, text.length - 1));
             output += ">";
             return output;
         };
@@ -616,10 +653,81 @@ var GLS;
         Language.prototype.ClassConstructorEnd = function (functionArgs, isInline) {
             return [this.getFunctionDefineEnd(), -1];
         };
+        // string super, [string argumentName, string argumentType, ...]
+        Language.prototype.ClassConstructorInheritedCall = function (functionArgs, isInline) {
+            this.requireArgumentsLength("ClassConstructorInheritedCall", functionArgs, 1);
+            var parentName = this.getClassParentName(), callingArgsLength = functionArgs.length, loopStart = 0, callingArgs, callingResult, i;
+            // Blank parentName indicates the super's class name should be used
+            if (parentName.length === 0) {
+                parentName = this.parseType(functionArgs[0]);
+            }
+            if (this.getClassFunctionsTakeThis()) {
+                callingArgsLength += 1;
+                loopStart += 1;
+            }
+            callingArgs = new Array(callingArgsLength);
+            callingArgs[0] = parentName;
+            if (this.getClassExtendsAsFunction()) {
+                callingArgs[0] += "." + this.getClassConstructorName();
+            }
+            if (this.getClassFunctionsTakeThis()) {
+                callingArgs[1] = this.getClassThis();
+            }
+            for (i = loopStart; i < functionArgs.length; i += 1) {
+                callingArgs[i + 1] = functionArgs[i];
+            }
+            return this.FunctionCall(callingArgs, isInline);
+        };
+        // string name[, string superCall[, string argumentName, string argumentType, ...]]
+        Language.prototype.ClassConstructorInheritedStart = function (functionArgs, isInline) {
+            this.requireArgumentsLength("ClassConstructorInheritedStart", functionArgs, 1);
+            if (functionArgs.length === 1) {
+                return this.ClassConstructorStart(functionArgs, isInline);
+            }
+            var generalCall, callingArgs, output, i;
+            // Populate the arguments that will be passed to the actual method
+            if (functionArgs.length > 2) {
+                callingArgs = new Array(functionArgs.length - 1);
+                for (i = 2; i < functionArgs.length; i += 1) {
+                    callingArgs[i - 1] = functionArgs[i];
+                }
+                callingArgs[0] = functionArgs[0];
+            }
+            else {
+                callingArgs = [functionArgs[0]];
+            }
+            generalCall = this.ClassConstructorStart(callingArgs, isInline);
+            if (this.getClassConstructorInheritedShorthand()) {
+                // "Shorthand" usage, like in C#, comes before FunctionDefineRight
+                output = new Array(generalCall.length);
+                output[0] = generalCall[0].substring(0, generalCall[0].length - this.getFunctionDefineRight().length);
+                output[0] += " : " + functionArgs[1] + this.getFunctionDefineRight();
+                for (i = 1; i < generalCall.length; i += 1) {
+                    output[i] = generalCall[i];
+                }
+            }
+            else {
+                // In-function usage, like in Python, comes within the function
+                output = new Array(generalCall.length + 2);
+                output[output.length - 1] = 0;
+                output[generalCall.length - 1] = generalCall[generalCall.length - 1];
+                output[output.length - 2] = functionArgs[1];
+                if (!isInline) {
+                    output[output.length - 2] += this.getSemiColon();
+                }
+                for (i = 0; i < generalCall.length - 1; i += 1) {
+                    output[i] = generalCall[i];
+                }
+            }
+            return output;
+        };
         // string name[, string argumentName, string argumentType, ...]
         Language.prototype.ClassConstructorStart = function (functionArgs, isInline) {
             this.requireArgumentsLength("ClassConstructorStart", functionArgs, 1);
             var output = this.getClassConstructorName(), variableDeclarationArguments = [], i;
+            if (this.getClassConstructorLoose()) {
+                output = this.getClassFunctionsStart() + output;
+            }
             if (output.length === 0) {
                 output = functionArgs[0];
             }
@@ -674,7 +782,7 @@ var GLS;
             this.requireArgumentsLength("ClassMemberFunctionStart", functionArgs, 4);
             var output = this.getClassFunctionsStart(), variableDeclarationArguments = [], i;
             if (this.getFunctionReturnsExplicit() && !this.getFunctionTypeAfterName()) {
-                output = this.getTypeAlias(functionArgs[3]) + " ";
+                output = this.parseType(functionArgs[3]) + " ";
             }
             if (this.getClassPrivacy()) {
                 output = functionArgs[1] + " " + output;
@@ -700,7 +808,7 @@ var GLS;
             }
             output += ")";
             if (this.getFunctionReturnsExplicit() && this.getFunctionTypeAfterName()) {
-                output += this.getFunctionTypeMarker() + this.getTypeAlias(functionArgs[3]);
+                output += this.getFunctionTypeMarker() + this.parseType(functionArgs[3]);
             }
             output += this.getFunctionDefineRight();
             return [output, 1];
@@ -740,26 +848,34 @@ var GLS;
             output += this.getSemiColon();
             return [output, 0];
         };
-        // string name, string visibility
+        // string name[, string visibility[, string parentClass]]
         Language.prototype.ClassStart = function (functionArgs, isInline) {
             this.requireArgumentsLength("ClassStart", functionArgs, 1);
             var output = this.getClassStartLeft();
             output += this.parseType(functionArgs[0]);
+            if (functionArgs.length > 2) {
+                if (this.getClassExtendsAsFunction()) {
+                    output += "(" + this.parseType(functionArgs[2]) + ")";
+                }
+                else {
+                    output += " " + this.getClassExtends() + " " + this.parseType(functionArgs[2]) + " ";
+                }
+            }
             output += this.getClassStartRight();
-            if (functionArgs.length > 1) {
+            if (this.getClassPrivacy() && functionArgs.length > 1) {
                 output = functionArgs[1] + " " + output;
             }
             return [output, 1];
         };
-        // string name[, string argumentName, string argumentType, ...]
+        // string class[, string argumentName, string argumentType, ...]
         Language.prototype.ClassNew = function (functionArgs, isInline) {
             this.requireArgumentsLength("ClassNew", functionArgs, 1);
             var output, i;
             if (this.getClassConstructorAsStatic()) {
-                output = functionArgs[0] + "." + this.getClassNewer() + "(";
+                output = this.parseType(functionArgs[0]) + "." + this.getClassNewer() + "(";
             }
             else {
-                output = this.getClassNewer() + functionArgs[0] + "(";
+                output = this.getClassNewer() + this.parseType(functionArgs[0]) + "(";
             }
             if (functionArgs.length > 1) {
                 for (i = 1; i < functionArgs.length; i += 1) {
@@ -843,7 +959,7 @@ var GLS;
         // e.x. i int 0 lessthan 7
         Language.prototype.ForNumbersStart = function (functionArgs, isInline) {
             this.requireArgumentsLength("ClassStart", functionArgs, 7);
-            var output = "for" + this.getConditionStartLeft(), generalArgs, i = functionArgs[0], typeName = this.getTypeAlias(functionArgs[1]), initial = functionArgs[2], comparison = functionArgs[3], boundary = functionArgs[4], direction = "increaseby", change = "1";
+            var output = "for" + this.getConditionStartLeft(), generalArgs, i = functionArgs[0], typeName = this.parseType(functionArgs[1]), initial = functionArgs[2], comparison = functionArgs[3], boundary = functionArgs[4], direction = "increaseby", change = "1";
             if (this.getRangedForLoops()) {
                 generalArgs = [i, typeName];
                 output += this.VariableDeclare(generalArgs, false)[0];
@@ -886,7 +1002,7 @@ var GLS;
             this.requireArgumentsLength("FunctionStart", functionArgs, 2);
             var output = "", variableDeclarationArguments = [], i;
             if (this.getFunctionReturnsExplicit() && !this.getFunctionTypeAfterName()) {
-                output += this.getTypeAlias(functionArgs[1]) + " ";
+                output += this.parseType(functionArgs[1]) + " ";
             }
             output += this.getFunctionDefine() + functionArgs[0] + "(";
             // All arguments are added using VariableDeclarePartial
@@ -901,7 +1017,7 @@ var GLS;
             }
             output += ")";
             if (this.getFunctionReturnsExplicit() && this.getFunctionTypeAfterName()) {
-                output += this.getFunctionTypeMarker() + this.getTypeAlias(functionArgs[1]);
+                output += this.getFunctionTypeMarker() + this.parseType(functionArgs[1]);
             }
             output += this.getFunctionDefineRight();
             return [output, 1];
@@ -989,13 +1105,13 @@ var GLS;
         // string name, string type[, string value]
         Language.prototype.VariableDeclarePartial = function (functionArgs, isInline) {
             this.requireArgumentsLength("VariableDeclarePartial", functionArgs, 2);
-            var output = "";
+            var output = "", variableType = this.parseType(functionArgs[1]);
             if (this.getVariableTypesExplicit()) {
                 if (this.getVariableTypesAfterName()) {
-                    output += functionArgs[0] + this.getVariableTypeMarker() + this.getTypeAlias(functionArgs[1]);
+                    output += functionArgs[0] + this.getVariableTypeMarker() + this.parseType(functionArgs[1]);
                 }
                 else {
-                    output += this.getTypeAlias(functionArgs[1]) + " " + functionArgs[0];
+                    output += this.parseType(variableType) + " " + functionArgs[0];
                 }
             }
             else {
