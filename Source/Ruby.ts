@@ -6,6 +6,7 @@ module GLS.Languages {
         .setSemiColon("")
         .setArrayClass("")
         .setArrayLength("length")
+        .setArrayNegativeIndices(true)
         .setClassConstructorAsStatic(true)
         .setClassParentName("super")
         .setClassConstructorName("initialize")

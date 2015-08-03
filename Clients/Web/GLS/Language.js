@@ -672,15 +672,26 @@ var GLS;
         */
         // string name, string key
         Language.prototype.ArrayInitialize = function (functionArgs, isInline) {
+            this.requireArgumentsLength("ArrayInitialize", functionArgs, 1);
             return ["sup", 0];
         };
+        // string name, string index
         Language.prototype.ArrayGetItem = function (functionArgs, isInline) {
-            return ["sup", 0];
+            this.requireArgumentsLength("ArrayGetItem", functionArgs, 1);
+            var name = functionArgs[0], output = name + "[", index = functionArgs[1];
+            if (index[0] !== "-" || this.getArrayNegativeIndices()) {
+                output += index;
+            }
+            else {
+                index = index.substring(1);
+                output += this.Operation([this.ArrayGetLength([name], true)[0], "minus", "1"], true)[0];
+            }
+            output += "]";
+            return [output, 0];
         };
+        // string name
         Language.prototype.ArrayGetLength = function (functionArgs, isInline) {
-            return ["sup", 0];
-        };
-        Language.prototype.ArrayLookup = function (functionArgs, isInline) {
+            this.requireArgumentsLength("ArrayGetLength", functionArgs, 1);
             return ["sup", 0];
         };
         Language.prototype.ClassConstructorEnd = function (functionArgs, isInline) {

@@ -7,6 +7,7 @@ module GLS.Languages {
         .setArrayClass("")
         .setArrayLength("len")
         .setArrayLengthAsFunction(true)
+        .setArrayNegativeIndices(true)
         .setClassConstructorName("__init__")
         .setClassConstructorLoose(true)
         .setClassEnder("\0")

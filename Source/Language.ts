@@ -66,6 +66,7 @@ module GLS {
         private ArrayInitializationAsNew: boolean;
         private ArrayLength: string;
         private ArrayLengthAsFunction: boolean;
+        private ArrayNegativeIndices: boolean;
 
         // Functions
         private FunctionDefine: string;
@@ -350,6 +351,10 @@ module GLS {
 
         public getArrayLengthAsFunction(): boolean {
             return this.ArrayLengthAsFunction;
+        }
+
+        public getArrayNegativeIndices(): boolean {
+            return this.ArrayNegativeIndices;
         }
 
         public getFunctionDefine(): string {
@@ -692,6 +697,11 @@ module GLS {
             return this;
         }
 
+        public setArrayNegativeIndices(value: boolean): Language {
+            this.ArrayNegativeIndices = value;
+            return this;
+        }
+
         public setFunctionDefine(value: string): Language {
             this.FunctionDefine = value;
             return this;
@@ -971,18 +981,33 @@ module GLS {
 
         // string name, string key
         public ArrayInitialize(functionArgs: string[], isInline?: boolean): any[] {
+            this.requireArgumentsLength("ArrayInitialize", functionArgs, 1);
+
             return ["sup", 0];
         }
 
+        // string name, string index
         public ArrayGetItem(functionArgs: string[], isInline?: boolean): any[] {
-            return ["sup", 0];
+            this.requireArgumentsLength("ArrayGetItem", functionArgs, 1);
+
+            var name: string = functionArgs[0],
+                output: string = name + "[",
+                index: string = functionArgs[1];
+
+            if (index[0] !== "-" || this.getArrayNegativeIndices()) {
+                output += index;
+            } else {
+                index = index.substring(1);
+                output += this.Operation([this.ArrayGetLength([name], true)[0], "minus", "1"], true)[0];
+            }
+
+            output += "]";
+            return [output, 0];
         }
 
+        // string name
         public ArrayGetLength(functionArgs: string[], isInline?: boolean): any[] {
-            return ["sup", 0];
-        }
-
-        public ArrayLookup(functionArgs: string[], isInline?: boolean): any[] {
+            this.requireArgumentsLength("ArrayGetLength", functionArgs, 1);
             return ["sup", 0];
         }
 

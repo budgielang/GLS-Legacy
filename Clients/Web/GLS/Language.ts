@@ -981,18 +981,33 @@ module GLS {
 
         // string name, string key
         public ArrayInitialize(functionArgs: string[], isInline?: boolean): any[] {
+            this.requireArgumentsLength("ArrayInitialize", functionArgs, 1);
+
             return ["sup", 0];
         }
 
+        // string name, string index
         public ArrayGetItem(functionArgs: string[], isInline?: boolean): any[] {
-            return ["sup", 0];
+            this.requireArgumentsLength("ArrayGetItem", functionArgs, 1);
+
+            var name: string = functionArgs[0],
+                output: string = name + "[",
+                index: string = functionArgs[1];
+
+            if (index[0] !== "-" || this.getArrayNegativeIndices()) {
+                output += index;
+            } else {
+                index = index.substring(1);
+                output += this.Operation([this.ArrayGetLength([name], true)[0], "minus", "1"], true)[0];
+            }
+
+            output += "]";
+            return [output, 0];
         }
 
+        // string name
         public ArrayGetLength(functionArgs: string[], isInline?: boolean): any[] {
-            return ["sup", 0];
-        }
-
-        public ArrayLookup(functionArgs: string[], isInline?: boolean): any[] {
+            this.requireArgumentsLength("ArrayGetLength", functionArgs, 1);
             return ["sup", 0];
         }
 
