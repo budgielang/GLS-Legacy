@@ -971,6 +971,7 @@ module GLS {
                 parentName = this.parseType(functionArgs[0]);
             }
 
+            // Taking a reference to this as a parameter increased the number of them
             if (this.getClassFunctionsTakeThis()) {
                 callingArgsLength += 1;
                 loopStart += 1;
