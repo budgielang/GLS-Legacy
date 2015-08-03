@@ -3,6 +3,10 @@ var GLS;
     var Language = (function () {
         function Language() {
             this.printers = {
+                "array initialize": this.ArrayInitialize.bind(this),
+                "array initialize size": this.ArrayInitializeSized.bind(this),
+                "array get item": this.ArrayGetItem.bind(this),
+                "array get length": this.ArrayGetLength.bind(this),
                 "class constructor end": this.ClassConstructorEnd.bind(this),
                 "class constructor inherited call": this.ClassConstructorInheritedCall.bind(this),
                 "class constructor inherited start": this.ClassConstructorInheritedStart.bind(this),
@@ -127,6 +131,9 @@ var GLS;
         Language.prototype.getOr = function () {
             return this.Or;
         };
+        Language.prototype.getUndefined = function () {
+            return this.Undefined;
+        };
         Language.prototype.getVariableTypesExplicit = function () {
             return this.VariableTypesExplicit;
         };
@@ -178,8 +185,26 @@ var GLS;
         Language.prototype.getArrayClass = function () {
             return this.ArrayClass;
         };
+        Language.prototype.getArrayInitializationAsNew = function () {
+            return this.ArrayInitializationAsNew;
+        };
+        Language.prototype.getArrayInitializationAsNewMultiplied = function () {
+            return this.ArrayInitializationAsNewMultiplied;
+        };
+        Language.prototype.getArrayInitializationAsNewStatic = function () {
+            return this.ArrayInitializationAsNewStatic;
+        };
+        Language.prototype.getArrayInitializationAsNewTyped = function () {
+            return this.ArrayInitializationAsNewTyped;
+        };
         Language.prototype.getArrayLength = function () {
             return this.ArrayLength;
+        };
+        Language.prototype.getArrayLengthAsFunction = function () {
+            return this.ArrayLengthAsFunction;
+        };
+        Language.prototype.getArrayNegativeIndices = function () {
+            return this.ArrayNegativeIndices;
         };
         Language.prototype.getFunctionDefine = function () {
             return this.FunctionDefine;
@@ -369,6 +394,10 @@ var GLS;
             this.Or = value;
             return this;
         };
+        Language.prototype.setUndefined = function (value) {
+            this.Undefined = value;
+            return this;
+        };
         Language.prototype.setVariableTypesExplicit = function (value) {
             this.VariableTypesExplicit = value;
             return this;
@@ -437,8 +466,32 @@ var GLS;
             this.ArrayClass = value;
             return this;
         };
+        Language.prototype.setArrayInitializationAsNew = function (value) {
+            this.ArrayInitializationAsNew = value;
+            return this;
+        };
+        Language.prototype.setArrayInitializationAsNewMultiplied = function (value) {
+            this.ArrayInitializationAsNewMultiplied = value;
+            return this;
+        };
+        Language.prototype.setArrayInitializationAsNewTyped = function (value) {
+            this.ArrayInitializationAsNewTyped = value;
+            return this;
+        };
+        Language.prototype.setArrayInitializationAsNewStatic = function (value) {
+            this.ArrayInitializationAsNewStatic = value;
+            return this;
+        };
         Language.prototype.setArrayLength = function (value) {
             this.ArrayLength = value;
+            return this;
+        };
+        Language.prototype.setArrayLengthAsFunction = function (value) {
+            this.ArrayLengthAsFunction = value;
+            return this;
+        };
+        Language.prototype.setArrayNegativeIndices = function (value) {
+            this.ArrayNegativeIndices = value;
             return this;
         };
         Language.prototype.setFunctionDefine = function (value) {
@@ -580,7 +633,7 @@ var GLS;
         /* Array & Template parsing
         */
         Language.prototype.parseType = function (text) {
-            if (this.typeontainsArray(text)) {
+            if (this.typeContainsArray(text)) {
                 return this.parseTypeWithArray(text);
             }
             if (this.typeContainsTemplate(text)) {
@@ -588,15 +641,15 @@ var GLS;
             }
             return this.getTypeAlias(text);
         };
-        Language.prototype.typeontainsArray = function (text) {
-            return name.indexOf("[") !== -1;
+        Language.prototype.typeContainsArray = function (text) {
+            return text.indexOf("[") !== -1;
         };
         Language.prototype.typeContainsTemplate = function (text) {
             return text.indexOf("<") !== -1;
         };
         Language.prototype.parseTypeWithArray = function (text) {
             var bracketIndex = text.indexOf("["), name = text.substring(0, bracketIndex), remainder = text.substring(bracketIndex);
-            return this.getTypeAlias(name) + remainder;
+            return this.parseType(name) + remainder;
         };
         Language.prototype.parseTypeWithTemplate = function (text) {
             var ltIndex = text.indexOf("<"), output = text.substring(0, ltIndex), i = ltIndex + 1, spaceNext;
@@ -650,6 +703,76 @@ var GLS;
         };
         /* Printers
         */
+        // string type[, string key, ...]
+        Language.prototype.ArrayInitialize = function (functionArgs, isInline) {
+            this.requireArgumentsLength("ArrayInitialize", functionArgs, 1);
+            var arrayType = this.parseType(functionArgs[0]), output, i;
+            if (this.getArrayInitializationAsNewTyped()) {
+                output = "new " + arrayType + "[] { ";
+            }
+            else {
+                output = "[";
+            }
+            for (i = 1; i < functionArgs.length - 1; i += 1) {
+                output += functionArgs[i] + ", ";
+            }
+            output += functionArgs[i];
+            if (this.getArrayInitializationAsNewTyped()) {
+                output += " }";
+            }
+            else {
+                output += "]";
+            }
+            return [output, 0];
+        };
+        // string type, string size
+        Language.prototype.ArrayInitializeSized = function (functionArgs, isInline) {
+            this.requireArgumentsLength("ArrayInitialize", functionArgs, 2);
+            var arrayType = this.parseType(functionArgs[0]), arraySize = functionArgs[1], output;
+            if (this.getArrayInitializationAsNewMultiplied()) {
+                return this.Operation(["[" + this.getUndefined() + "]", "times", arraySize], isInline);
+            }
+            if (this.getArrayInitializationAsNewStatic()) {
+                output = this.getArrayClass() + ".new";
+            }
+            else {
+                output = "new ";
+            }
+            if (this.getArrayInitializationAsNewTyped()) {
+                output += arrayType + "[" + arraySize + "]";
+            }
+            else {
+                if (!this.getArrayInitializationAsNewStatic()) {
+                    output += this.getArrayClass();
+                }
+                output += "(" + arraySize + ")";
+            }
+            return [output, 0];
+        };
+        // string name, string index
+        Language.prototype.ArrayGetItem = function (functionArgs, isInline) {
+            this.requireArgumentsLength("ArrayGetItem", functionArgs, 1);
+            var name = functionArgs[0], output = name + "[", index = functionArgs[1];
+            if (index[0] !== "-" || this.getArrayNegativeIndices()) {
+                output += index;
+            }
+            else {
+                index = index.substring(1);
+                output += this.Operation([this.ArrayGetLength([name], true)[0], "minus", "1"], true)[0];
+            }
+            output += "]";
+            return [output, 0];
+        };
+        // string name
+        Language.prototype.ArrayGetLength = function (functionArgs, isInline) {
+            this.requireArgumentsLength("ArrayGetLength", functionArgs, 1);
+            if (this.getArrayLengthAsFunction()) {
+                return [this.getArrayLength() + "(" + functionArgs[0] + ")", 0];
+            }
+            else {
+                return [functionArgs[0] + this.getArrayLength(), 0];
+            }
+        };
         Language.prototype.ClassConstructorEnd = function (functionArgs, isInline) {
             return [this.getFunctionDefineEnd(), -1];
         };
@@ -1053,7 +1176,7 @@ var GLS;
             var output = this.getMainStartLine();
             return [output, output.length === 0 ? 0 : 1];
         };
-        // string i, string direction, string difference
+        // string i, string operator, string difference
         Language.prototype.Operation = function (functionArgs, isInline) {
             this.requireArgumentsLength("Operation", functionArgs, 3);
             var output = functionArgs[0] + " " + this.getOperationAlias(functionArgs[1]);

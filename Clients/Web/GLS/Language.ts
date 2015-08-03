@@ -36,6 +36,7 @@ module GLS {
         private Or: string;
 
         // Variables
+        private Undefined: string;
         private VariableTypesExplicit: boolean;
         private VariableTypesAfterName: boolean;
         private VariableTypeMarker: string;
@@ -63,7 +64,13 @@ module GLS {
 
         // Arrays
         private ArrayClass: string;
+        private ArrayInitializationAsNew: boolean;
+        private ArrayInitializationAsNewMultiplied: boolean;
+        private ArrayInitializationAsNewStatic: boolean;
+        private ArrayInitializationAsNewTyped: boolean;
         private ArrayLength: string;
+        private ArrayLengthAsFunction: boolean;
+        private ArrayNegativeIndices: boolean;
 
         // Functions
         private FunctionDefine: string;
@@ -115,6 +122,10 @@ module GLS {
 
         constructor() {
             this.printers = {
+                "array initialize": this.ArrayInitialize.bind(this),
+                "array initialize size": this.ArrayInitializeSized.bind(this),
+                "array get item": this.ArrayGetItem.bind(this),
+                "array get length": this.ArrayGetLength.bind(this),
                 "class constructor end": this.ClassConstructorEnd.bind(this),
                 "class constructor inherited call": this.ClassConstructorInheritedCall.bind(this),
                 "class constructor inherited start": this.ClassConstructorInheritedStart.bind(this),
@@ -267,6 +278,10 @@ module GLS {
             return this.Or;
         }
 
+        public getUndefined(): string {
+            return this.Undefined;
+        }
+
         public getVariableTypesExplicit(): boolean {
             return this.VariableTypesExplicit;
         }
@@ -335,8 +350,32 @@ module GLS {
             return this.ArrayClass;
         }
 
+        public getArrayInitializationAsNew(): boolean {
+            return this.ArrayInitializationAsNew;
+        }
+
+        public getArrayInitializationAsNewMultiplied(): boolean {
+            return this.ArrayInitializationAsNewMultiplied;
+        }
+
+        public getArrayInitializationAsNewStatic(): boolean {
+            return this.ArrayInitializationAsNewStatic;
+        }
+
+        public getArrayInitializationAsNewTyped(): boolean {
+            return this.ArrayInitializationAsNewTyped;
+        }
+
         public getArrayLength(): string {
             return this.ArrayLength;
+        }
+
+        public getArrayLengthAsFunction(): boolean {
+            return this.ArrayLengthAsFunction;
+        }
+
+        public getArrayNegativeIndices(): boolean {
+            return this.ArrayNegativeIndices;
         }
 
         public getFunctionDefine(): string {
@@ -584,6 +623,11 @@ module GLS {
             return this;
         }
 
+        public setUndefined(value: string): Language {
+            this.Undefined = value;
+            return this;
+        }
+
         public setVariableTypesExplicit(value: boolean): Language {
             this.VariableTypesExplicit = value;
             return this;
@@ -669,8 +713,38 @@ module GLS {
             return this;
         }
 
+        public setArrayInitializationAsNew(value: boolean): Language {
+            this.ArrayInitializationAsNew = value;
+            return this;
+        }
+
+        public setArrayInitializationAsNewMultiplied(value: boolean): Language {
+            this.ArrayInitializationAsNewMultiplied = value;
+            return this;
+        }
+
+        public setArrayInitializationAsNewTyped(value: boolean): Language {
+            this.ArrayInitializationAsNewTyped = value;
+            return this;
+        }
+
+        public setArrayInitializationAsNewStatic(value: boolean): Language {
+            this.ArrayInitializationAsNewStatic = value;
+            return this;
+        }
+
         public setArrayLength(value: string): Language {
             this.ArrayLength = value;
+            return this;
+        }
+
+        public setArrayLengthAsFunction(value: boolean): Language {
+            this.ArrayLengthAsFunction = value;
+            return this;
+        }
+
+        public setArrayNegativeIndices(value: boolean): Language {
+            this.ArrayNegativeIndices = value;
             return this;
         }
 
@@ -849,7 +923,7 @@ module GLS {
         */
 
         public parseType(text: string): string {
-            if (this.typeontainsArray(text)) {
+            if (this.typeContainsArray(text)) {
                 return this.parseTypeWithArray(text);
             }
 
@@ -860,8 +934,8 @@ module GLS {
             return this.getTypeAlias(text);
         }
 
-        public typeontainsArray(text: string): boolean {
-            return name.indexOf("[") !== -1;
+        public typeContainsArray(text: string): boolean {
+            return text.indexOf("[") !== -1;
         }
 
         public typeContainsTemplate(text: string): boolean {
@@ -873,7 +947,7 @@ module GLS {
                 name: string = text.substring(0, bracketIndex),
                 remainder: string = text.substring(bracketIndex);
 
-            return this.getTypeAlias(name) + remainder;
+            return this.parseType(name) + remainder;
         }
 
         public parseTypeWithTemplate(text: string): string {
@@ -950,6 +1024,95 @@ module GLS {
 
         /* Printers
         */
+
+        // string type[, string key, ...]
+        public ArrayInitialize(functionArgs: string[], isInline?: boolean): any[] {
+            this.requireArgumentsLength("ArrayInitialize", functionArgs, 1);
+
+            var arrayType: string = this.parseType(functionArgs[0]),
+                output: string,
+                i: number;
+
+            if (this.getArrayInitializationAsNewTyped()) {
+                output = "new " + arrayType + "[] { ";
+            } else {
+                output = "[";
+            }
+
+            for (i = 1; i < functionArgs.length - 1; i += 1) {
+                output += functionArgs[i] + ", ";
+            }
+
+            output += functionArgs[i];
+
+            if (this.getArrayInitializationAsNewTyped()) {
+                output += " }";
+            } else {
+                output += "]";
+            }
+
+            return [output, 0];
+        }
+
+        // string type, string size
+        public ArrayInitializeSized(functionArgs: string[], isInline?: boolean): any[] {
+            this.requireArgumentsLength("ArrayInitialize", functionArgs, 2);
+
+            var arrayType: string = this.parseType(functionArgs[0]),
+                arraySize: string = functionArgs[1],
+                output: string;
+
+            if (this.getArrayInitializationAsNewMultiplied()) {
+                return this.Operation(["[" + this.getUndefined() + "]", "times", arraySize], isInline);
+            }
+
+            if (this.getArrayInitializationAsNewStatic()) {
+                output = this.getArrayClass() + ".new";
+            } else {
+                output = "new ";
+            }
+
+            if (this.getArrayInitializationAsNewTyped()) {
+                output += arrayType + "[" + arraySize + "]";
+            } else {
+                if (!this.getArrayInitializationAsNewStatic()) {
+                    output += this.getArrayClass();
+                }
+                output += "(" + arraySize + ")";
+            }
+
+            return [output, 0];
+        }
+
+        // string name, string index
+        public ArrayGetItem(functionArgs: string[], isInline?: boolean): any[] {
+            this.requireArgumentsLength("ArrayGetItem", functionArgs, 1);
+
+            var name: string = functionArgs[0],
+                output: string = name + "[",
+                index: string = functionArgs[1];
+
+            if (index[0] !== "-" || this.getArrayNegativeIndices()) {
+                output += index;
+            } else {
+                index = index.substring(1);
+                output += this.Operation([this.ArrayGetLength([name], true)[0], "minus", "1"], true)[0];
+            }
+
+            output += "]";
+            return [output, 0];
+        }
+
+        // string name
+        public ArrayGetLength(functionArgs: string[], isInline?: boolean): any[] {
+            this.requireArgumentsLength("ArrayGetLength", functionArgs, 1);
+
+            if (this.getArrayLengthAsFunction()) {
+                return [this.getArrayLength() + "(" + functionArgs[0] + ")", 0];
+            } else {
+                return [functionArgs[0] + this.getArrayLength(), 0];
+            }
+        }
 
         public ClassConstructorEnd(functionArgs: string[], isInline?: boolean): any[] {
             return [this.getFunctionDefineEnd(), -1];
@@ -1526,7 +1689,7 @@ module GLS {
             return [output, output.length === 0 ? 0 : 1];
         }
 
-        // string i, string direction, string difference
+        // string i, string operator, string difference
         public Operation(functionArgs: string[], isInline?: boolean): any[] {
             this.requireArgumentsLength("Operation", functionArgs, 3);
 
