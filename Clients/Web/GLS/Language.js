@@ -692,7 +692,12 @@ var GLS;
         // string name
         Language.prototype.ArrayGetLength = function (functionArgs, isInline) {
             this.requireArgumentsLength("ArrayGetLength", functionArgs, 1);
-            return ["sup", 0];
+            if (this.getArrayLengthAsFunction()) {
+                return [this.getArrayLength() + "(" + functionArgs[0] + ")", 0];
+            }
+            else {
+                return [functionArgs[0] + this.getArrayLength(), 0];
+            }
         };
         Language.prototype.ClassConstructorEnd = function (functionArgs, isInline) {
             return [this.getFunctionDefineEnd(), -1];

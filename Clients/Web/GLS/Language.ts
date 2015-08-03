@@ -1008,7 +1008,12 @@ module GLS {
         // string name
         public ArrayGetLength(functionArgs: string[], isInline?: boolean): any[] {
             this.requireArgumentsLength("ArrayGetLength", functionArgs, 1);
-            return ["sup", 0];
+
+            if (this.getArrayLengthAsFunction()) {
+                return [this.getArrayLength() + "(" + functionArgs[0] + ")", 0];
+            } else {
+                return [functionArgs[0] + this.getArrayLength(), 0];
+            }
         }
 
         public ClassConstructorEnd(functionArgs: string[], isInline?: boolean): any[] {

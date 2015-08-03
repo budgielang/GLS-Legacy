@@ -5,7 +5,7 @@ module GLS.Languages {
         .setPrintFunction("puts")
         .setSemiColon("")
         .setArrayClass("")
-        .setArrayLength("length")
+        .setArrayLength(".length")
         .setArrayNegativeIndices(true)
         .setClassConstructorAsStatic(true)
         .setClassParentName("super")

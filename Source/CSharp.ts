@@ -4,7 +4,7 @@ module GLS.Languages {
         .setExtension("cs")
         .setPrintFunction("System.Console.WriteLine")
         .setSemiColon(";")
-        .setArrayLength("Length")
+        .setArrayLength(".Length")
         .setClassConstructorName("")
         .setClassConstructorInheritedShorthand(true)
         .setClassEnder("};")

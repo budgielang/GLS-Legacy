@@ -5,7 +5,7 @@ module GLS.Languages {
         .setPrintFunction("console.log")
         .setSemiColon(";")
         .setArrayClass("")
-        .setArrayLength("length")
+        .setArrayLength(".length")
         .setClassConstructorName("constructor")
         .setClassEnder("}")
         .setClassExtends("extends")
