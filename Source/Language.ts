@@ -82,10 +82,7 @@ module GLS {
 
         // Dictionaries
         private DictionaryClass: string;
-        private DictionaryNewLeft: string;
-        private DictionaryNewRight: string;
-        private DictionaryTypeLeft: string;
-        private DictionaryTypeRight: string;
+        private DictionaryInitializationAsNew: boolean;
 
         // Classes
         private ClassConstructorAsStatic: boolean;
@@ -144,6 +141,10 @@ module GLS {
                 "comment inline": this.CommentInline.bind(this),
                 "comparison": this.Comparison.bind(this),
                 "concatenate": this.Concatenate.bind(this),
+                "dictionary initialize": this.DictionaryInitialize.bind(this),
+                "dictionary initialize end": this.DictionaryInitializeEnd.bind(this),
+                "dictionary initialize key": this.DictionaryInitializeKey.bind(this),
+                "dictionary initialize start": this.DictionaryInitializeStart.bind(this),
                 "file end": this.FileEnd.bind(this),
                 "file start": this.FileStart.bind(this),
                 "for end": this.ForEnd.bind(this),
@@ -409,6 +410,10 @@ module GLS {
 
         public getDictionaryClass(): string {
             return this.DictionaryClass;
+        }
+
+        public getDictionaryInitializationAsNew(): boolean {
+            return this.DictionaryInitializationAsNew;
         }
 
         public getClassConstructorAsStatic(): boolean {
@@ -785,6 +790,11 @@ module GLS {
 
         public setDictionaryClass(value: string): Language {
             this.DictionaryClass = value;
+            return this;
+        }
+
+        public setDictionaryInitializationAsNew(value: boolean): Language {
+            this.DictionaryInitializationAsNew = value;
             return this;
         }
 
@@ -1523,6 +1533,22 @@ module GLS {
             }
 
             return [output, 0];
+        }
+
+        public DictionaryInitialize(functionArgs: string[], isInline?: boolean): any[] {
+            return ["sup", 0];
+        }
+
+        public DictionaryInitializeEnd(functionArgs: string[], isInline?: boolean): any[] {
+            return ["sup", 0];
+        }
+
+        public DictionaryInitializeKey(functionArgs: string[], isInline?: boolean): any[] {
+            return ["sup", 0];
+        }
+
+        public DictionaryInitializeStart(functionArgs: string[], isInline?: boolean): any[] {
+            return ["sup", 0];
         }
 
         public FileEnd(functionArgs: string[], isInline?: boolean): any[] {
