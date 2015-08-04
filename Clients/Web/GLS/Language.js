@@ -49,6 +49,7 @@ var GLS;
                 "print line": this.PrintLine.bind(this),
                 "value": this.Value.bind(this),
                 "variable declare": this.VariableDeclare.bind(this),
+                "variable declare incomplete": this.VariableDeclareIncomplete.bind(this),
                 "variable declare partial": this.VariableDeclarePartial.bind(this),
                 "while condition start": this.WhileConditionStart.bind(this),
                 "while end": this.WhileEnd.bind(this),
@@ -236,6 +237,18 @@ var GLS;
         };
         Language.prototype.getDictionaryClass = function () {
             return this.DictionaryClass;
+        };
+        Language.prototype.getDictionaryKeyLeft = function () {
+            return this.DictionaryKeyLeft;
+        };
+        Language.prototype.getDictionaryKeyMiddle = function () {
+            return this.DictionaryKeyMiddle;
+        };
+        Language.prototype.getDictionaryKeyRight = function () {
+            return this.DictionaryKeyRight;
+        };
+        Language.prototype.getDictionaryKeysNatural = function () {
+            return this.DictionaryKeysNatural;
         };
         Language.prototype.getDictionaryInitializationAsNew = function () {
             return this.DictionaryInitializationAsNew;
@@ -533,6 +546,22 @@ var GLS;
         };
         Language.prototype.setDictionaryClass = function (value) {
             this.DictionaryClass = value;
+            return this;
+        };
+        Language.prototype.setDictionaryKeyLeft = function (value) {
+            this.DictionaryKeyLeft = value;
+            return this;
+        };
+        Language.prototype.setDictionaryKeyMiddle = function (value) {
+            this.DictionaryKeyMiddle = value;
+            return this;
+        };
+        Language.prototype.setDictionaryKeyRight = function (value) {
+            this.DictionaryKeyRight = value;
+            return this;
+        };
+        Language.prototype.setDictionaryKeysNatural = function (value) {
+            this.DictionaryKeysNatural = value;
             return this;
         };
         Language.prototype.setDictionaryInitializationAsNew = function (value) {
@@ -1095,21 +1124,38 @@ var GLS;
             }
             return [output, -1];
         };
+        // string key, string value
         Language.prototype.DictionaryInitializeKey = function (functionArgs, isInline) {
-            return ["sup", 0];
+            this.requireArgumentsLength("DictionaryInitializeKey", functionArgs, 2);
+            var output;
+            if (this.getDictionaryKeysNatural()) {
+                output = "\"" + functionArgs[0] + "\": " + functionArgs[1];
+            }
+            else {
+                output = this.getDictionaryKeyLeft();
+                output += "\"" + functionArgs[0] + "\"";
+                output += this.getDictionaryKeyMiddle();
+                output += functionArgs[1];
+                output += this.getDictionaryKeyRight();
+            }
+            return [output, 0];
         };
         // string keyType, string valueType
         Language.prototype.DictionaryInitializeStart = function (functionArgs, isInline) {
-            this.requireArgumentsLength("ClassStart", functionArgs, 2);
-            var output;
+            this.requireArgumentsLength("DictionaryInitializeStart", functionArgs, 2);
+            var dictionaryType = this.DictionaryType(functionArgs, true)[0], output;
             if (this.getDictionaryInitializationAsNew()) {
                 output = "new ";
             }
             else {
                 output = "";
             }
-            output += this.DictionaryType(functionArgs, true);
-            return [output, 0];
+            output += dictionaryType;
+            if (dictionaryType.length !== 0) {
+                output += " ";
+            }
+            output += "{";
+            return [output, 1];
         };
         // string keyType, string valueType
         Language.prototype.DictionaryType = function (functionArgs, isInline) {
@@ -1289,6 +1335,15 @@ var GLS;
         // string name, string type[, string value]
         Language.prototype.VariableDeclare = function (functionArgs, isInline) {
             this.requireArgumentsLength("VariableDeclare", functionArgs, 2);
+            var output = this.VariableDeclareIncomplete(functionArgs, isInline);
+            if (!isInline) {
+                output[0] = output[0] + this.getSemiColon();
+            }
+            output[1] = 0;
+            return output;
+        };
+        Language.prototype.VariableDeclareIncomplete = function (functionArgs, isInline) {
+            this.requireArgumentsLength("VariableDeclareStartLine", functionArgs, 2);
             var variableType = this.parseType(functionArgs[1]), variableDeclarationArguments, variableDeclared;
             if (functionArgs.length == 2) {
                 variableDeclarationArguments = [functionArgs[0], variableType];
@@ -1298,9 +1353,7 @@ var GLS;
             }
             variableDeclared = this.VariableDeclarePartial(functionArgs, isInline);
             variableDeclared[0] = this.getVariableDeclareStart() + variableDeclared[0];
-            if (!isInline) {
-                variableDeclared[0] = variableDeclared[0] + this.getSemiColon();
-            }
+            variableDeclared[1] = 1;
             return variableDeclared;
         };
         // string name, string type[, string value]
