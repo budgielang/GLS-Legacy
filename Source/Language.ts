@@ -1585,8 +1585,40 @@ module GLS {
             return [output, 0];
         }
 
+        // string key, string value
         public DictionaryInitialize(functionArgs: string[], isInline?: boolean): any[] {
-            return ["sup", 0];
+            this.requireArgumentsLength("DictionaryInitializeKey", functionArgs, 2);
+            //var start: any[] = this.DictionaryInitializeStart(functionArgs, true),
+            //    end: any[] = this.DictionaryInitializeEnd(functionArgs, true);
+
+            //var output: string = start[0];
+
+            //if (this.getDictionaryInitializationAsNew()) {
+            //    output += "()";
+            //}
+
+            //output += end[0];
+
+            //return [output, 0];
+
+            var dictionaryType: string = this.DictionaryType(functionArgs, true)[0],
+                output: string;
+
+            if (this.getDictionaryInitializationAsNew()) {
+                output = "new ";
+            } else {
+                output = "";
+            }
+
+            output += dictionaryType;
+
+            if (dictionaryType.length === 0) {
+                output = "{}";
+            } else {
+                output += "()";
+            }
+
+            return [output, 0];
         }
 
         public DictionaryInitializeEnd(functionArgs: string[], isInline?: boolean): any[] {
@@ -1907,7 +1939,7 @@ module GLS {
             if (!isInline) {
                 output[0] = output[0] + this.getSemiColon();
             }
-            
+
             output[1] = 0;
 
             return output;

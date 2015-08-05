@@ -1114,8 +1114,32 @@ var GLS;
             }
             return [output, 0];
         };
+        // string key, string value
         Language.prototype.DictionaryInitialize = function (functionArgs, isInline) {
-            return ["sup", 0];
+            this.requireArgumentsLength("DictionaryInitializeKey", functionArgs, 2);
+            //var start: any[] = this.DictionaryInitializeStart(functionArgs, true),
+            //    end: any[] = this.DictionaryInitializeEnd(functionArgs, true);
+            //var output: string = start[0];
+            //if (this.getDictionaryInitializationAsNew()) {
+            //    output += "()";
+            //}
+            //output += end[0];
+            //return [output, 0];
+            var dictionaryType = this.DictionaryType(functionArgs, true)[0], output;
+            if (this.getDictionaryInitializationAsNew()) {
+                output = "new ";
+            }
+            else {
+                output = "";
+            }
+            output += dictionaryType;
+            if (dictionaryType.length === 0) {
+                output = "{}";
+            }
+            else {
+                output += "()";
+            }
+            return [output, 0];
         };
         Language.prototype.DictionaryInitializeEnd = function (functionArgs, isInline) {
             var output = "}";
