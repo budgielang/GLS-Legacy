@@ -430,10 +430,6 @@ module GLS {
             return this.DictionaryKeyRight;
         }
 
-        public getDictionaryKeysNatural(): boolean {
-            return this.DictionaryKeysNatural;
-        }
-
         public getDictionaryInitializationAsNew(): boolean {
             return this.DictionaryInitializationAsNew;
         }
@@ -827,11 +823,6 @@ module GLS {
 
         public setDictionaryKeyRight(value: string): Language {
             this.DictionaryKeyRight = value;
-            return this;
-        }
-
-        public setDictionaryKeysNatural(value: boolean): Language {
-            this.DictionaryKeysNatural = value;
             return this;
         }
 
@@ -1588,18 +1579,6 @@ module GLS {
         // string key, string value
         public DictionaryInitialize(functionArgs: string[], isInline?: boolean): any[] {
             this.requireArgumentsLength("DictionaryInitializeKey", functionArgs, 2);
-            //var start: any[] = this.DictionaryInitializeStart(functionArgs, true),
-            //    end: any[] = this.DictionaryInitializeEnd(functionArgs, true);
-
-            //var output: string = start[0];
-
-            //if (this.getDictionaryInitializationAsNew()) {
-            //    output += "()";
-            //}
-
-            //output += end[0];
-
-            //return [output, 0];
 
             var dictionaryType: string = this.DictionaryType(functionArgs, true)[0],
                 output: string;
@@ -1635,17 +1614,11 @@ module GLS {
         public DictionaryInitializeKey(functionArgs: string[], isInline?: boolean): any[] {
             this.requireArgumentsLength("DictionaryInitializeKey", functionArgs, 2);
 
-            var output: string;
-
-            if (this.getDictionaryKeysNatural()) {
-                output = "\"" + functionArgs[0] + "\": " + functionArgs[1];
-            } else {
-                output = this.getDictionaryKeyLeft();
-                output += "\"" + functionArgs[0] + "\"";
-                output += this.getDictionaryKeyMiddle();
-                output += functionArgs[1];
-                output += this.getDictionaryKeyRight();
-            }
+            var output: string = this.getDictionaryKeyLeft();
+            output += functionArgs[0];
+            output += this.getDictionaryKeyMiddle();
+            output += functionArgs[1];
+            output += this.getDictionaryKeyRight();
 
             return [output, 0];
         }
@@ -1654,8 +1627,14 @@ module GLS {
         public DictionaryInitializeStart(functionArgs: string[], isInline?: boolean): any[] {
             this.requireArgumentsLength("DictionaryInitializeStart", functionArgs, 2);
 
-            var dictionaryType: string = this.DictionaryType(functionArgs, true)[0],
+            var dictionaryType: string,
                 output: string;
+
+            if (this.getDictionaryInitializationAsNew()) {
+                dictionaryType = this.DictionaryType(functionArgs, true)[0];
+            } else {
+                dictionaryType = "";
+            }
 
             if (this.getDictionaryInitializationAsNew()) {
                 output = "new ";

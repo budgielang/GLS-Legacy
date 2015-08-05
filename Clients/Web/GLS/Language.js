@@ -247,9 +247,6 @@ var GLS;
         Language.prototype.getDictionaryKeyRight = function () {
             return this.DictionaryKeyRight;
         };
-        Language.prototype.getDictionaryKeysNatural = function () {
-            return this.DictionaryKeysNatural;
-        };
         Language.prototype.getDictionaryInitializationAsNew = function () {
             return this.DictionaryInitializationAsNew;
         };
@@ -558,10 +555,6 @@ var GLS;
         };
         Language.prototype.setDictionaryKeyRight = function (value) {
             this.DictionaryKeyRight = value;
-            return this;
-        };
-        Language.prototype.setDictionaryKeysNatural = function (value) {
-            this.DictionaryKeysNatural = value;
             return this;
         };
         Language.prototype.setDictionaryInitializationAsNew = function (value) {
@@ -1117,14 +1110,6 @@ var GLS;
         // string key, string value
         Language.prototype.DictionaryInitialize = function (functionArgs, isInline) {
             this.requireArgumentsLength("DictionaryInitializeKey", functionArgs, 2);
-            //var start: any[] = this.DictionaryInitializeStart(functionArgs, true),
-            //    end: any[] = this.DictionaryInitializeEnd(functionArgs, true);
-            //var output: string = start[0];
-            //if (this.getDictionaryInitializationAsNew()) {
-            //    output += "()";
-            //}
-            //output += end[0];
-            //return [output, 0];
             var dictionaryType = this.DictionaryType(functionArgs, true)[0], output;
             if (this.getDictionaryInitializationAsNew()) {
                 output = "new ";
@@ -1151,23 +1136,23 @@ var GLS;
         // string key, string value
         Language.prototype.DictionaryInitializeKey = function (functionArgs, isInline) {
             this.requireArgumentsLength("DictionaryInitializeKey", functionArgs, 2);
-            var output;
-            if (this.getDictionaryKeysNatural()) {
-                output = "\"" + functionArgs[0] + "\": " + functionArgs[1];
-            }
-            else {
-                output = this.getDictionaryKeyLeft();
-                output += "\"" + functionArgs[0] + "\"";
-                output += this.getDictionaryKeyMiddle();
-                output += functionArgs[1];
-                output += this.getDictionaryKeyRight();
-            }
+            var output = this.getDictionaryKeyLeft();
+            output += functionArgs[0];
+            output += this.getDictionaryKeyMiddle();
+            output += functionArgs[1];
+            output += this.getDictionaryKeyRight();
             return [output, 0];
         };
         // string keyType, string valueType
         Language.prototype.DictionaryInitializeStart = function (functionArgs, isInline) {
             this.requireArgumentsLength("DictionaryInitializeStart", functionArgs, 2);
-            var dictionaryType = this.DictionaryType(functionArgs, true)[0], output;
+            var dictionaryType, output;
+            if (this.getDictionaryInitializationAsNew()) {
+                dictionaryType = this.DictionaryType(functionArgs, true)[0];
+            }
+            else {
+                dictionaryType = "";
+            }
             if (this.getDictionaryInitializationAsNew()) {
                 output = "new ";
             }
