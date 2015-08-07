@@ -34,6 +34,7 @@ module GLS.Languages {
         .setConditionContinueLeft(" ")
         .setConditionContinueRight(":")
         .setConditionEnd("\0")
+        .setDictionaryKeyChecker(" in ")
         .setDictionaryKeyLeft("")
         .setDictionaryKeyMiddle(": ")
         .setDictionaryKeyRight("")

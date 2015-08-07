@@ -25,6 +25,9 @@ var GLS;
                 "comment inline": this.CommentInline.bind(this),
                 "comparison": this.Comparison.bind(this),
                 "concatenate": this.Concatenate.bind(this),
+                "dictionary key check": this.DictionaryKeyCheck.bind(this),
+                "dictionary key get": this.DictionaryKeyGet.bind(this),
+                "dictionary key set": this.DictionaryKeySet.bind(this),
                 "dictionary initialize": this.DictionaryInitialize.bind(this),
                 "dictionary initialize end": this.DictionaryInitializeEnd.bind(this),
                 "dictionary initialize key": this.DictionaryInitializeKey.bind(this),
@@ -237,6 +240,12 @@ var GLS;
         };
         Language.prototype.getDictionaryClass = function () {
             return this.DictionaryClass;
+        };
+        Language.prototype.getDictionaryKeyCheckAsFunction = function () {
+            return this.DictionaryKeyCheckAsFunction;
+        };
+        Language.prototype.getDictionaryKeyChecker = function () {
+            return this.DictionaryKeyChecker;
         };
         Language.prototype.getDictionaryKeyLeft = function () {
             return this.DictionaryKeyLeft;
@@ -543,6 +552,14 @@ var GLS;
         };
         Language.prototype.setDictionaryClass = function (value) {
             this.DictionaryClass = value;
+            return this;
+        };
+        Language.prototype.setDictionaryKeyCheckAsFunction = function (value) {
+            this.DictionaryKeyCheckAsFunction = value;
+            return this;
+        };
+        Language.prototype.setDictionaryKeyChecker = function (value) {
+            this.DictionaryKeyChecker = value;
             return this;
         };
         Language.prototype.setDictionaryKeyLeft = function (value) {
@@ -1106,6 +1123,28 @@ var GLS;
                 output += this.getSemiColon();
             }
             return [output, 0];
+        };
+        // string name, string key
+        Language.prototype.DictionaryKeyCheck = function (functionArgs, isInline) {
+            this.requireArgumentsLength("DictionaryKeyCheck", functionArgs, 2);
+            var output;
+            if (this.getDictionaryKeyCheckAsFunction()) {
+                output = functionArgs[0] + "." + this.getDictionaryKeyChecker() + "(" + functionArgs[1] + ")";
+            }
+            else {
+                output = functionArgs[1] + this.getDictionaryKeyChecker() + functionArgs[0];
+            }
+            return [output, 0];
+        };
+        // string name, string key
+        Language.prototype.DictionaryKeyGet = function (functionArgs, isInline) {
+            this.requireArgumentsLength("DictionaryKeyGet", functionArgs, 2);
+            return [functionArgs[0] + "[" + functionArgs[1] + "]", 0];
+        };
+        // string name, string key, string value
+        Language.prototype.DictionaryKeySet = function (functionArgs, isInline) {
+            this.requireArgumentsLength("DictionaryKeySet", functionArgs, 3);
+            return [functionArgs[0] + "[" + functionArgs[1] + "] = " + functionArgs[2], 0];
         };
         // string key, string value
         Language.prototype.DictionaryInitialize = function (functionArgs, isInline) {

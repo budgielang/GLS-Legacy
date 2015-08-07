@@ -82,6 +82,8 @@ module GLS {
 
         // Dictionaries
         private DictionaryClass: string;
+        private DictionaryKeyCheckAsFunction: boolean;
+        private DictionaryKeyChecker: string;
         private DictionaryKeyLeft: string;
         private DictionaryKeyMiddle: string;
         private DictionaryKeyRight: string;
@@ -145,6 +147,9 @@ module GLS {
                 "comment inline": this.CommentInline.bind(this),
                 "comparison": this.Comparison.bind(this),
                 "concatenate": this.Concatenate.bind(this),
+                "dictionary key check": this.DictionaryKeyCheck.bind(this),
+                "dictionary key get": this.DictionaryKeyGet.bind(this),
+                "dictionary key set": this.DictionaryKeySet.bind(this),
                 "dictionary initialize": this.DictionaryInitialize.bind(this),
                 "dictionary initialize end": this.DictionaryInitializeEnd.bind(this),
                 "dictionary initialize key": this.DictionaryInitializeKey.bind(this),
@@ -416,6 +421,14 @@ module GLS {
 
         public getDictionaryClass(): string {
             return this.DictionaryClass;
+        }
+
+        public getDictionaryKeyCheckAsFunction(): boolean {
+            return this.DictionaryKeyCheckAsFunction;
+        }
+
+        public getDictionaryKeyChecker(): string {
+            return this.DictionaryKeyChecker;
         }
 
         public getDictionaryKeyLeft(): string {
@@ -808,6 +821,16 @@ module GLS {
 
         public setDictionaryClass(value: string): Language {
             this.DictionaryClass = value;
+            return this;
+        }
+
+        public setDictionaryKeyCheckAsFunction(value: boolean): Language {
+            this.DictionaryKeyCheckAsFunction = value;
+            return this;
+        }
+
+        public setDictionaryKeyChecker(value: string): Language {
+            this.DictionaryKeyChecker = value;
             return this;
         }
 
@@ -1574,6 +1597,35 @@ module GLS {
             }
 
             return [output, 0];
+        }
+
+        // string name, string key
+        public DictionaryKeyCheck(functionArgs: string[], isInline?: boolean): any[] {
+            this.requireArgumentsLength("DictionaryKeyCheck", functionArgs, 2);
+
+            var output: string;
+
+            if (this.getDictionaryKeyCheckAsFunction()) {
+                output = functionArgs[0] + "." + this.getDictionaryKeyChecker() + "(" + functionArgs[1] + ")";
+            } else {
+                output = functionArgs[1] + this.getDictionaryKeyChecker() + functionArgs[0];
+            }
+
+            return [output, 0];
+        }
+
+        // string name, string key
+        public DictionaryKeyGet(functionArgs: string[], isInline?: boolean): any[] {
+            this.requireArgumentsLength("DictionaryKeyGet", functionArgs, 2);
+
+            return [functionArgs[0] + "[" + functionArgs[1] + "]", 0];
+        }
+
+        // string name, string key, string value
+        public DictionaryKeySet(functionArgs: string[], isInline?: boolean): any[] {
+            this.requireArgumentsLength("DictionaryKeySet", functionArgs, 3);
+
+            return [functionArgs[0] + "[" + functionArgs[1] + "] = " + functionArgs[2], 0];
         }
 
         // string key, string value
