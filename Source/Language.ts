@@ -99,6 +99,9 @@ module GLS {
         private ClassEnder: string;
         private ClassExtends: string;
         private ClassExtendsAsFunction: boolean;
+        private ClassMemberFunctionGetEnd: string;
+        private ClassMemberFunctionGetStart: string;
+        private ClassMemberFunctionGetBind: boolean;
         private ClassFunctionsTakeThis: boolean;
         private ClassFunctionsStart: string;
         private ClassFunctionsThis: string;
@@ -136,6 +139,7 @@ module GLS {
                 "class end": this.ClassEnd.bind(this),
                 "class member function call": this.ClassMemberFunctionCall.bind(this),
                 "class member function end": this.ClassMemberFunctionEnd.bind(this),
+                "class member function get": this.ClassMemberFunctionGet.bind(this),
                 "class member function start": this.ClassMemberFunctionStart.bind(this),
                 "class member variable declare": this.ClassMemberVariableDeclare.bind(this),
                 "class member variable get": this.ClassMemberVariableGet.bind(this),
@@ -485,6 +489,18 @@ module GLS {
 
         public getClassFunctionsThis(): string {
             return this.ClassFunctionsThis;
+        }
+
+        public getClassMemberFunctionGetBind(): boolean {
+            return this.ClassMemberFunctionGetBind;
+        }
+
+        public getClassMemberFunctionGetEnd(): string {
+            return this.ClassMemberFunctionGetEnd;
+        }
+
+        public getClassMemberFunctionGetStart(): string {
+            return this.ClassMemberFunctionGetStart;
         }
 
         public getClassMemberVariableDefault(): string {
@@ -901,6 +917,21 @@ module GLS {
 
         public setClassFunctionsThis(value: string): Language {
             this.ClassFunctionsThis = value;
+            return this;
+        }
+
+        public setClassMemberFunctionGetBind(value: boolean): Language {
+            this.ClassMemberFunctionGetBind = value;
+            return this;
+        }
+
+        public setClassMemberFunctionGetEnd(value: string): Language {
+            this.ClassMemberFunctionGetEnd = value;
+            return this;
+        }
+
+        public setClassMemberFunctionGetStart(value: string): Language {
+            this.ClassMemberFunctionGetStart = value;
             return this;
         }
 
@@ -1372,6 +1403,21 @@ module GLS {
 
         public ClassMemberFunctionEnd(functionArgs: string[], isInline?: boolean): any[] {
             return [this.getFunctionDefineEnd(), -1];
+        }
+
+        // string variable, string function
+        public ClassMemberFunctionGet(functionArgs: string[], isInline?: boolean): any[] {
+            this.requireArgumentsLength("ClassMemberFunctionStart", functionArgs, 2);
+            var output: string = "";
+
+            output += this.getClassMemberFunctionGetStart() + functionArgs[0];
+            output += "." + functionArgs[1] + this.getClassMemberFunctionGetEnd();
+
+            if (this.getClassMemberFunctionGetBind()) {
+                output += "(" + functionArgs[0] + ")";
+            }
+
+            return [output, 0];
         }
 
         // string class, string visibility, string name, string return, [, string argumentName, string argumentType...]
