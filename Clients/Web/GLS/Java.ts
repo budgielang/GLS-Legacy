@@ -32,6 +32,8 @@ module GLS.Languages {
         .setConditionContinueLeft("} ")
         .setConditionContinueRight(" {")
         .setConditionEnd("}")
+        .setDictionaryInitializateEnder("}}")
+        .setDictionaryInitializateStarter("{{")
         .setDictionaryClass("HashMap")
         .setDictionaryInitializationAsNew(true)
         .setDictionaryKeyCheckAsFunction(true)

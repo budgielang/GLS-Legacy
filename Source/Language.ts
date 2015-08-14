@@ -89,6 +89,8 @@ module GLS {
         private DictionaryKeyRight: string;
         private DictionaryKeysNatural: boolean;
         private DictionaryInitializationAsNew: boolean;
+        private DictionaryInitializateStarter: string;
+        private DictionaryInitializateEnder: string;
 
         // Classes
         private ClassConstructorAsStatic: boolean;
@@ -176,6 +178,7 @@ module GLS {
                 "operation": this.Operation.bind(this),
                 "parenthesis": this.Parenthesis.bind(this),
                 "print line": this.PrintLine.bind(this),
+                "type": this.Type.bind(this),
                 "value": this.Value.bind(this),
                 "variable declare": this.VariableDeclare.bind(this),
                 "variable declare incomplete": this.VariableDeclareIncomplete.bind(this),
@@ -449,6 +452,14 @@ module GLS {
 
         public getDictionaryInitializationAsNew(): boolean {
             return this.DictionaryInitializationAsNew;
+        }
+
+        public getDictionaryInitializeStarter(): string {
+            return this.DictionaryInitializateStarter;
+        }
+
+        public getDictionaryInitializeEnder(): string {
+            return this.DictionaryInitializateEnder;
         }
 
         public getClassConstructorAsStatic(): boolean {
@@ -867,6 +878,16 @@ module GLS {
 
         public setDictionaryInitializationAsNew(value: boolean): Language {
             this.DictionaryInitializationAsNew = value;
+            return this;
+        }
+
+        public setDictionaryInitializateStarter(value: string): Language {
+            this.DictionaryInitializateStarter = value;
+            return this;
+        }
+
+        public setDictionaryInitializateEnder(value: string): Language {
+            this.DictionaryInitializateEnder = value;
             return this;
         }
 
@@ -1682,24 +1703,16 @@ module GLS {
                 output: string;
 
             if (this.getDictionaryInitializationAsNew()) {
-                output = "new ";
+                output = "new " + dictionaryType + "()";
             } else {
-                output = "";
-            }
-
-            output += dictionaryType;
-
-            if (dictionaryType.length === 0) {
                 output = "{}";
-            } else {
-                output += "()";
             }
 
             return [output, 0];
         }
 
         public DictionaryInitializeEnd(functionArgs: string[], isInline?: boolean): any[] {
-            var output: string = "}";
+            var output: string = this.getDictionaryInitializeEnder();
 
             if (!isInline) {
                 output += this.getSemiColon();
@@ -1746,7 +1759,7 @@ module GLS {
                 output += " ";
             }
 
-            output += "{";
+            output += this.getDictionaryInitializeStarter();
 
             return [output, 1];
         }
@@ -1755,20 +1768,16 @@ module GLS {
         public DictionaryType(functionArgs: string[], isInline?: boolean): any[] {
             this.requireArgumentsLength("ClassStart", functionArgs, 2);
 
-            var output: string = "";
+            if (!this.getVariableTypesExplicit()) {
+                return ["", 0];
+            }
 
-            if (this.getVariableTypesExplicit()) {
-                if (this.getDictionaryInitializationAsNew()) {
-                    output = this.getDictionaryClass();
+            var output: string = this.getDictionaryClass();
 
-                    if (this.getClassTemplates()) {
-                        output += "<" + this.parseType(functionArgs[0]);
-                        output += this.getClassTemplatesBetween();
-                        output += this.parseType(functionArgs[1]) + ">";
-                    }
-                } else {
-                    output = this.getDictionaryClass();
-                }
+            if (this.getDictionaryInitializationAsNew()) {
+                output += "<" + this.parseType(functionArgs[0]);
+                output += this.getClassTemplatesBetween();
+                output += this.parseType(functionArgs[1]) + ">";
             }
 
             return [output, 0];
@@ -2000,6 +2009,11 @@ module GLS {
             return [output, 0];
         }
 
+        // string type
+        public Type(functionArgs: string[], isInline?: boolean): any[] {
+            return [this.getTypeAlias(functionArgs[0]), 0];
+        }
+
         // string value
         public Value(functionArgs: string[], isInline?: boolean): any[] {
             this.requireArgumentsLength("VariableDeclare", functionArgs, 1);
@@ -2062,7 +2076,7 @@ module GLS {
                 output += " " + this.getOperationAlias("equals") + " " + this.getValueAlias(functionArgs[2]);
             }
 
-            return [output, 0];
+            return [output, 1];
         }
 
         // string left, string operator, string right

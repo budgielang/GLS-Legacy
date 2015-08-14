@@ -89,6 +89,8 @@ module GLS {
         private DictionaryKeyRight: string;
         private DictionaryKeysNatural: boolean;
         private DictionaryInitializationAsNew: boolean;
+        private DictionaryInitializateStarter: string;
+        private DictionaryInitializateEnder: string;
 
         // Classes
         private ClassConstructorAsStatic: boolean;
@@ -99,6 +101,9 @@ module GLS {
         private ClassEnder: string;
         private ClassExtends: string;
         private ClassExtendsAsFunction: boolean;
+        private ClassMemberFunctionGetEnd: string;
+        private ClassMemberFunctionGetStart: string;
+        private ClassMemberFunctionGetBind: boolean;
         private ClassFunctionsTakeThis: boolean;
         private ClassFunctionsStart: string;
         private ClassFunctionsThis: string;
@@ -136,6 +141,7 @@ module GLS {
                 "class end": this.ClassEnd.bind(this),
                 "class member function call": this.ClassMemberFunctionCall.bind(this),
                 "class member function end": this.ClassMemberFunctionEnd.bind(this),
+                "class member function get": this.ClassMemberFunctionGet.bind(this),
                 "class member function start": this.ClassMemberFunctionStart.bind(this),
                 "class member variable declare": this.ClassMemberVariableDeclare.bind(this),
                 "class member variable get": this.ClassMemberVariableGet.bind(this),
@@ -172,6 +178,7 @@ module GLS {
                 "operation": this.Operation.bind(this),
                 "parenthesis": this.Parenthesis.bind(this),
                 "print line": this.PrintLine.bind(this),
+                "type": this.Type.bind(this),
                 "value": this.Value.bind(this),
                 "variable declare": this.VariableDeclare.bind(this),
                 "variable declare incomplete": this.VariableDeclareIncomplete.bind(this),
@@ -447,6 +454,14 @@ module GLS {
             return this.DictionaryInitializationAsNew;
         }
 
+        public getDictionaryInitializeStarter(): string {
+            return this.DictionaryInitializateStarter;
+        }
+
+        public getDictionaryInitializeEnder(): string {
+            return this.DictionaryInitializateEnder;
+        }
+
         public getClassConstructorAsStatic(): boolean {
             return this.ClassConstructorAsStatic;
         }
@@ -485,6 +500,18 @@ module GLS {
 
         public getClassFunctionsThis(): string {
             return this.ClassFunctionsThis;
+        }
+
+        public getClassMemberFunctionGetBind(): boolean {
+            return this.ClassMemberFunctionGetBind;
+        }
+
+        public getClassMemberFunctionGetEnd(): string {
+            return this.ClassMemberFunctionGetEnd;
+        }
+
+        public getClassMemberFunctionGetStart(): string {
+            return this.ClassMemberFunctionGetStart;
         }
 
         public getClassMemberVariableDefault(): string {
@@ -854,6 +881,16 @@ module GLS {
             return this;
         }
 
+        public setDictionaryInitializateStarter(value: string): Language {
+            this.DictionaryInitializateStarter = value;
+            return this;
+        }
+
+        public setDictionaryInitializateEnder(value: string): Language {
+            this.DictionaryInitializateEnder = value;
+            return this;
+        }
+
         public setClassConstructorAsStatic(value: boolean): Language {
             this.ClassConstructorAsStatic = value;
             return this;
@@ -901,6 +938,21 @@ module GLS {
 
         public setClassFunctionsThis(value: string): Language {
             this.ClassFunctionsThis = value;
+            return this;
+        }
+
+        public setClassMemberFunctionGetBind(value: boolean): Language {
+            this.ClassMemberFunctionGetBind = value;
+            return this;
+        }
+
+        public setClassMemberFunctionGetEnd(value: string): Language {
+            this.ClassMemberFunctionGetEnd = value;
+            return this;
+        }
+
+        public setClassMemberFunctionGetStart(value: string): Language {
+            this.ClassMemberFunctionGetStart = value;
             return this;
         }
 
@@ -1374,6 +1426,21 @@ module GLS {
             return [this.getFunctionDefineEnd(), -1];
         }
 
+        // string variable, string function
+        public ClassMemberFunctionGet(functionArgs: string[], isInline?: boolean): any[] {
+            this.requireArgumentsLength("ClassMemberFunctionStart", functionArgs, 2);
+            var output: string = "";
+
+            output += this.getClassMemberFunctionGetStart() + functionArgs[0];
+            output += "." + functionArgs[1] + this.getClassMemberFunctionGetEnd();
+
+            if (this.getClassMemberFunctionGetBind()) {
+                output += "(" + functionArgs[0] + ")";
+            }
+
+            return [output, 0];
+        }
+
         // string class, string visibility, string name, string return, [, string argumentName, string argumentType...]
         public ClassMemberFunctionStart(functionArgs: string[], isInline?: boolean): any[] {
             this.requireArgumentsLength("ClassMemberFunctionStart", functionArgs, 4);
@@ -1636,24 +1703,16 @@ module GLS {
                 output: string;
 
             if (this.getDictionaryInitializationAsNew()) {
-                output = "new ";
+                output = "new " + dictionaryType + "()";
             } else {
-                output = "";
-            }
-
-            output += dictionaryType;
-
-            if (dictionaryType.length === 0) {
                 output = "{}";
-            } else {
-                output += "()";
             }
 
             return [output, 0];
         }
 
         public DictionaryInitializeEnd(functionArgs: string[], isInline?: boolean): any[] {
-            var output: string = "}";
+            var output: string = this.getDictionaryInitializeEnder();
 
             if (!isInline) {
                 output += this.getSemiColon();
@@ -1700,7 +1759,7 @@ module GLS {
                 output += " ";
             }
 
-            output += "{";
+            output += this.getDictionaryInitializeStarter();
 
             return [output, 1];
         }
@@ -1709,20 +1768,16 @@ module GLS {
         public DictionaryType(functionArgs: string[], isInline?: boolean): any[] {
             this.requireArgumentsLength("ClassStart", functionArgs, 2);
 
-            var output: string = "";
+            if (!this.getVariableTypesExplicit()) {
+                return ["", 0];
+            }
 
-            if (this.getVariableTypesExplicit()) {
-                if (this.getDictionaryInitializationAsNew()) {
-                    output = this.getDictionaryClass();
+            var output: string = this.getDictionaryClass();
 
-                    if (this.getClassTemplates()) {
-                        output += "<" + this.parseType(functionArgs[0]);
-                        output += this.getClassTemplatesBetween();
-                        output += this.parseType(functionArgs[1]) + ">";
-                    }
-                } else {
-                    output = this.getDictionaryClass();
-                }
+            if (this.getDictionaryInitializationAsNew()) {
+                output += "<" + this.parseType(functionArgs[0]);
+                output += this.getClassTemplatesBetween();
+                output += this.parseType(functionArgs[1]) + ">";
             }
 
             return [output, 0];
@@ -1954,6 +2009,11 @@ module GLS {
             return [output, 0];
         }
 
+        // string type
+        public Type(functionArgs: string[], isInline?: boolean): any[] {
+            return [this.getTypeAlias(functionArgs[0]), 0];
+        }
+
         // string value
         public Value(functionArgs: string[], isInline?: boolean): any[] {
             this.requireArgumentsLength("VariableDeclare", functionArgs, 1);
@@ -2016,7 +2076,7 @@ module GLS {
                 output += " " + this.getOperationAlias("equals") + " " + this.getValueAlias(functionArgs[2]);
             }
 
-            return [output, 0];
+            return [output, 1];
         }
 
         // string left, string operator, string right

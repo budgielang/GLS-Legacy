@@ -55,15 +55,15 @@ document.onreadystatechange = function (event) {
             return;
         }
 
-        try {
+        //try {
             original = source.value;
             resultTexter.innerText = converter.parseCommands(language, original.split("\n"));
             localStorage.setItem("original", original);
             Prism.highlightAll();
-        } catch (error) {
-            // Logging errors is spammy, so it's not done...
-            console.log(error.toString());
-        }
+        //} catch (error) {
+        //    // Logging errors is spammy, so it's not done...
+        //    console.log(error.toString());
+        //}
     }
 
     function checkLanguageDefault() {
@@ -202,7 +202,7 @@ document.onreadystatechange = function (event) {
         "        print line : (\"Hello world!\")",
         "        comment inline : (basic printing here)",
         "        ",
-        "        comment line : Variables",
+        "        comment line : Basic Variables",
         "        variable declare : a string (\"Hello world!\")",
         "        variable declare : b int 7",
         "        variable declare : c double 11.7",
@@ -237,6 +237,16 @@ document.onreadystatechange = function (event) {
         "        for numbers start : i int 0 lessthan 7 increaseby 1",
         "            print line : { concatenate : (\"i plus one is \") { parenthesis : { operation : i plus 1 } } }",
         "        for end",
+        "        ",
+        "        comment line : Dictionaries",
+        "        variable declare : g { dictionary type : string int } { dictionary initialize : string int }",
+        "        variable declare : h boolean { dictionary key check : g \"sup\" }",
+        "        comment inline : { value : false }",
+        "        variable declare : i {dictionary type : string int } { dictionary initialize start : string boolean }",
+        "            dictionary initialize key : \"foo\" 7",
+        "            dictionary initialize key : \"bar\" 14",
+        "            dictionary initialize key : \"baz\" 21",
+        "        dictionary initialize end",
         "        ",
         "        comment line : (Calling Functions)",
         "        function call : sayHello",

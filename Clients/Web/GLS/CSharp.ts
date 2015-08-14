@@ -33,6 +33,8 @@ module GLS.Languages {
         .setConditionContinueLeft("} ")
         .setConditionContinueRight(" {")
         .setConditionEnd("}")
+        .setDictionaryInitializateEnder("}")
+        .setDictionaryInitializateStarter("{")
         .setDictionaryClass("Dictionary")
         .setDictionaryInitializationAsNew(true)
         .setDictionaryKeyCheckAsFunction(true)

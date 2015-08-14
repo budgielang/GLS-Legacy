@@ -34,6 +34,8 @@ module GLS.Languages {
         .setConditionContinueLeft(" ")
         .setConditionContinueRight("")
         .setConditionEnd("end")
+        .setDictionaryInitializateEnder("}")
+        .setDictionaryInitializateStarter("{")
         .setDictionaryKeyCheckAsFunction(true)
         .setDictionaryKeyChecker("has_key?")
         .setDictionaryKeyLeft("")

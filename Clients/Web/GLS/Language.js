@@ -14,6 +14,7 @@ var GLS;
                 "class end": this.ClassEnd.bind(this),
                 "class member function call": this.ClassMemberFunctionCall.bind(this),
                 "class member function end": this.ClassMemberFunctionEnd.bind(this),
+                "class member function get": this.ClassMemberFunctionGet.bind(this),
                 "class member function start": this.ClassMemberFunctionStart.bind(this),
                 "class member variable declare": this.ClassMemberVariableDeclare.bind(this),
                 "class member variable get": this.ClassMemberVariableGet.bind(this),
@@ -50,6 +51,7 @@ var GLS;
                 "operation": this.Operation.bind(this),
                 "parenthesis": this.Parenthesis.bind(this),
                 "print line": this.PrintLine.bind(this),
+                "type": this.Type.bind(this),
                 "value": this.Value.bind(this),
                 "variable declare": this.VariableDeclare.bind(this),
                 "variable declare incomplete": this.VariableDeclareIncomplete.bind(this),
@@ -259,6 +261,12 @@ var GLS;
         Language.prototype.getDictionaryInitializationAsNew = function () {
             return this.DictionaryInitializationAsNew;
         };
+        Language.prototype.getDictionaryInitializeStarter = function () {
+            return this.DictionaryInitializateStarter;
+        };
+        Language.prototype.getDictionaryInitializeEnder = function () {
+            return this.DictionaryInitializateEnder;
+        };
         Language.prototype.getClassConstructorAsStatic = function () {
             return this.ClassConstructorAsStatic;
         };
@@ -288,6 +296,15 @@ var GLS;
         };
         Language.prototype.getClassFunctionsThis = function () {
             return this.ClassFunctionsThis;
+        };
+        Language.prototype.getClassMemberFunctionGetBind = function () {
+            return this.ClassMemberFunctionGetBind;
+        };
+        Language.prototype.getClassMemberFunctionGetEnd = function () {
+            return this.ClassMemberFunctionGetEnd;
+        };
+        Language.prototype.getClassMemberFunctionGetStart = function () {
+            return this.ClassMemberFunctionGetStart;
         };
         Language.prototype.getClassMemberVariableDefault = function () {
             return this.ClassMemberVariableDefault;
@@ -578,6 +595,14 @@ var GLS;
             this.DictionaryInitializationAsNew = value;
             return this;
         };
+        Language.prototype.setDictionaryInitializateStarter = function (value) {
+            this.DictionaryInitializateStarter = value;
+            return this;
+        };
+        Language.prototype.setDictionaryInitializateEnder = function (value) {
+            this.DictionaryInitializateEnder = value;
+            return this;
+        };
         Language.prototype.setClassConstructorAsStatic = function (value) {
             this.ClassConstructorAsStatic = value;
             return this;
@@ -616,6 +641,18 @@ var GLS;
         };
         Language.prototype.setClassFunctionsThis = function (value) {
             this.ClassFunctionsThis = value;
+            return this;
+        };
+        Language.prototype.setClassMemberFunctionGetBind = function (value) {
+            this.ClassMemberFunctionGetBind = value;
+            return this;
+        };
+        Language.prototype.setClassMemberFunctionGetEnd = function (value) {
+            this.ClassMemberFunctionGetEnd = value;
+            return this;
+        };
+        Language.prototype.setClassMemberFunctionGetStart = function (value) {
+            this.ClassMemberFunctionGetStart = value;
             return this;
         };
         Language.prototype.setClassMemberVariableDefault = function (value) {
@@ -962,6 +999,17 @@ var GLS;
         Language.prototype.ClassMemberFunctionEnd = function (functionArgs, isInline) {
             return [this.getFunctionDefineEnd(), -1];
         };
+        // string variable, string function
+        Language.prototype.ClassMemberFunctionGet = function (functionArgs, isInline) {
+            this.requireArgumentsLength("ClassMemberFunctionStart", functionArgs, 2);
+            var output = "";
+            output += this.getClassMemberFunctionGetStart() + functionArgs[0];
+            output += "." + functionArgs[1] + this.getClassMemberFunctionGetEnd();
+            if (this.getClassMemberFunctionGetBind()) {
+                output += "(" + functionArgs[0] + ")";
+            }
+            return [output, 0];
+        };
         // string class, string visibility, string name, string return, [, string argumentName, string argumentType...]
         Language.prototype.ClassMemberFunctionStart = function (functionArgs, isInline) {
             this.requireArgumentsLength("ClassMemberFunctionStart", functionArgs, 4);
@@ -1151,22 +1199,15 @@ var GLS;
             this.requireArgumentsLength("DictionaryInitializeKey", functionArgs, 2);
             var dictionaryType = this.DictionaryType(functionArgs, true)[0], output;
             if (this.getDictionaryInitializationAsNew()) {
-                output = "new ";
+                output = "new " + dictionaryType + "()";
             }
             else {
-                output = "";
-            }
-            output += dictionaryType;
-            if (dictionaryType.length === 0) {
                 output = "{}";
-            }
-            else {
-                output += "()";
             }
             return [output, 0];
         };
         Language.prototype.DictionaryInitializeEnd = function (functionArgs, isInline) {
-            var output = "}";
+            var output = this.getDictionaryInitializeEnder();
             if (!isInline) {
                 output += this.getSemiColon();
             }
@@ -1202,25 +1243,20 @@ var GLS;
             if (dictionaryType.length !== 0) {
                 output += " ";
             }
-            output += "{";
+            output += this.getDictionaryInitializeStarter();
             return [output, 1];
         };
         // string keyType, string valueType
         Language.prototype.DictionaryType = function (functionArgs, isInline) {
             this.requireArgumentsLength("ClassStart", functionArgs, 2);
-            var output = "";
-            if (this.getVariableTypesExplicit()) {
-                if (this.getDictionaryInitializationAsNew()) {
-                    output = this.getDictionaryClass();
-                    if (this.getClassTemplates()) {
-                        output += "<" + this.parseType(functionArgs[0]);
-                        output += this.getClassTemplatesBetween();
-                        output += this.parseType(functionArgs[1]) + ">";
-                    }
-                }
-                else {
-                    output = this.getDictionaryClass();
-                }
+            if (!this.getVariableTypesExplicit()) {
+                return ["", 0];
+            }
+            var output = this.getDictionaryClass();
+            if (this.getDictionaryInitializationAsNew()) {
+                output += "<" + this.parseType(functionArgs[0]);
+                output += this.getClassTemplatesBetween();
+                output += this.parseType(functionArgs[1]) + ">";
             }
             return [output, 0];
         };
@@ -1375,6 +1411,10 @@ var GLS;
             }
             return [output, 0];
         };
+        // string type
+        Language.prototype.Type = function (functionArgs, isInline) {
+            return [this.getTypeAlias(functionArgs[0]), 0];
+        };
         // string value
         Language.prototype.Value = function (functionArgs, isInline) {
             this.requireArgumentsLength("VariableDeclare", functionArgs, 1);
@@ -1422,7 +1462,7 @@ var GLS;
             if (functionArgs.length > 2) {
                 output += " " + this.getOperationAlias("equals") + " " + this.getValueAlias(functionArgs[2]);
             }
-            return [output, 0];
+            return [output, 1];
         };
         // string left, string operator, string right
         Language.prototype.WhileConditionStart = function (functionArgs, isInline) {
