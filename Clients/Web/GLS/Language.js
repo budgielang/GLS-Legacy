@@ -1071,6 +1071,7 @@ var GLS;
                 variableDeclarationArgs = [functionArgs[0], variableType];
             }
             variableDeclared = this.VariableDeclarePartial(variableDeclarationArgs, isInline);
+            variableDeclared[1] = 0;
             if (!isInline) {
                 variableDeclared[0] = variableDeclared[0] + this.getSemiColon();
             }
