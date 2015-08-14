@@ -262,10 +262,16 @@ var GLS;
             return this.DictionaryInitializationAsNew;
         };
         Language.prototype.getDictionaryInitializeStarter = function () {
-            return this.DictionaryInitializateStarter;
+            return this.DictionaryInitializeStarter;
         };
         Language.prototype.getDictionaryInitializeEnder = function () {
-            return this.DictionaryInitializateEnder;
+            return this.DictionaryInitializeEnder;
+        };
+        Language.prototype.getDictionaryInitializeKeyComma = function () {
+            return this.DictionaryInitializeKeyComma;
+        };
+        Language.prototype.getDictionaryInitializeKeyWithSemicolon = function () {
+            return this.DictionaryInitializeKeyWithSemicolon;
         };
         Language.prototype.getClassConstructorAsStatic = function () {
             return this.ClassConstructorAsStatic;
@@ -595,12 +601,20 @@ var GLS;
             this.DictionaryInitializationAsNew = value;
             return this;
         };
-        Language.prototype.setDictionaryInitializateStarter = function (value) {
-            this.DictionaryInitializateStarter = value;
+        Language.prototype.setDictionaryInitializeStarter = function (value) {
+            this.DictionaryInitializeStarter = value;
             return this;
         };
-        Language.prototype.setDictionaryInitializateEnder = function (value) {
-            this.DictionaryInitializateEnder = value;
+        Language.prototype.setDictionaryInitializeEnder = function (value) {
+            this.DictionaryInitializeEnder = value;
+            return this;
+        };
+        Language.prototype.setDictionaryInitializeKeyComma = function (value) {
+            this.DictionaryInitializeKeyComma = value;
+            return this;
+        };
+        Language.prototype.setDictionaryInitializeKeyWithSemicolon = function (value) {
+            this.DictionaryInitializeKeyWithSemicolon = value;
             return this;
         };
         Language.prototype.setClassConstructorAsStatic = function (value) {
@@ -1196,7 +1210,7 @@ var GLS;
         };
         // string key, string value
         Language.prototype.DictionaryInitialize = function (functionArgs, isInline) {
-            this.requireArgumentsLength("DictionaryInitializeKey", functionArgs, 2);
+            this.requireArgumentsLength("DictionaryInitialize", functionArgs, 2);
             var dictionaryType = this.DictionaryType(functionArgs, true)[0], output;
             if (this.getDictionaryInitializationAsNew()) {
                 output = "new " + dictionaryType + "()";
@@ -1213,7 +1227,7 @@ var GLS;
             }
             return [output, -1];
         };
-        // string key, string value
+        // string key, string value[, string comma]
         Language.prototype.DictionaryInitializeKey = function (functionArgs, isInline) {
             this.requireArgumentsLength("DictionaryInitializeKey", functionArgs, 2);
             var output = this.getDictionaryKeyLeft();
@@ -1221,6 +1235,9 @@ var GLS;
             output += this.getDictionaryKeyMiddle();
             output += functionArgs[1];
             output += this.getDictionaryKeyRight();
+            if (functionArgs.length > 2 || this.getDictionaryInitializeKeyWithSemicolon()) {
+                output += this.getDictionaryInitializeKeyComma();
+            }
             return [output, 0];
         };
         // string keyType, string valueType
@@ -1240,9 +1257,6 @@ var GLS;
                 output = "";
             }
             output += dictionaryType;
-            if (dictionaryType.length !== 0) {
-                output += " ";
-            }
             output += this.getDictionaryInitializeStarter();
             return [output, 1];
         };

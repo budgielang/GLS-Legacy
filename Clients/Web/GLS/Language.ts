@@ -82,15 +82,17 @@ module GLS {
 
         // Dictionaries
         private DictionaryClass: string;
+        private DictionaryInitializationAsNew: boolean;
+        private DictionaryInitializeEnder: string;
+        private DictionaryInitializeKeyComma: string;
+        private DictionaryInitializeKeyWithSemicolon: boolean;
+        private DictionaryInitializeStarter: string;
         private DictionaryKeyCheckAsFunction: boolean;
         private DictionaryKeyChecker: string;
         private DictionaryKeyLeft: string;
         private DictionaryKeyMiddle: string;
         private DictionaryKeyRight: string;
         private DictionaryKeysNatural: boolean;
-        private DictionaryInitializationAsNew: boolean;
-        private DictionaryInitializateStarter: string;
-        private DictionaryInitializateEnder: string;
 
         // Classes
         private ClassConstructorAsStatic: boolean;
@@ -455,11 +457,19 @@ module GLS {
         }
 
         public getDictionaryInitializeStarter(): string {
-            return this.DictionaryInitializateStarter;
+            return this.DictionaryInitializeStarter;
         }
 
         public getDictionaryInitializeEnder(): string {
-            return this.DictionaryInitializateEnder;
+            return this.DictionaryInitializeEnder;
+        }
+
+        public getDictionaryInitializeKeyComma(): string {
+            return this.DictionaryInitializeKeyComma;
+        }
+
+        public getDictionaryInitializeKeyWithSemicolon(): boolean {
+            return this.DictionaryInitializeKeyWithSemicolon;
         }
 
         public getClassConstructorAsStatic(): boolean {
@@ -881,13 +891,23 @@ module GLS {
             return this;
         }
 
-        public setDictionaryInitializateStarter(value: string): Language {
-            this.DictionaryInitializateStarter = value;
+        public setDictionaryInitializeStarter(value: string): Language {
+            this.DictionaryInitializeStarter = value;
             return this;
         }
 
-        public setDictionaryInitializateEnder(value: string): Language {
-            this.DictionaryInitializateEnder = value;
+        public setDictionaryInitializeEnder(value: string): Language {
+            this.DictionaryInitializeEnder = value;
+            return this;
+        }
+
+        public setDictionaryInitializeKeyComma(value: string): Language {
+            this.DictionaryInitializeKeyComma = value;
+            return this;
+        }
+
+        public setDictionaryInitializeKeyWithSemicolon(value: boolean): Language {
+            this.DictionaryInitializeKeyWithSemicolon = value;
             return this;
         }
 
@@ -1697,7 +1717,7 @@ module GLS {
 
         // string key, string value
         public DictionaryInitialize(functionArgs: string[], isInline?: boolean): any[] {
-            this.requireArgumentsLength("DictionaryInitializeKey", functionArgs, 2);
+            this.requireArgumentsLength("DictionaryInitialize", functionArgs, 2);
 
             var dictionaryType: string = this.DictionaryType(functionArgs, true)[0],
                 output: string;
@@ -1721,7 +1741,7 @@ module GLS {
             return [output, -1];
         }
 
-        // string key, string value
+        // string key, string value[, string comma]
         public DictionaryInitializeKey(functionArgs: string[], isInline?: boolean): any[] {
             this.requireArgumentsLength("DictionaryInitializeKey", functionArgs, 2);
 
@@ -1730,6 +1750,10 @@ module GLS {
             output += this.getDictionaryKeyMiddle();
             output += functionArgs[1];
             output += this.getDictionaryKeyRight();
+
+            if (functionArgs.length > 2 || this.getDictionaryInitializeKeyWithSemicolon()) {
+                output += this.getDictionaryInitializeKeyComma();
+            }
 
             return [output, 0];
         }
@@ -1754,11 +1778,6 @@ module GLS {
             }
 
             output += dictionaryType;
-
-            if (dictionaryType.length !== 0) {
-                output += " ";
-            }
-
             output += this.getDictionaryInitializeStarter();
 
             return [output, 1];
