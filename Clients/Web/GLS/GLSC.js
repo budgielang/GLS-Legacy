@@ -3,7 +3,6 @@ var GLS;
 (function (GLS) {
     var GLSC = (function () {
         function GLSC() {
-            this.INT_MIN = -9001;
             this.Languages = {};
             this.SearchEnds = {
                 " ": " ",
@@ -15,16 +14,24 @@ var GLS;
             if (commandsRaw.length === 0 || (commandsRaw.length === 1 && commandsRaw[0].length === 0)) {
                 return "";
             }
-            var output = "", command, numTabs = 0, i, j;
+            var output = "", command, numTabs = 0, lastTabRequest = 0, lastLineSkipped = false, i, j;
             for (i = 0; i < commandsRaw.length; i += 1) {
                 command = this.parseCommand(language, commandsRaw[i], false);
                 for (j = 0; j < command.length; j += 2) {
-                    if (command[1] === this.INT_MIN) {
-                        output += " " + command[0];
+                    // Special case: a blank line after an inline command is ignored
+                    // This is useful for things like lambda types that aren't in every language
+                    if (lastTabRequest === GLS.Language.INT_MIN && command.length === 2 && command[0] === "") {
+                        lastLineSkipped = true;
+                        continue;
+                    }
+                    if (command[1] === GLS.Language.INT_MIN) {
+                        if (command[0] !== "") {
+                            output += " " + command[0];
+                        }
                     }
                     else {
                         // Just "\0" changes numTabs without adding a line
-                        if (command[j] !== "\0") {
+                        if (command[j] !== "\0" && !lastLineSkipped) {
                             output += "\n";
                         }
                         if (command[j + 1] < 0) {
@@ -42,6 +49,8 @@ var GLS;
                             numTabs += command[j + 1];
                         }
                     }
+                    lastTabRequest = command[command.length - 1];
+                    lastLineSkipped = false;
                 }
             }
             return output;

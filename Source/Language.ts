@@ -2022,7 +2022,7 @@ module GLS {
             this.requireArgumentsLength("LambdaDeclare", functionArgs, 3);
 
             if (!this.getLambdaTypeDeclarationRequired()) {
-                return ["", -1];
+                return ["", Language.INT_MIN];
             }
 
             var start: string[] = this.getLambdaTypeDeclarationStart(),

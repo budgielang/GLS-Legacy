@@ -1420,7 +1420,7 @@ var GLS;
         Language.prototype.LambdaTypeDeclare = function (functionArgs, isInline) {
             this.requireArgumentsLength("LambdaDeclare", functionArgs, 3);
             if (!this.getLambdaTypeDeclarationRequired()) {
-                return ["", -1];
+                return ["", Language.INT_MIN];
             }
             var start = this.getLambdaTypeDeclarationStart(), middle = this.getLambdaTypeDeclarationMiddle(), end = this.getLambdaTypeDeclarationEnd();
             if (this.getLambdaTypeDeclarationAsInterface()) {
