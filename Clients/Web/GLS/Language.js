@@ -1538,6 +1538,8 @@ var GLS;
             output[1] = 0;
             return output;
         };
+        // string name, string type
+        // E.x. Dictionary<string, int> x = 
         Language.prototype.VariableDeclareIncomplete = function (functionArgs, isInline) {
             this.requireArgumentsLength("VariableDeclareStartLine", functionArgs, 2);
             var variableType = this.parseType(functionArgs[1]), variableDeclarationArguments, variableDeclared;
@@ -1553,6 +1555,8 @@ var GLS;
             return variableDeclared;
         };
         // string name, string type[, string value]
+        // E.x. var x;
+        // E.x. var x = 7;
         Language.prototype.VariableDeclarePartial = function (functionArgs, isInline) {
             this.requireArgumentsLength("VariableDeclarePartial", functionArgs, 2);
             var output = "", variableType = this.parseType(functionArgs[1]);

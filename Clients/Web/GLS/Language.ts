@@ -2193,6 +2193,8 @@ module GLS {
             return output;
         }
 
+        // string name, string type
+        // E.x. Dictionary<string, int> x = 
         public VariableDeclareIncomplete(functionArgs: string[], isInline?: boolean): any[] {
             this.requireArgumentsLength("VariableDeclareStartLine", functionArgs, 2);
             var variableType: string = this.parseType(functionArgs[1]),
@@ -2213,6 +2215,8 @@ module GLS {
         }
 
         // string name, string type[, string value]
+        // E.x. var x;
+        // E.x. var x = 7;
         public VariableDeclarePartial(functionArgs: string[], isInline?: boolean): any[] {
             this.requireArgumentsLength("VariableDeclarePartial", functionArgs, 2);
 
