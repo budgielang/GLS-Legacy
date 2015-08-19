@@ -16,11 +16,7 @@ var GLS;
                 return "";
             }
             var output = "", command, numTabs = 0, i, j;
-            // The first line will never start with a newline, or be initially tabbed
-            command = this.parseCommand(language, commandsRaw[0], false);
-            output += command[0];
-            numTabs += command[1];
-            for (i = 1; i < commandsRaw.length; i += 1) {
+            for (i = 0; i < commandsRaw.length; i += 1) {
                 command = this.parseCommand(language, commandsRaw[i], false);
                 for (j = 0; j < command.length; j += 2) {
                     if (command[1] === this.INT_MIN) {
