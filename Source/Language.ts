@@ -94,6 +94,9 @@ module GLS {
         private FunctionTypeMarker: string;
 
         // Lambdas
+        private LambdaDeclareEnder: string;
+        private LambdaDeclareMiddle: string;
+        private LambdaDeclareStarter: string;
         private LambdaTypeDeclarationAsInterface: boolean;
         private LambdaTypeDeclarationRequired: boolean;
         private LambdaTypeDeclarationEnd: string[];
@@ -177,12 +180,17 @@ module GLS {
                 "for end": this.ForEnd.bind(this),
                 "for numbers start": this.ForNumbersStart.bind(this),
                 "function call": this.FunctionCall.bind(this),
+                "function call partial end": this.FunctionCallPartialEnd.bind(this),
+                "function call partial start": this.FunctionCallPartialStart.bind(this),
                 "function end": this.FunctionEnd.bind(this),
                 "function start": this.FunctionStart.bind(this),
                 "function return": this.FunctionReturn.bind(this),
                 "if condition start": this.IfConditionStart.bind(this),
                 "if end": this.IfEnd.bind(this),
                 "if variable start": this.IfVariableStart.bind(this),
+                "lambda declare block end": this.LambdaDeclareBlockEnd.bind(this),
+                "lambda declare block start": this.LambdaDeclareBlockStart.bind(this),
+                "lambda declare inline": this.LambdaDeclareInlineStart.bind(this),
                 "lambda type declare": this.LambdaTypeDeclare.bind(this),
                 "main end": this.MainEnd.bind(this),
                 "main start": this.MainStart.bind(this),
@@ -478,6 +486,18 @@ module GLS {
 
         public getFunctionTypeMarker(): string {
             return this.FunctionTypeMarker;
+        }
+
+        public getLambdaDeclareEnder(): string {
+            return this.LambdaDeclareEnder;
+        }
+
+        public getLambdaDeclareMiddle(): string {
+            return this.LambdaDeclareMiddle;
+        }
+
+        public getLambdaDeclareStarter(): string {
+            return this.LambdaDeclareStarter;
         }
 
         public getLambdaTypeDeclarationAsInterface(): boolean {
@@ -881,6 +901,21 @@ module GLS {
 
         public setFunctionTypeMarker(value: string): Language {
             this.FunctionTypeMarker = value;
+            return this;
+        }
+
+        public setLambdaDeclareEnder(value: string): Language {
+            this.LambdaDeclareEnder = value;
+            return this;
+        }
+
+        public setLambdaDeclareMiddle(value: string): Language {
+            this.LambdaDeclareMiddle = value;
+            return this;
+        }
+
+        public setLambdaDeclareStarter(value: string): Language {
+            this.LambdaDeclareStarter = value;
             return this;
         }
 
@@ -1941,6 +1976,21 @@ module GLS {
             return [output, 0];
         }
 
+        public FunctionCallPartialEnd(functionArgs: string[], isInline?: boolean): any[] {
+            if (isInline) {
+                return [")", -1];
+            } else {
+                return [");", -1];
+            }
+        }
+
+        // string name
+        public FunctionCallPartialStart(functionArgs: string[], isInline?: boolean): any[] {
+            this.requireArgumentsLength("FunctionCallPartialStart", functionArgs, 1);
+
+            return [functionArgs[0] + "(", 1];
+        }
+
         public FunctionEnd(functionArgs: string[], isInline?: boolean): any[] {
             return [this.getFunctionDefineEnd(), -1];
         }
@@ -2016,10 +2066,53 @@ module GLS {
             return [output, 1];
         }
 
+        public LambdaDeclareBlockEnd(functionArgs: string[], isInline?: boolean): any[] {
+            var output: string = this.getLambdaDeclareEnder();
+
+            if (!isInline) {
+                output += this.getSemiColon();
+            }
+
+            return [output, -1];
+        }
+
+        // [, string param, ...]
+        public LambdaDeclareBlockStart(functionArgs: string[], isInline?: boolean): any[] {
+            var output: string = this.getLambdaDeclareStarter(),
+                i: number;
+
+            for (i = 0; i < functionArgs.length; i += 1) {
+                output += functionArgs[i] + ", ";
+            }
+
+            output = output.substr(0, output.length - 2);
+            output += this.getLambdaDeclareMiddle() + "{";
+
+            return [output, 1];
+        }
+
+        // [, string param, ...], statement
+        public LambdaDeclareInlineStart(functionArgs: string[], isInline?: boolean): any[] {
+            this.requireArgumentsLength("LambdaTypeDeclare", functionArgs, 3);
+
+            var output: string = this.getLambdaDeclareStarter(),
+                i: number;
+
+            for (i = 0; i < functionArgs.length - 1; i += 1) {
+                output += functionArgs[i] + ", ";
+            }
+
+            output = output.substr(0, output.length - 2);
+            output += this.getLambdaDeclareMiddle();
+
+            output += functionArgs[functionArgs.length - 1];
+
+            return [output, 0];
+        }
 
         // string visibility, string name, string returnType[, string paramName, string paramType, ...]
         public LambdaTypeDeclare(functionArgs: string[], isInline?: boolean): any[] {
-            this.requireArgumentsLength("LambdaDeclare", functionArgs, 3);
+            this.requireArgumentsLength("LambdaTypeDeclare", functionArgs, 3);
 
             if (!this.getLambdaTypeDeclarationRequired()) {
                 return ["", Language.INT_MIN];
@@ -2080,7 +2173,7 @@ module GLS {
                 var line: string = "", // this.getLambdaTypeDeclareStart(),
                     i: number;
 
-                line += start[0] + functionArgs[0] + " " + start[1] ;
+                line += start[0] + functionArgs[0] + " " + start[1];
                 line += " " + this.parseType(functionArgs[2]);
                 line += " " + functionArgs[1];
 

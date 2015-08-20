@@ -39,12 +39,17 @@ var GLS;
                 "for end": this.ForEnd.bind(this),
                 "for numbers start": this.ForNumbersStart.bind(this),
                 "function call": this.FunctionCall.bind(this),
+                "function call partial end": this.FunctionCallPartialEnd.bind(this),
+                "function call partial start": this.FunctionCallPartialStart.bind(this),
                 "function end": this.FunctionEnd.bind(this),
                 "function start": this.FunctionStart.bind(this),
                 "function return": this.FunctionReturn.bind(this),
                 "if condition start": this.IfConditionStart.bind(this),
                 "if end": this.IfEnd.bind(this),
                 "if variable start": this.IfVariableStart.bind(this),
+                "lambda declare block end": this.LambdaDeclareBlockEnd.bind(this),
+                "lambda declare block start": this.LambdaDeclareBlockStart.bind(this),
+                "lambda declare inline": this.LambdaDeclareInlineStart.bind(this),
                 "lambda type declare": this.LambdaTypeDeclare.bind(this),
                 "main end": this.MainEnd.bind(this),
                 "main start": this.MainStart.bind(this),
@@ -272,6 +277,15 @@ var GLS;
         };
         Language.prototype.getFunctionTypeMarker = function () {
             return this.FunctionTypeMarker;
+        };
+        Language.prototype.getLambdaDeclareEnder = function () {
+            return this.LambdaDeclareEnder;
+        };
+        Language.prototype.getLambdaDeclareMiddle = function () {
+            return this.LambdaDeclareMiddle;
+        };
+        Language.prototype.getLambdaDeclareStarter = function () {
+            return this.LambdaDeclareStarter;
         };
         Language.prototype.getLambdaTypeDeclarationAsInterface = function () {
             return this.LambdaTypeDeclarationAsInterface;
@@ -586,6 +600,18 @@ var GLS;
         };
         Language.prototype.setFunctionTypeMarker = function (value) {
             this.FunctionTypeMarker = value;
+            return this;
+        };
+        Language.prototype.setLambdaDeclareEnder = function (value) {
+            this.LambdaDeclareEnder = value;
+            return this;
+        };
+        Language.prototype.setLambdaDeclareMiddle = function (value) {
+            this.LambdaDeclareMiddle = value;
+            return this;
+        };
+        Language.prototype.setLambdaDeclareStarter = function (value) {
+            this.LambdaDeclareStarter = value;
             return this;
         };
         Language.prototype.setLambdaTypeDeclarationAsInterface = function (value) {
@@ -1365,6 +1391,19 @@ var GLS;
             }
             return [output, 0];
         };
+        Language.prototype.FunctionCallPartialEnd = function (functionArgs, isInline) {
+            if (isInline) {
+                return [")", -1];
+            }
+            else {
+                return [");", -1];
+            }
+        };
+        // string name
+        Language.prototype.FunctionCallPartialStart = function (functionArgs, isInline) {
+            this.requireArgumentsLength("FunctionCallPartialStart", functionArgs, 1);
+            return [functionArgs[0] + "(", 1];
+        };
         Language.prototype.FunctionEnd = function (functionArgs, isInline) {
             return [this.getFunctionDefineEnd(), -1];
         };
@@ -1416,9 +1455,38 @@ var GLS;
             output += functionArgs[0] + this.getConditionStartRight();
             return [output, 1];
         };
+        Language.prototype.LambdaDeclareBlockEnd = function (functionArgs, isInline) {
+            var output = this.getLambdaDeclareEnder();
+            if (!isInline) {
+                output += this.getSemiColon();
+            }
+            return [output, -1];
+        };
+        // [, string param, ...]
+        Language.prototype.LambdaDeclareBlockStart = function (functionArgs, isInline) {
+            var output = this.getLambdaDeclareStarter(), i;
+            for (i = 0; i < functionArgs.length; i += 1) {
+                output += functionArgs[i] + ", ";
+            }
+            output = output.substr(0, output.length - 2);
+            output += this.getLambdaDeclareMiddle() + "{";
+            return [output, 1];
+        };
+        // [, string param, ...], statement
+        Language.prototype.LambdaDeclareInlineStart = function (functionArgs, isInline) {
+            this.requireArgumentsLength("LambdaTypeDeclare", functionArgs, 3);
+            var output = this.getLambdaDeclareStarter(), i;
+            for (i = 0; i < functionArgs.length - 1; i += 1) {
+                output += functionArgs[i] + ", ";
+            }
+            output = output.substr(0, output.length - 2);
+            output += this.getLambdaDeclareMiddle();
+            output += functionArgs[functionArgs.length - 1];
+            return [output, 0];
+        };
         // string visibility, string name, string returnType[, string paramName, string paramType, ...]
         Language.prototype.LambdaTypeDeclare = function (functionArgs, isInline) {
-            this.requireArgumentsLength("LambdaDeclare", functionArgs, 3);
+            this.requireArgumentsLength("LambdaTypeDeclare", functionArgs, 3);
             if (!this.getLambdaTypeDeclarationRequired()) {
                 return ["", Language.INT_MIN];
             }
