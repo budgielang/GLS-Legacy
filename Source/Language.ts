@@ -188,9 +188,7 @@ module GLS {
                 "if condition start": this.IfConditionStart.bind(this),
                 "if end": this.IfEnd.bind(this),
                 "if variable start": this.IfVariableStart.bind(this),
-                "lambda declare block end": this.LambdaDeclareBlockEnd.bind(this),
-                "lambda declare block start": this.LambdaDeclareBlockStart.bind(this),
-                "lambda declare inline": this.LambdaDeclareInlineStart.bind(this),
+                "lambda declare inline": this.LambdaDeclareInline.bind(this),
                 "lambda type declare": this.LambdaTypeDeclare.bind(this),
                 "main end": this.MainEnd.bind(this),
                 "main start": this.MainStart.bind(this),
@@ -2068,27 +2066,8 @@ module GLS {
             return [output, 1];
         }
 
-        public LambdaDeclareBlockEnd(functionArgs: string[], isInline?: boolean): any[] {
-            return [this.getLambdaDeclareEnder(), -1];
-        }
-
-        // [, string param, ...]
-        public LambdaDeclareBlockStart(functionArgs: string[], isInline?: boolean): any[] {
-            var output: string = this.getLambdaDeclareStarter(),
-                i: number;
-
-            for (i = 0; i < functionArgs.length; i += 1) {
-                output += functionArgs[i] + ", ";
-            }
-
-            output = output.substr(0, output.length - 2);
-            output += this.getLambdaDeclareMiddle();
-
-            return [output, 1];
-        }
-
         // [, string param, ...], statement
-        public LambdaDeclareInlineStart(functionArgs: string[], isInline?: boolean): any[] {
+        public LambdaDeclareInline(functionArgs: string[], isInline?: boolean): any[] {
             this.requireArgumentsLength("LambdaTypeDeclare", functionArgs, 3);
 
             var output: string = this.getLambdaDeclareStarter(),
@@ -2101,7 +2080,7 @@ module GLS {
             output = output.substr(0, output.length - 2);
             output += this.getLambdaDeclareMiddle();
 
-            output += functionArgs[functionArgs.length - 1];
+            output += functionArgs[functionArgs.length - 1] + this.getLambdaDeclareEnder();
 
             return [output, 0];
         }

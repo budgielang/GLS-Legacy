@@ -47,9 +47,7 @@ var GLS;
                 "if condition start": this.IfConditionStart.bind(this),
                 "if end": this.IfEnd.bind(this),
                 "if variable start": this.IfVariableStart.bind(this),
-                "lambda declare block end": this.LambdaDeclareBlockEnd.bind(this),
-                "lambda declare block start": this.LambdaDeclareBlockStart.bind(this),
-                "lambda declare inline": this.LambdaDeclareInlineStart.bind(this),
+                "lambda declare inline": this.LambdaDeclareInline.bind(this),
                 "lambda type declare": this.LambdaTypeDeclare.bind(this),
                 "main end": this.MainEnd.bind(this),
                 "main start": this.MainStart.bind(this),
@@ -1454,21 +1452,8 @@ var GLS;
             output += functionArgs[0] + this.getConditionStartRight();
             return [output, 1];
         };
-        Language.prototype.LambdaDeclareBlockEnd = function (functionArgs, isInline) {
-            return [this.getLambdaDeclareEnder(), -1];
-        };
-        // [, string param, ...]
-        Language.prototype.LambdaDeclareBlockStart = function (functionArgs, isInline) {
-            var output = this.getLambdaDeclareStarter(), i;
-            for (i = 0; i < functionArgs.length; i += 1) {
-                output += functionArgs[i] + ", ";
-            }
-            output = output.substr(0, output.length - 2);
-            output += this.getLambdaDeclareMiddle();
-            return [output, 1];
-        };
         // [, string param, ...], statement
-        Language.prototype.LambdaDeclareInlineStart = function (functionArgs, isInline) {
+        Language.prototype.LambdaDeclareInline = function (functionArgs, isInline) {
             this.requireArgumentsLength("LambdaTypeDeclare", functionArgs, 3);
             var output = this.getLambdaDeclareStarter(), i;
             for (i = 0; i < functionArgs.length - 1; i += 1) {
@@ -1476,7 +1461,7 @@ var GLS;
             }
             output = output.substr(0, output.length - 2);
             output += this.getLambdaDeclareMiddle();
-            output += functionArgs[functionArgs.length - 1];
+            output += functionArgs[functionArgs.length - 1] + this.getLambdaDeclareEnder();
             return [output, 0];
         };
         // string visibility, string name, string returnType[, string paramName, string paramType, ...]
