@@ -19,5 +19,6 @@ No language is perfect. The following are some seemingly obvious omissions in GL
 |---------------------|----|----------|----------|------|-------------|
 | Multiline Lambdas   |    |          | Missing! |      |             |
 | Optional Parameters |    | Missing! |          |      |             |
+| String.Replace      |    |          |          |      |  Abnormal!  |
 
 This list will grow as features are requested.

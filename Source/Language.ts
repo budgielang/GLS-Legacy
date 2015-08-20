@@ -4,6 +4,7 @@ module GLS {
         private OperationAliases: any;
         private TypeAliases: any;
         private ValueAliases: any;
+        private NativeFunctionAliases: any;
 
         // General information
         private Name: string;
@@ -238,6 +239,12 @@ module GLS {
             this.TypeAliases = {};
 
             this.ValueAliases = {};
+
+            this.NativeFunctionAliases = {
+                "Array": {},
+                "Dictionary": {},
+                "String": {}
+            };
         }
 
 
@@ -1284,6 +1291,25 @@ module GLS {
 
         public addValueAlias(key: string, alias: string): Language {
             this.ValueAliases[alias] = key;
+            return this;
+        }
+
+        public getNativeFunctionAlias(className: string, memberName: string): any {
+            return this.NativeFunctionAliases[className][memberName];
+        }
+
+        public addNativeFunctionAlias(className: string, memberName: string, aliasInfo: any): Language {
+            this.NativeFunctionAliases[className][memberName] = aliasInfo;
+            return this;
+        }
+
+        public addNativeFunctionAliases(className: string, aliasInfos: any): Language {
+            for (var i in aliasInfos) {
+                if (aliasInfos.hasOwnProperty(i)) {
+                    this.addNativeFunctionAlias(className, i, aliasInfos[i]);
+                }
+            }
+
             return this;
         }
 
