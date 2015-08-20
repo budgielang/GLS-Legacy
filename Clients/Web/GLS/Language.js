@@ -1392,12 +1392,11 @@ var GLS;
             return [output, 0];
         };
         Language.prototype.FunctionCallPartialEnd = function (functionArgs, isInline) {
-            if (isInline) {
-                return [")", -1];
+            var output = ")";
+            if (!isInline) {
+                output += this.getSemiColon();
             }
-            else {
-                return [");", -1];
-            }
+            return [output, -1];
         };
         // string name
         Language.prototype.FunctionCallPartialStart = function (functionArgs, isInline) {
@@ -1456,11 +1455,7 @@ var GLS;
             return [output, 1];
         };
         Language.prototype.LambdaDeclareBlockEnd = function (functionArgs, isInline) {
-            var output = this.getLambdaDeclareEnder();
-            if (!isInline) {
-                output += this.getSemiColon();
-            }
-            return [output, -1];
+            return [this.getLambdaDeclareEnder(), -1];
         };
         // [, string param, ...]
         Language.prototype.LambdaDeclareBlockStart = function (functionArgs, isInline) {
@@ -1469,7 +1464,7 @@ var GLS;
                 output += functionArgs[i] + ", ";
             }
             output = output.substr(0, output.length - 2);
-            output += this.getLambdaDeclareMiddle() + "{";
+            output += this.getLambdaDeclareMiddle();
             return [output, 1];
         };
         // [, string param, ...], statement

@@ -1976,12 +1976,14 @@ module GLS {
             return [output, 0];
         }
 
-        public FunctionCallPartialEnd(functionArgs: string[], isInline?: boolean): any[] {
-            if (isInline) {
-                return [")", -1];
-            } else {
-                return [");", -1];
+        public FunctionCallPartialEnd(functionArgs: string[], isInline?: boolean): any[]{
+            var output: string = ")";
+
+            if (!isInline) {
+                output += this.getSemiColon();
             }
+
+            return [output, -1];
         }
 
         // string name
@@ -2067,13 +2069,7 @@ module GLS {
         }
 
         public LambdaDeclareBlockEnd(functionArgs: string[], isInline?: boolean): any[] {
-            var output: string = this.getLambdaDeclareEnder();
-
-            if (!isInline) {
-                output += this.getSemiColon();
-            }
-
-            return [output, -1];
+            return [this.getLambdaDeclareEnder(), -1];
         }
 
         // [, string param, ...]
@@ -2086,7 +2082,7 @@ module GLS {
             }
 
             output = output.substr(0, output.length - 2);
-            output += this.getLambdaDeclareMiddle() + "{";
+            output += this.getLambdaDeclareMiddle();
 
             return [output, 1];
         }

@@ -50,7 +50,7 @@ module GLS.Languages {
         .setFunctionTypeMarker(": ")
         .setFunctionTypeAfterName(true)
         .setLambdaDeclareEnder("}")
-        .setLambdaDeclareMiddle(") => ")
+        .setLambdaDeclareMiddle(") => {")
         .setLambdaDeclareStarter("(")
         .setLambdaTypeDeclarationAsInterface(true)
         .setLambdaTypeDeclarationEnd(["}"])
