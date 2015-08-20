@@ -160,6 +160,13 @@ module GLS {
                 "class member variable declare": this.ClassMemberVariableDeclare.bind(this),
                 "class member variable get": this.ClassMemberVariableGet.bind(this),
                 "class member variable set": this.ClassMemberVariableSet.bind(this),
+                "class static function call": this.ClassStaticFunctionCall.bind(this),
+                "class static function end": this.ClassStaticFunctionEnd.bind(this),
+                "class static function get": this.ClassStaticFunctionGet.bind(this),
+                "class static function start": this.ClassStaticFunctionStart.bind(this),
+                "class static variable declare": this.ClassStaticVariableDeclare.bind(this),
+                "class static variable get": this.ClassStaticVariableGet.bind(this),
+                "class static variable set": this.ClassStaticVariableSet.bind(this),
                 "class new": this.ClassNew.bind(this),
                 "class start": this.ClassStart.bind(this),
                 "comment block": this.CommentBlock.bind(this),
@@ -1505,7 +1512,7 @@ module GLS {
             return [this.getClassEnder(), -1];
         }
 
-        // string variable, string function, [, string argumentName, string argumentType, ... ]
+        // string variable, string function, [string argumentName, ...]
         public ClassMemberFunctionCall(functionArgs: string[], isInline?: boolean): any[] {
             this.requireArgumentsLength("ClassMemberFunctionCall", functionArgs, 2);
 
@@ -1648,6 +1655,40 @@ module GLS {
             output += this.getSemiColon();
 
             return [output, 0];
+        }
+
+        // string class, string function, [string argumentName, ...]
+        public ClassStaticFunctionCall(functionArgs: string[], isInline?: boolean): any[] {
+            return this.ClassMemberFunctionCall(functionArgs, isInline);
+        }
+
+        public ClassStaticFunctionEnd(functionArgs: string[], isInline?: boolean): any[] {
+            return this.ClassMemberFunctionEnd(functionArgs, isInline);
+        }
+
+        // string class, string function
+        public ClassStaticFunctionGet(functionArgs: string[], isInline?: boolean): any[] {
+            return this.ClassMemberFunctionGet(functionArgs, isInline);
+        }
+
+        // string class, string visibility, string name, string return, [, string argumentName, string argumentType...]
+        public ClassStaticFunctionStart(functionArgs: string[], isInline?: boolean): any[] {
+            return this.ClassMemberFunctionStart(functionArgs, isInline);
+        }
+
+        // string class, string visibility, string type
+        public ClassStaticVariableDeclare(functionArgs: string[], isInline?: boolean): any[] {
+            return this.ClassMemberVariableDeclare(functionArgs, isInline);
+        }
+
+        // string class
+        public ClassStaticVariableGet(functionArgs: string[], isInline?: boolean): any[] {
+            return this.ClassMemberVariableGet(functionArgs, isInline);
+        }
+
+        // string name, string value
+        public ClassStaticVariableSet(functionArgs: string[], isInline?: boolean): any[] {
+            return this.ClassMemberVariableSet(functionArgs, isInline);
         }
 
         // string name[, string visibility[, string parentClass]]
@@ -1974,7 +2015,7 @@ module GLS {
             return [output, 0];
         }
 
-        public FunctionCallPartialEnd(functionArgs: string[], isInline?: boolean): any[]{
+        public FunctionCallPartialEnd(functionArgs: string[], isInline?: boolean): any[] {
             var output: string = ")";
 
             if (!isInline) {

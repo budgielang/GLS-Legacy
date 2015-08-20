@@ -19,6 +19,13 @@ var GLS;
                 "class member variable declare": this.ClassMemberVariableDeclare.bind(this),
                 "class member variable get": this.ClassMemberVariableGet.bind(this),
                 "class member variable set": this.ClassMemberVariableSet.bind(this),
+                "class static function call": this.ClassStaticFunctionCall.bind(this),
+                "class static function end": this.ClassStaticFunctionEnd.bind(this),
+                "class static function get": this.ClassStaticFunctionGet.bind(this),
+                "class static function start": this.ClassStaticFunctionStart.bind(this),
+                "class static variable declare": this.ClassStaticVariableDeclare.bind(this),
+                "class static variable get": this.ClassStaticVariableGet.bind(this),
+                "class static variable set": this.ClassStaticVariableSet.bind(this),
                 "class new": this.ClassNew.bind(this),
                 "class start": this.ClassStart.bind(this),
                 "comment block": this.CommentBlock.bind(this),
@@ -1053,7 +1060,7 @@ var GLS;
             var output = this.getClassEnder();
             return [this.getClassEnder(), -1];
         };
-        // string variable, string function, [, string argumentName, string argumentType, ... ]
+        // string variable, string function, [string argumentName, ...]
         Language.prototype.ClassMemberFunctionCall = function (functionArgs, isInline) {
             this.requireArgumentsLength("ClassMemberFunctionCall", functionArgs, 2);
             var output = functionArgs[0] + "." + functionArgs[1] + "(", i;
@@ -1154,6 +1161,33 @@ var GLS;
             output += functionArgs[0] + " " + this.getOperationAlias("equals") + " " + functionArgs[1];
             output += this.getSemiColon();
             return [output, 0];
+        };
+        // string class, string function, [string argumentName, ...]
+        Language.prototype.ClassStaticFunctionCall = function (functionArgs, isInline) {
+            return this.ClassMemberFunctionCall(functionArgs, isInline);
+        };
+        Language.prototype.ClassStaticFunctionEnd = function (functionArgs, isInline) {
+            return this.ClassMemberFunctionEnd(functionArgs, isInline);
+        };
+        // string class, string function
+        Language.prototype.ClassStaticFunctionGet = function (functionArgs, isInline) {
+            return this.ClassMemberFunctionGet(functionArgs, isInline);
+        };
+        // string class, string visibility, string name, string return, [, string argumentName, string argumentType...]
+        Language.prototype.ClassStaticFunctionStart = function (functionArgs, isInline) {
+            return this.ClassMemberFunctionStart(functionArgs, isInline);
+        };
+        // string class, string visibility, string type
+        Language.prototype.ClassStaticVariableDeclare = function (functionArgs, isInline) {
+            return this.ClassMemberVariableDeclare(functionArgs, isInline);
+        };
+        // string class
+        Language.prototype.ClassStaticVariableGet = function (functionArgs, isInline) {
+            return this.ClassMemberVariableGet(functionArgs, isInline);
+        };
+        // string name, string value
+        Language.prototype.ClassStaticVariableSet = function (functionArgs, isInline) {
+            return this.ClassMemberVariableSet(functionArgs, isInline);
         };
         // string name[, string visibility[, string parentClass]]
         Language.prototype.ClassStart = function (functionArgs, isInline) {
