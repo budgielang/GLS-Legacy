@@ -39,12 +39,16 @@ var GLS;
                 "for end": this.ForEnd.bind(this),
                 "for numbers start": this.ForNumbersStart.bind(this),
                 "function call": this.FunctionCall.bind(this),
+                "function call partial end": this.FunctionCallPartialEnd.bind(this),
+                "function call partial start": this.FunctionCallPartialStart.bind(this),
                 "function end": this.FunctionEnd.bind(this),
                 "function start": this.FunctionStart.bind(this),
                 "function return": this.FunctionReturn.bind(this),
                 "if condition start": this.IfConditionStart.bind(this),
                 "if end": this.IfEnd.bind(this),
                 "if variable start": this.IfVariableStart.bind(this),
+                "lambda declare inline": this.LambdaDeclareInline.bind(this),
+                "lambda type declare": this.LambdaTypeDeclare.bind(this),
                 "main end": this.MainEnd.bind(this),
                 "main start": this.MainStart.bind(this),
                 "not": this.Not.bind(this),
@@ -80,7 +84,6 @@ var GLS;
             };
             this.TypeAliases = {};
             this.ValueAliases = {};
-            this.INT_MIN = -9001;
         }
         /* Gets
         */
@@ -222,24 +225,6 @@ var GLS;
         Language.prototype.getArrayNegativeIndices = function () {
             return this.ArrayNegativeIndices;
         };
-        Language.prototype.getFunctionDefine = function () {
-            return this.FunctionDefine;
-        };
-        Language.prototype.getFunctionDefineRight = function () {
-            return this.FunctionDefineRight;
-        };
-        Language.prototype.getFunctionDefineEnd = function () {
-            return this.FunctionDefineEnd;
-        };
-        Language.prototype.getFunctionReturnsExplicit = function () {
-            return this.FunctionReturnsExplicit;
-        };
-        Language.prototype.getFunctionTypeMarker = function () {
-            return this.FunctionTypeMarker;
-        };
-        Language.prototype.getFunctionTypeAfterName = function () {
-            return this.FunctionTypeAfterName;
-        };
         Language.prototype.getDictionaryClass = function () {
             return this.DictionaryClass;
         };
@@ -272,6 +257,48 @@ var GLS;
         };
         Language.prototype.getDictionaryInitializeKeyWithSemicolon = function () {
             return this.DictionaryInitializeKeyWithSemicolon;
+        };
+        Language.prototype.getFunctionDefine = function () {
+            return this.FunctionDefine;
+        };
+        Language.prototype.getFunctionDefineRight = function () {
+            return this.FunctionDefineRight;
+        };
+        Language.prototype.getFunctionDefineEnd = function () {
+            return this.FunctionDefineEnd;
+        };
+        Language.prototype.getFunctionReturnsExplicit = function () {
+            return this.FunctionReturnsExplicit;
+        };
+        Language.prototype.getFunctionTypeAfterName = function () {
+            return this.FunctionTypeAfterName;
+        };
+        Language.prototype.getFunctionTypeMarker = function () {
+            return this.FunctionTypeMarker;
+        };
+        Language.prototype.getLambdaDeclareEnder = function () {
+            return this.LambdaDeclareEnder;
+        };
+        Language.prototype.getLambdaDeclareMiddle = function () {
+            return this.LambdaDeclareMiddle;
+        };
+        Language.prototype.getLambdaDeclareStarter = function () {
+            return this.LambdaDeclareStarter;
+        };
+        Language.prototype.getLambdaTypeDeclarationAsInterface = function () {
+            return this.LambdaTypeDeclarationAsInterface;
+        };
+        Language.prototype.getLambdaTypeDeclarationRequired = function () {
+            return this.LambdaTypeDeclarationRequired;
+        };
+        Language.prototype.getLambdaTypeDeclarationEnd = function () {
+            return this.LambdaTypeDeclarationEnd;
+        };
+        Language.prototype.getLambdaTypeDeclarationMiddle = function () {
+            return this.LambdaTypeDeclarationMiddle;
+        };
+        Language.prototype.getLambdaTypeDeclarationStart = function () {
+            return this.LambdaTypeDeclarationStart;
         };
         Language.prototype.getClassConstructorAsStatic = function () {
             return this.ClassConstructorAsStatic;
@@ -571,6 +598,38 @@ var GLS;
         };
         Language.prototype.setFunctionTypeMarker = function (value) {
             this.FunctionTypeMarker = value;
+            return this;
+        };
+        Language.prototype.setLambdaDeclareEnder = function (value) {
+            this.LambdaDeclareEnder = value;
+            return this;
+        };
+        Language.prototype.setLambdaDeclareMiddle = function (value) {
+            this.LambdaDeclareMiddle = value;
+            return this;
+        };
+        Language.prototype.setLambdaDeclareStarter = function (value) {
+            this.LambdaDeclareStarter = value;
+            return this;
+        };
+        Language.prototype.setLambdaTypeDeclarationAsInterface = function (value) {
+            this.LambdaTypeDeclarationAsInterface = value;
+            return this;
+        };
+        Language.prototype.setLambdaTypeDeclarationRequired = function (value) {
+            this.LambdaTypeDeclarationRequired = value;
+            return this;
+        };
+        Language.prototype.setLambdaTypeDeclarationEnd = function (value) {
+            this.LambdaTypeDeclarationEnd = value;
+            return this;
+        };
+        Language.prototype.setLambdaTypeDeclarationMiddle = function (value) {
+            this.LambdaTypeDeclarationMiddle = value;
+            return this;
+        };
+        Language.prototype.setLambdaTypeDeclarationStart = function (value) {
+            this.LambdaTypeDeclarationStart = value;
             return this;
         };
         Language.prototype.setDictionaryClass = function (value) {
@@ -1160,7 +1219,7 @@ var GLS;
         // [string message, ...]
         Language.prototype.CommentInline = function (functionArgs, isInline) {
             var result = this.CommentLine(functionArgs, isInline);
-            result[1] = this.INT_MIN;
+            result[1] = Language.INT_MIN;
             return result;
         };
         // string left, string comparison, string right
@@ -1277,14 +1336,14 @@ var GLS;
         };
         Language.prototype.FileEnd = function (functionArgs, isInline) {
             var output = this.getFileEndLine();
-            return [output, output.length === 0 ? this.INT_MIN : -1];
+            return [output, output.length === 0 ? Language.INT_MIN : -1];
         };
         // string name
         Language.prototype.FileStart = function (functionArgs, isInline) {
             this.requireArgumentsLength("FileStart", functionArgs, 1);
             var left = this.getFileStartLeft(), right = this.getFileStartRight();
             if (left.length === 0 && right.length === 0) {
-                return ["", this.INT_MIN];
+                return ["", Language.INT_MIN];
             }
             return [left + functionArgs[0] + right, 1];
         };
@@ -1329,6 +1388,18 @@ var GLS;
                 output += this.getSemiColon();
             }
             return [output, 0];
+        };
+        Language.prototype.FunctionCallPartialEnd = function (functionArgs, isInline) {
+            var output = ")";
+            if (!isInline) {
+                output += this.getSemiColon();
+            }
+            return [output, -1];
+        };
+        // string name
+        Language.prototype.FunctionCallPartialStart = function (functionArgs, isInline) {
+            this.requireArgumentsLength("FunctionCallPartialStart", functionArgs, 1);
+            return [functionArgs[0] + "(", 1];
         };
         Language.prototype.FunctionEnd = function (functionArgs, isInline) {
             return [this.getFunctionDefineEnd(), -1];
@@ -1380,6 +1451,76 @@ var GLS;
             var output = "if" + this.getConditionStartLeft();
             output += functionArgs[0] + this.getConditionStartRight();
             return [output, 1];
+        };
+        // [, string param, ...], statement
+        Language.prototype.LambdaDeclareInline = function (functionArgs, isInline) {
+            this.requireArgumentsLength("LambdaTypeDeclare", functionArgs, 3);
+            var output = this.getLambdaDeclareStarter(), i;
+            for (i = 0; i < functionArgs.length - 1; i += 1) {
+                output += functionArgs[i] + ", ";
+            }
+            output = output.substr(0, output.length - 2);
+            output += this.getLambdaDeclareMiddle();
+            output += functionArgs[functionArgs.length - 1] + this.getLambdaDeclareEnder();
+            return [output, 0];
+        };
+        // string visibility, string name, string returnType[, string paramName, string paramType, ...]
+        Language.prototype.LambdaTypeDeclare = function (functionArgs, isInline) {
+            this.requireArgumentsLength("LambdaTypeDeclare", functionArgs, 3);
+            if (!this.getLambdaTypeDeclarationRequired()) {
+                return ["", Language.INT_MIN];
+            }
+            var start = this.getLambdaTypeDeclarationStart(), middle = this.getLambdaTypeDeclarationMiddle(), end = this.getLambdaTypeDeclarationEnd();
+            if (this.getLambdaTypeDeclarationAsInterface()) {
+                var variableDeclarationArguments = new Array(2), output = new Array(6), line, i;
+                // public interface TestInterface {
+                line = functionArgs[0];
+                line += start[0];
+                line += functionArgs[1];
+                line += start[1];
+                output[0] = line;
+                output[1] = 1;
+                //     (a: string, b: int): boolean;
+                line = middle[0] + "(";
+                // All arguments are added using VariableDeclarePartial
+                if (functionArgs.length > 3) {
+                    for (i = 3; i < functionArgs.length; i += 2) {
+                        variableDeclarationArguments[0] = functionArgs[i];
+                        variableDeclarationArguments[1] = functionArgs[i + 1];
+                        line += this.VariableDeclarePartial(variableDeclarationArguments, true)[0] + ", ";
+                    }
+                    // The last argument does not have the last ", " at the end
+                    line = line.substr(0, line.length - 2);
+                }
+                line += ")";
+                if (this.getFunctionReturnsExplicit() && this.getFunctionTypeAfterName()) {
+                    line += this.getFunctionTypeMarker() + this.parseType(functionArgs[2]);
+                }
+                line += middle[1];
+                output[2] = line;
+                output[3] = 0;
+                // }
+                output[4] = end[0];
+                output[5] = -1;
+                return output;
+            }
+            else {
+                var line = "", i;
+                line += start[0] + functionArgs[0] + " " + start[1];
+                line += " " + this.parseType(functionArgs[2]);
+                line += " " + functionArgs[1];
+                if (functionArgs.length > 3) {
+                    line += middle[0];
+                    for (i = 4; i < functionArgs.length; i += 2) {
+                        line += this.parseType(functionArgs[i]) + ", ";
+                    }
+                    // The last argument does not have the last ", " at the end
+                    line = line.substr(0, line.length - 2);
+                    line += middle[1];
+                }
+                line = end[0] + line + end[1];
+                return [line, 0];
+            }
         };
         Language.prototype.MainEnd = function (functionArgs, isInline) {
             return [this.getMainEndLine(), this.getMainStartLine().length === 0 ? 0 : -1];
@@ -1445,6 +1586,8 @@ var GLS;
             output[1] = 0;
             return output;
         };
+        // string name, string type
+        // E.x. Dictionary<string, int> x = 
         Language.prototype.VariableDeclareIncomplete = function (functionArgs, isInline) {
             this.requireArgumentsLength("VariableDeclareStartLine", functionArgs, 2);
             var variableType = this.parseType(functionArgs[1]), variableDeclarationArguments, variableDeclared;
@@ -1460,6 +1603,8 @@ var GLS;
             return variableDeclared;
         };
         // string name, string type[, string value]
+        // E.x. var x;
+        // E.x. var x = 7;
         Language.prototype.VariableDeclarePartial = function (functionArgs, isInline) {
             this.requireArgumentsLength("VariableDeclarePartial", functionArgs, 2);
             var output = "", variableType = this.parseType(functionArgs[1]);
@@ -1504,6 +1649,8 @@ var GLS;
                 throw new Error("Not enough arguments given to " + functionName + " (required: " + amount + ").");
             }
         };
+        // Extra
+        Language.INT_MIN = 9001;
         return Language;
     })();
     GLS.Language = Language;

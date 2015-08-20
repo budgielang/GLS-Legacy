@@ -49,7 +49,15 @@ module GLS.Languages {
         .setFunctionReturnsExplicit(true)
         .setFunctionTypeMarker(": ")
         .setFunctionTypeAfterName(true)
-        .setMainEndLine("}")
+        .setLambdaDeclareEnder("")
+        .setLambdaDeclareMiddle(") => ")
+        .setLambdaDeclareStarter("(")
+        .setLambdaTypeDeclarationAsInterface(true)
+        .setLambdaTypeDeclarationEnd(["}"])
+        .setLambdaTypeDeclarationMiddle(["", ";"])
+        .setLambdaTypeDeclarationRequired(true)
+        .setLambdaTypeDeclarationStart([" interface ", " {"])
+        .setMainEndLine("}") 
         .setMainStartLine("export function Main(): void {")
         .setToString("")
         .setUndefined("undefined")
@@ -60,5 +68,6 @@ module GLS.Languages {
         .setVariableDeclareStart("var ")
         .addTypeAlias("number", "int")
         .addTypeAlias("number", "double")
-        .addTypeAlias("number", "float");
+        .addTypeAlias("number", "float")
+        .addTypeAlias("boolean", "bool");
 }

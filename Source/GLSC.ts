@@ -4,10 +4,8 @@ module GLS {
     export class GLSC {
         private Languages: any;
         private SearchEnds: any;
-        private INT_MIN: number;
 
         constructor() {
-            this.INT_MIN = -9001;
             this.Languages = {};
             this.SearchEnds = {
                 " ": " ",
@@ -24,25 +22,30 @@ module GLS {
             var output: string = "",
                 command: any[],
                 numTabs: number = 0,
+                lastTabRequest: number = 0,
+                lastLineSkipped: boolean = false,
                 i: number,
                 j: number;
 
-            // The first line will never start with a newline, or be initially tabbed
-            command = this.parseCommand(language, commandsRaw[0], false);
-            output += command[0];
-            numTabs += command[1];
-
-            // The rest of the commands all might have different tabbings
-            for (i = 1; i < commandsRaw.length; i += 1) {
+            for (i = 0; i < commandsRaw.length; i += 1) {
                 command = this.parseCommand(language, commandsRaw[i], false);
 
-                // Each command is an odd-length [string, int, ...]
+                // Each command is an even-length [string, int, ...]
                 for (j = 0; j < command.length; j += 2) {
-                    if (command[1] === this.INT_MIN) {
-                        output += " " + command[0];
+                    // Special case: a blank line after an inline command is ignored
+                    // This is useful for things like lambda types that aren't in every language
+                    if (lastTabRequest === Language.INT_MIN && command.length === 2 && command[0] === "") {
+                        lastLineSkipped = true;
+                        continue;
+                    }
+
+                    if (command[1] === Language.INT_MIN) {
+                        if (command[0] !== "") {
+                            output += " " + command[0];
+                        }
                     } else {
                         // Just "\0" changes numTabs without adding a line
-                        if (command[j] !== "\0") {
+                        if (command[j] !== "\0" && !lastLineSkipped) {
                             output += "\n";
                         }
 
@@ -60,6 +63,9 @@ module GLS {
                             numTabs += command[j + 1];
                         }
                     }
+
+                    lastTabRequest = command[command.length - 1];
+                    lastLineSkipped = false;
                 }
             }
 
