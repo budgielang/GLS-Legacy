@@ -17,6 +17,8 @@ module GLS.Languages {
         .setClassFunctionsStart("def ")
         .setClassFunctionsTakeThis(false)
         .setClassFunctionsThis("")
+        .setClassMemberFunctionGetStart("")
+        .setClassMemberFunctionGetEnd("")
         .setClassMemberVariableDefault("")
         .setClassMemberVariablePrivacy(false)
         .setClassMemberVariableStarter("@")

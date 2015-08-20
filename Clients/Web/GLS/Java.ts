@@ -12,6 +12,8 @@ module GLS.Languages {
         .setClassExtends("extends")
         .setClassFunctionsTakeThis(false)
         .setClassFunctionsStart("")
+        .setClassMemberFunctionGetStart("")
+        .setClassMemberFunctionGetEnd("")
         .setClassMemberVariableDefault("")
         .setClassMemberVariablePrivacy(true)
         .setClassMemberVariableStarter("")

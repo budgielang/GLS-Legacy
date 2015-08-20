@@ -124,6 +124,8 @@ module GLS {
         private ClassParentName: string;
         private ClassPrivacy: boolean;
         private ClassStaticLabel: string;
+        private ClassStaticFunctionDecorator: string;
+        private ClassStaticFunctionRequiresDecorator: boolean;
         private ClassStartLeft: string;
         private ClassStartRight: string;
         private ClassTemplates: boolean;
@@ -604,6 +606,14 @@ module GLS {
 
         public getClassStaticLabel(): string {
             return this.ClassStaticLabel;
+        }
+
+        public getClassStaticFunctionDecorator(): string {
+            return this.ClassStaticFunctionDecorator;
+        }
+
+        public getClassStaticFunctionRequiresDecorator(): boolean {
+            return this.ClassStaticFunctionRequiresDecorator;
         }
 
         public getClassStartLeft(): string {
@@ -1109,6 +1119,16 @@ module GLS {
             return this;
         }
 
+        public setClassStaticFunctionDecorator(value: string): Language {
+            this.ClassStaticFunctionDecorator = value;
+            return this;
+        }
+
+        public setClassStaticFunctionRequiresDecorator(value: boolean): Language {
+            this.ClassStaticFunctionRequiresDecorator = value;
+            return this;
+        }
+
         public setClassStartLeft(value: string): Language {
             this.ClassStartLeft = value;
             return this;
@@ -1552,6 +1572,7 @@ module GLS {
         // string variable, string function
         public ClassMemberFunctionGet(functionArgs: string[], isInline?: boolean): any[] {
             this.requireArgumentsLength("ClassMemberFunctionStart", functionArgs, 2);
+
             var output: string = "";
 
             output += this.getClassMemberFunctionGetStart() + functionArgs[0];
@@ -1667,21 +1688,97 @@ module GLS {
 
         // string class, string function, [string argumentName, ...]
         public ClassStaticFunctionCall(functionArgs: string[], isInline?: boolean): any[] {
-            return this.ClassMemberFunctionCall(functionArgs, isInline);
+            this.requireArgumentsLength("ClassStaticFunctionCall", functionArgs, 2);
+
+            var output: string = functionArgs[0] + "." + functionArgs[1] + "(",
+                i: number;
+
+            if (functionArgs.length > 2) {
+                for (i = 2; i < functionArgs.length - 1; i += 1) {
+                    output += functionArgs[i] + ", ";
+                }
+                output += functionArgs[i];
+            }
+
+            output += ")";
+
+            if (!isInline) {
+                output += this.getSemiColon();
+            }
+
+            return [output, 0];
         }
 
         public ClassStaticFunctionEnd(functionArgs: string[], isInline?: boolean): any[] {
-            return this.ClassMemberFunctionEnd(functionArgs, isInline);
+            return [this.getFunctionDefineEnd(), -1];
         }
 
         // string class, string function
         public ClassStaticFunctionGet(functionArgs: string[], isInline?: boolean): any[] {
-            return this.ClassMemberFunctionGet(functionArgs, isInline);
+            this.requireArgumentsLength("ClassStaticFunctionGet", functionArgs, 2);
+
+            var output: string = "";
+
+            output += this.getClassMemberFunctionGetStart() + functionArgs[0];
+            output += "." + functionArgs[1] + this.getClassMemberFunctionGetEnd();
+
+            if (this.getClassMemberFunctionGetBind()) {
+                output += "(" + functionArgs[0] + ")";
+            }
+
+            return [output, 0];
         }
 
         // string class, string visibility, string name, string return, [, string argumentName, string argumentType...]
         public ClassStaticFunctionStart(functionArgs: string[], isInline?: boolean): any[] {
-            return this.ClassMemberFunctionStart(functionArgs, isInline);
+            this.requireArgumentsLength("ClassStaticFunctionStart", functionArgs, 4);
+
+            var output: string = this.getClassFunctionsStart(),
+                variableDeclarationArguments: string[] = [],
+                i: number;
+
+            if (this.getFunctionReturnsExplicit() && !this.getFunctionTypeAfterName()) {
+                output = this.parseType(functionArgs[3]) + " ";
+            }
+
+            output = this.getClassStaticLabel() + output;
+
+            if (this.getClassPrivacy()) {
+                output = functionArgs[1] + " " + output;
+            }
+
+            output += functionArgs[2] + "(";
+
+            // All arguments are added using VariableDeclarePartial
+            if (functionArgs.length > 4) {
+                if (this.getClassFunctionsTakeThis()) {
+                    output += ", ";
+                }
+
+                for (i = 4; i < functionArgs.length; i += 2) {
+                    variableDeclarationArguments[0] = functionArgs[i];
+                    variableDeclarationArguments[1] = functionArgs[i + 1];
+
+                    output += this.VariableDeclarePartial(variableDeclarationArguments, true)[0] + ", ";
+                }
+
+                // The last argument does not have the last ", " at the end
+                output = output.substr(0, output.length - 2);
+            }
+
+            output += ")";
+
+            if (this.getFunctionReturnsExplicit() && this.getFunctionTypeAfterName()) {
+                output += this.getFunctionTypeMarker() + this.parseType(functionArgs[3]);
+            }
+
+            output += this.getFunctionDefineRight();
+
+            if (this.getClassStaticFunctionRequiresDecorator()) {
+                return [this.getClassStaticFunctionDecorator(), 0, output, 1];
+            } else {
+                return [output, 1];
+            }
         }
 
         // string class, string visibility, string type[, string value]
