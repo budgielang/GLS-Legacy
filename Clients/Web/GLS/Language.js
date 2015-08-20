@@ -19,6 +19,13 @@ var GLS;
                 "class member variable declare": this.ClassMemberVariableDeclare.bind(this),
                 "class member variable get": this.ClassMemberVariableGet.bind(this),
                 "class member variable set": this.ClassMemberVariableSet.bind(this),
+                "class static function call": this.ClassStaticFunctionCall.bind(this),
+                "class static function end": this.ClassStaticFunctionEnd.bind(this),
+                "class static function get": this.ClassStaticFunctionGet.bind(this),
+                "class static function start": this.ClassStaticFunctionStart.bind(this),
+                "class static variable declare": this.ClassStaticVariableDeclare.bind(this),
+                "class static variable get": this.ClassStaticVariableGet.bind(this),
+                "class static variable set": this.ClassStaticVariableSet.bind(this),
                 "class new": this.ClassNew.bind(this),
                 "class start": this.ClassStart.bind(this),
                 "comment block": this.CommentBlock.bind(this),
@@ -356,6 +363,15 @@ var GLS;
         };
         Language.prototype.getClassPrivacy = function () {
             return this.ClassPrivacy;
+        };
+        Language.prototype.getClassStaticLabel = function () {
+            return this.ClassStaticLabel;
+        };
+        Language.prototype.getClassStaticFunctionDecorator = function () {
+            return this.ClassStaticFunctionDecorator;
+        };
+        Language.prototype.getClassStaticFunctionRequiresDecorator = function () {
+            return this.ClassStaticFunctionRequiresDecorator;
         };
         Language.prototype.getClassStartLeft = function () {
             return this.ClassStartLeft;
@@ -752,6 +768,18 @@ var GLS;
             this.ClassPrivacy = value;
             return this;
         };
+        Language.prototype.setClassStaticLabel = function (value) {
+            this.ClassStaticLabel = value;
+            return this;
+        };
+        Language.prototype.setClassStaticFunctionDecorator = function (value) {
+            this.ClassStaticFunctionDecorator = value;
+            return this;
+        };
+        Language.prototype.setClassStaticFunctionRequiresDecorator = function (value) {
+            this.ClassStaticFunctionRequiresDecorator = value;
+            return this;
+        };
         Language.prototype.setClassStartLeft = function (value) {
             this.ClassStartLeft = value;
             return this;
@@ -1053,7 +1081,7 @@ var GLS;
             var output = this.getClassEnder();
             return [this.getClassEnder(), -1];
         };
-        // string variable, string function, [, string argumentName, string argumentType, ... ]
+        // string variable, string function, [string argumentName, ...]
         Language.prototype.ClassMemberFunctionCall = function (functionArgs, isInline) {
             this.requireArgumentsLength("ClassMemberFunctionCall", functionArgs, 2);
             var output = functionArgs[0] + "." + functionArgs[1] + "(", i;
@@ -1137,9 +1165,7 @@ var GLS;
             if (this.getClassMemberVariablePrivacy()) {
                 variableDeclared[0] = functionArgs[1] + " " + variableDeclared[0];
             }
-            if (this.getClassMemberVariableStarter() !== "") {
-                variableDeclared[0] = this.getClassMemberVariableStarter() + variableDeclared[0];
-            }
+            variableDeclared[0] = this.getClassMemberVariableStarter() + variableDeclared[0];
             return variableDeclared;
         };
         // string name
@@ -1149,9 +1175,114 @@ var GLS;
         };
         // string name, string value
         Language.prototype.ClassMemberVariableSet = function (functionArgs, isInline) {
-            this.requireArgumentsLength("ClasMemberVariableSet", functionArgs, 2);
+            this.requireArgumentsLength("ClassMemberVariableSet", functionArgs, 2);
             var output = this.getClassThis() + this.getClassThisAccess();
             output += functionArgs[0] + " " + this.getOperationAlias("equals") + " " + functionArgs[1];
+            output += this.getSemiColon();
+            return [output, 0];
+        };
+        // string class, string function, [string argumentName, ...]
+        Language.prototype.ClassStaticFunctionCall = function (functionArgs, isInline) {
+            this.requireArgumentsLength("ClassStaticFunctionCall", functionArgs, 2);
+            var output = functionArgs[0] + "." + functionArgs[1] + "(", i;
+            if (functionArgs.length > 2) {
+                for (i = 2; i < functionArgs.length - 1; i += 1) {
+                    output += functionArgs[i] + ", ";
+                }
+                output += functionArgs[i];
+            }
+            output += ")";
+            if (!isInline) {
+                output += this.getSemiColon();
+            }
+            return [output, 0];
+        };
+        Language.prototype.ClassStaticFunctionEnd = function (functionArgs, isInline) {
+            return [this.getFunctionDefineEnd(), -1];
+        };
+        // string class, string function
+        Language.prototype.ClassStaticFunctionGet = function (functionArgs, isInline) {
+            this.requireArgumentsLength("ClassStaticFunctionGet", functionArgs, 2);
+            var output = "";
+            output += this.getClassMemberFunctionGetStart() + functionArgs[0];
+            output += "." + functionArgs[1] + this.getClassMemberFunctionGetEnd();
+            if (this.getClassMemberFunctionGetBind()) {
+                output += "(" + functionArgs[0] + ")";
+            }
+            return [output, 0];
+        };
+        // string class, string visibility, string name, string return, [, string argumentName, string argumentType...]
+        Language.prototype.ClassStaticFunctionStart = function (functionArgs, isInline) {
+            this.requireArgumentsLength("ClassStaticFunctionStart", functionArgs, 4);
+            var output = this.getClassFunctionsStart(), variableDeclarationArguments = [], i;
+            if (this.getFunctionReturnsExplicit() && !this.getFunctionTypeAfterName()) {
+                output = this.parseType(functionArgs[3]) + " ";
+            }
+            output = this.getClassStaticLabel() + output;
+            if (this.getClassPrivacy()) {
+                output = functionArgs[1] + " " + output;
+            }
+            output += functionArgs[2] + "(";
+            // All arguments are added using VariableDeclarePartial
+            if (functionArgs.length > 4) {
+                if (this.getClassFunctionsTakeThis()) {
+                    output += ", ";
+                }
+                for (i = 4; i < functionArgs.length; i += 2) {
+                    variableDeclarationArguments[0] = functionArgs[i];
+                    variableDeclarationArguments[1] = functionArgs[i + 1];
+                    output += this.VariableDeclarePartial(variableDeclarationArguments, true)[0] + ", ";
+                }
+                // The last argument does not have the last ", " at the end
+                output = output.substr(0, output.length - 2);
+            }
+            output += ")";
+            if (this.getFunctionReturnsExplicit() && this.getFunctionTypeAfterName()) {
+                output += this.getFunctionTypeMarker() + this.parseType(functionArgs[3]);
+            }
+            output += this.getFunctionDefineRight();
+            if (this.getClassStaticFunctionRequiresDecorator()) {
+                return [this.getClassStaticFunctionDecorator(), 0, output, 1];
+            }
+            else {
+                return [output, 1];
+            }
+        };
+        // string class, string visibility, string type[, string value]
+        Language.prototype.ClassStaticVariableDeclare = function (functionArgs, isInline) {
+            this.requireArgumentsLength("ClassStaticVariableDeclare", functionArgs, 3);
+            var variableType = this.parseType(functionArgs[2]), variableDeclarationArgs, variableDeclared;
+            if (functionArgs.length > 3) {
+                variableDeclarationArgs = [functionArgs[0], variableType, functionArgs[3]];
+            }
+            else if (this.getClassMemberVariableDefault() !== "") {
+                variableDeclarationArgs = [functionArgs[0], variableType, this.getClassMemberVariableDefault()];
+            }
+            else {
+                variableDeclarationArgs = [functionArgs[0], variableType];
+            }
+            variableDeclared = this.VariableDeclarePartial(variableDeclarationArgs, isInline);
+            variableDeclared[0] = this.getClassStaticLabel() + variableDeclared[0];
+            variableDeclared[1] = 0;
+            if (!isInline) {
+                variableDeclared[0] = variableDeclared[0] + this.getSemiColon();
+            }
+            if (this.getClassMemberVariablePrivacy()) {
+                variableDeclared[0] = functionArgs[1] + " " + variableDeclared[0];
+            }
+            variableDeclared[0] = this.getClassMemberVariableStarter() + variableDeclared[0];
+            return variableDeclared;
+        };
+        // string class, string name
+        Language.prototype.ClassStaticVariableGet = function (functionArgs, isInline) {
+            this.requireArgumentsLength("ClassStaticVariableGet", functionArgs, 2);
+            return [functionArgs[0] + "." + functionArgs[1], 0];
+        };
+        // string class, string name, string value
+        Language.prototype.ClassStaticVariableSet = function (functionArgs, isInline) {
+            this.requireArgumentsLength("ClassStaticVariableSet", functionArgs, 3);
+            var output = functionArgs[0] + "." + functionArgs[1] + " ";
+            output += this.getOperationAlias("equals") + " " + functionArgs[2];
             output += this.getSemiColon();
             return [output, 0];
         };
