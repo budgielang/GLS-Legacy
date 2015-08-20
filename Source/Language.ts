@@ -105,24 +105,25 @@ module GLS {
 
         // Classes
         private ClassConstructorAsStatic: boolean;
-        private ClassParentName: string;
         private ClassConstructorInheritedShorthand: boolean;
         private ClassConstructorName: string;
         private ClassConstructorLoose: boolean;
         private ClassEnder: string;
         private ClassExtends: string;
         private ClassExtendsAsFunction: boolean;
+        private ClassFunctionsStart: string;
+        private ClassFunctionsThis: string;
         private ClassMemberFunctionGetEnd: string;
         private ClassMemberFunctionGetStart: string;
         private ClassMemberFunctionGetBind: boolean;
         private ClassFunctionsTakeThis: boolean;
-        private ClassFunctionsStart: string;
-        private ClassFunctionsThis: string;
         private ClassMemberVariableDefault: string;
         private ClassMemberVariablePrivacy: boolean;
         private ClassMemberVariableStarter: string;
         private ClassNewer: string;
+        private ClassParentName: string;
         private ClassPrivacy: boolean;
+        private ClassStaticLabel: string;
         private ClassStartLeft: string;
         private ClassStartRight: string;
         private ClassTemplates: boolean;
@@ -599,6 +600,10 @@ module GLS {
 
         public getClassPrivacy(): boolean {
             return this.ClassPrivacy;
+        }
+
+        public getClassStaticLabel(): string {
+            return this.ClassStaticLabel;
         }
 
         public getClassStartLeft(): string {
@@ -1096,6 +1101,11 @@ module GLS {
 
         public setClassPrivacy(value: boolean): Language {
             this.ClassPrivacy = value;
+            return this;
+        }
+
+        public setClassStaticLabel(value: string): Language {
+            this.ClassStaticLabel = value;
             return this;
         }
 
@@ -1631,9 +1641,7 @@ module GLS {
                 variableDeclared[0] = functionArgs[1] + " " + variableDeclared[0];
             }
 
-            if (this.getClassMemberVariableStarter() !== "") {
-                variableDeclared[0] = this.getClassMemberVariableStarter() + variableDeclared[0];
-            }
+            variableDeclared[0] = this.getClassMemberVariableStarter() + variableDeclared[0];
 
             return variableDeclared;
         }
@@ -1647,7 +1655,7 @@ module GLS {
 
         // string name, string value
         public ClassMemberVariableSet(functionArgs: string[], isInline?: boolean): any[] {
-            this.requireArgumentsLength("ClasMemberVariableSet", functionArgs, 2);
+            this.requireArgumentsLength("ClassMemberVariableSet", functionArgs, 2);
 
             var output: string = this.getClassThis() + this.getClassThisAccess();
 
@@ -1676,19 +1684,56 @@ module GLS {
             return this.ClassMemberFunctionStart(functionArgs, isInline);
         }
 
-        // string class, string visibility, string type
+        // string class, string visibility, string type[, string value]
         public ClassStaticVariableDeclare(functionArgs: string[], isInline?: boolean): any[] {
-            return this.ClassMemberVariableDeclare(functionArgs, isInline);
+            this.requireArgumentsLength("ClassStaticVariableDeclare", functionArgs, 3);
+
+            var variableType = this.parseType(functionArgs[2]),
+                variableDeclarationArgs: string[],
+                variableDeclared: any[];
+
+            if (functionArgs.length > 3) {
+                variableDeclarationArgs = [functionArgs[0], variableType, functionArgs[3]];
+            } else if (this.getClassMemberVariableDefault() !== "") {
+                variableDeclarationArgs = [functionArgs[0], variableType, this.getClassMemberVariableDefault()];
+            } else {
+                variableDeclarationArgs = [functionArgs[0], variableType];
+            }
+
+            variableDeclared = this.VariableDeclarePartial(variableDeclarationArgs, isInline);
+            variableDeclared[0] = this.getClassStaticLabel() + variableDeclared[0];
+            variableDeclared[1] = 0;
+
+            if (!isInline) {
+                variableDeclared[0] = variableDeclared[0] + this.getSemiColon();
+            }
+
+            if (this.getClassMemberVariablePrivacy()) {
+                variableDeclared[0] = functionArgs[1] + " " + variableDeclared[0];
+            }
+
+            variableDeclared[0] = this.getClassMemberVariableStarter() + variableDeclared[0];
+
+            return variableDeclared;
         }
 
-        // string class
-        public ClassStaticVariableGet(functionArgs: string[], isInline?: boolean): any[] {
-            return this.ClassMemberVariableGet(functionArgs, isInline);
+        // string class, string name
+        public ClassStaticVariableGet(functionArgs: string[], isInline?: boolean): any[]{
+            this.requireArgumentsLength("ClassStaticVariableGet", functionArgs, 2);
+
+            return [functionArgs[0] + "." + functionArgs[1], 0];
         }
 
-        // string name, string value
+        // string class, string name, string value
         public ClassStaticVariableSet(functionArgs: string[], isInline?: boolean): any[] {
-            return this.ClassMemberVariableSet(functionArgs, isInline);
+            this.requireArgumentsLength("ClassStaticVariableSet", functionArgs, 3);
+
+            var output: string = functionArgs[0] + "." + functionArgs[1] + " ";
+
+            output += this.getOperationAlias("equals") + " " + functionArgs[2];
+            output += this.getSemiColon();
+
+            return [output, 0];
         }
 
         // string name[, string visibility[, string parentClass]]

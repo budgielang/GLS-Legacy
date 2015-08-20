@@ -364,6 +364,9 @@ var GLS;
         Language.prototype.getClassPrivacy = function () {
             return this.ClassPrivacy;
         };
+        Language.prototype.getClassStaticLabel = function () {
+            return this.ClassStaticLabel;
+        };
         Language.prototype.getClassStartLeft = function () {
             return this.ClassStartLeft;
         };
@@ -759,6 +762,10 @@ var GLS;
             this.ClassPrivacy = value;
             return this;
         };
+        Language.prototype.setClassStaticLabel = function (value) {
+            this.ClassStaticLabel = value;
+            return this;
+        };
         Language.prototype.setClassStartLeft = function (value) {
             this.ClassStartLeft = value;
             return this;
@@ -1144,9 +1151,7 @@ var GLS;
             if (this.getClassMemberVariablePrivacy()) {
                 variableDeclared[0] = functionArgs[1] + " " + variableDeclared[0];
             }
-            if (this.getClassMemberVariableStarter() !== "") {
-                variableDeclared[0] = this.getClassMemberVariableStarter() + variableDeclared[0];
-            }
+            variableDeclared[0] = this.getClassMemberVariableStarter() + variableDeclared[0];
             return variableDeclared;
         };
         // string name
@@ -1156,7 +1161,7 @@ var GLS;
         };
         // string name, string value
         Language.prototype.ClassMemberVariableSet = function (functionArgs, isInline) {
-            this.requireArgumentsLength("ClasMemberVariableSet", functionArgs, 2);
+            this.requireArgumentsLength("ClassMemberVariableSet", functionArgs, 2);
             var output = this.getClassThis() + this.getClassThisAccess();
             output += functionArgs[0] + " " + this.getOperationAlias("equals") + " " + functionArgs[1];
             output += this.getSemiColon();
@@ -1177,17 +1182,43 @@ var GLS;
         Language.prototype.ClassStaticFunctionStart = function (functionArgs, isInline) {
             return this.ClassMemberFunctionStart(functionArgs, isInline);
         };
-        // string class, string visibility, string type
+        // string class, string visibility, string type[, string value]
         Language.prototype.ClassStaticVariableDeclare = function (functionArgs, isInline) {
-            return this.ClassMemberVariableDeclare(functionArgs, isInline);
+            this.requireArgumentsLength("ClassStaticVariableDeclare", functionArgs, 3);
+            var variableType = this.parseType(functionArgs[2]), variableDeclarationArgs, variableDeclared;
+            if (functionArgs.length > 3) {
+                variableDeclarationArgs = [functionArgs[0], variableType, functionArgs[3]];
+            }
+            else if (this.getClassMemberVariableDefault() !== "") {
+                variableDeclarationArgs = [functionArgs[0], variableType, this.getClassMemberVariableDefault()];
+            }
+            else {
+                variableDeclarationArgs = [functionArgs[0], variableType];
+            }
+            variableDeclared = this.VariableDeclarePartial(variableDeclarationArgs, isInline);
+            variableDeclared[0] = this.getClassStaticLabel() + variableDeclared[0];
+            variableDeclared[1] = 0;
+            if (!isInline) {
+                variableDeclared[0] = variableDeclared[0] + this.getSemiColon();
+            }
+            if (this.getClassMemberVariablePrivacy()) {
+                variableDeclared[0] = functionArgs[1] + " " + variableDeclared[0];
+            }
+            variableDeclared[0] = this.getClassMemberVariableStarter() + variableDeclared[0];
+            return variableDeclared;
         };
-        // string class
+        // string class, string name
         Language.prototype.ClassStaticVariableGet = function (functionArgs, isInline) {
-            return this.ClassMemberVariableGet(functionArgs, isInline);
+            this.requireArgumentsLength("ClassStaticVariableGet", functionArgs, 2);
+            return [functionArgs[0] + "." + functionArgs[1], 0];
         };
-        // string name, string value
+        // string class, string name, string value
         Language.prototype.ClassStaticVariableSet = function (functionArgs, isInline) {
-            return this.ClassMemberVariableSet(functionArgs, isInline);
+            this.requireArgumentsLength("ClassStaticVariableSet", functionArgs, 3);
+            var output = functionArgs[0] + "." + functionArgs[1] + " ";
+            output += this.getOperationAlias("equals") + " " + functionArgs[2];
+            output += this.getSemiColon();
+            return [output, 0];
         };
         // string name[, string visibility[, string parentClass]]
         Language.prototype.ClassStart = function (functionArgs, isInline) {

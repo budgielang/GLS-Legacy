@@ -17,6 +17,7 @@ module GLS.Languages {
         .setClassNewer("new ")
         .setClassParentName("super")
         .setClassPrivacy(true)
+        .setClassStaticLabel("static ")
         .setClassStartLeft("class ")
         .setClassStartRight(" {")
         .setClassTemplates(true)
