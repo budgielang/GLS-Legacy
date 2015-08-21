@@ -74,6 +74,7 @@ module GLS.Languages {
         .addTypeAlias("number", "double")
         .addTypeAlias("number", "float")
         .addTypeAlias("boolean", "bool")
+        .addTypeAlias("Array", "array")
         .addNativeFunctionAliases("array",
         {
             "length": {

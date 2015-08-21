@@ -203,6 +203,7 @@ module GLS {
                 "lambda type declare": this.LambdaTypeDeclare.bind(this),
                 "main end": this.MainEnd.bind(this),
                 "main start": this.MainStart.bind(this),
+                "native call": this.NativeCall.bind(this),
                 "not": this.Not.bind(this),
                 "operation": this.Operation.bind(this),
                 "parenthesis": this.Parenthesis.bind(this),
@@ -241,9 +242,9 @@ module GLS {
             this.ValueAliases = {};
 
             this.NativeFunctionAliases = {
-                "Array": {},
-                "Dictionary": {},
-                "String": {}
+                "array": {},
+                "dictionary": {},
+                "string": {}
             };
         }
 
@@ -2160,7 +2161,7 @@ module GLS {
             return [output, 1];
         }
 
-        // string name
+        // string name[, string parameter, ...]
         public FunctionCall(functionArgs: string[], isInline?: boolean): any[] {
             this.requireArgumentsLength("FunctionCall", functionArgs, 1);
 
@@ -2385,6 +2386,53 @@ module GLS {
             var output: string = this.getMainStartLine();
 
             return [output, output.length === 0 ? 0 : 1];
+        }
+
+        // string class, string function, string instance[, string parameter, ...]
+        public NativeCall(functionArgs: string[], isInline?: boolean): any[] {
+            this.requireArgumentsLength("NativeFunction", functionArgs, 3);
+
+            var className: string = this.getTypeAlias(functionArgs[0]),
+                aliasInfo: any = this.getNativeFunctionAlias(functionArgs[0], functionArgs[1]),
+                caller: string,
+                numArgs: number,
+                start: number,
+                output: string;
+
+            switch (aliasInfo.placement) {
+                case "member":
+                    caller = functionArgs[2] + "." + aliasInfo.alias;
+                    numArgs = functionArgs.length - 3;
+                    start = 2;
+                    break;
+
+                case "static":
+                    caller = className + "." + aliasInfo.alias;
+                    numArgs = functionArgs.length - 2;
+                    start = 1;
+                    break;
+            }
+            
+            switch (aliasInfo.usage) {
+                case "function":
+                    var functionCallArgs: any[] = new Array(numArgs),
+                        i: number;
+
+                    functionCallArgs[0] = caller;
+
+                    for (i = 1; i < functionArgs.length - start; i += 1) {
+                        functionCallArgs[i] = functionArgs[i + start];
+                    }
+
+                    output = this.FunctionCall(functionCallArgs, isInline)[0];
+                    break;
+
+                case "variable":
+                    output = caller;
+                    break;
+            }
+
+            return [output, 0];
         }
 
         // string value
