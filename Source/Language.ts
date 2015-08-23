@@ -164,6 +164,7 @@ module GLS {
                 "class member variable declare": this.ClassMemberVariableDeclare.bind(this),
                 "class member variable get": this.ClassMemberVariableGet.bind(this),
                 "class member variable set": this.ClassMemberVariableSet.bind(this),
+                "class member variable set incomplete": this.ClassMemberVariableSetIncomplete.bind(this),
                 "class static function call": this.ClassStaticFunctionCall.bind(this),
                 "class static function end": this.ClassStaticFunctionEnd.bind(this),
                 "class static function get": this.ClassStaticFunctionGet.bind(this),
@@ -1705,12 +1706,23 @@ module GLS {
         public ClassMemberVariableSet(functionArgs: string[], isInline?: boolean): any[] {
             this.requireArgumentsLength("ClassMemberVariableSet", functionArgs, 2);
 
+            var output: any = this.ClassMemberVariableSetIncomplete(functionArgs, isInline);
+
+            output[0] += this.getSemiColon();
+            output[1] = 0;
+
+            return output;
+        }
+
+        // string name, string value
+        public ClassMemberVariableSetIncomplete(functionArgs: string[], isInline?: boolean): any[] {
+            this.requireArgumentsLength("ClassMemberVariableSetIncomplete", functionArgs, 2);
+
             var output: string = this.getClassThis() + this.getClassThisAccess();
 
             output += functionArgs[0] + " " + this.getOperationAlias("equals") + " " + functionArgs[1];
-            output += this.getSemiColon();
 
-            return [output, 0];
+            return [output, 1];
         }
 
         // string class, string function, [string argumentName, ...]
@@ -2519,9 +2531,11 @@ module GLS {
         }
 
         // string name, string type
-        // E.x. Dictionary<string, int> x = 
+        // E.x. var x: number
+        // E.x. var x: number = 7
         public VariableDeclareIncomplete(functionArgs: string[], isInline?: boolean): any[] {
             this.requireArgumentsLength("VariableDeclareStartLine", functionArgs, 2);
+
             var variableType: string = this.parseType(functionArgs[1]),
                 variableDeclarationArguments: string[],
                 variableDeclared: any[];
@@ -2540,8 +2554,8 @@ module GLS {
         }
 
         // string name, string type[, string value]
-        // E.x. var x;
-        // E.x. var x = 7;
+        // E.x. x: number;
+        // E.x. x: number = 7;
         public VariableDeclarePartial(functionArgs: string[], isInline?: boolean): any[] {
             this.requireArgumentsLength("VariableDeclarePartial", functionArgs, 2);
 
