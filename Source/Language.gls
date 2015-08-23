@@ -145,5 +145,13 @@ file start : GLS
 
         comment line : Extra
         class static variable declare : INT_MIN public int 9001
+
+        class constructor start : Language
+            class member variable set : Printers { dictionary type : string XXX } { dictionary initialize start : string boolean }
+                dictionary initialize key : "foo" 7
+                dictionary initialize key : "bar" 14
+                dictionary initialize key : "baz" 21
+            dictionary initialize end
+        class constructor end
     class end
 file end
