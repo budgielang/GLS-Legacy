@@ -19,6 +19,7 @@ var GLS;
                 "class member variable declare": this.ClassMemberVariableDeclare.bind(this),
                 "class member variable get": this.ClassMemberVariableGet.bind(this),
                 "class member variable set": this.ClassMemberVariableSet.bind(this),
+                "class member variable set incomplete": this.ClassMemberVariableSetIncomplete.bind(this),
                 "class static function call": this.ClassStaticFunctionCall.bind(this),
                 "class static function end": this.ClassStaticFunctionEnd.bind(this),
                 "class static function get": this.ClassStaticFunctionGet.bind(this),
@@ -1197,10 +1198,17 @@ var GLS;
         // string name, string value
         Language.prototype.ClassMemberVariableSet = function (functionArgs, isInline) {
             this.requireArgumentsLength("ClassMemberVariableSet", functionArgs, 2);
+            var output = this.ClassMemberVariableSetIncomplete(functionArgs, isInline);
+            output[0] += this.getSemiColon();
+            output[1] = 0;
+            return output;
+        };
+        // string name, string value
+        Language.prototype.ClassMemberVariableSetIncomplete = function (functionArgs, isInline) {
+            this.requireArgumentsLength("ClassMemberVariableSetIncomplete", functionArgs, 2);
             var output = this.getClassThis() + this.getClassThisAccess();
             output += functionArgs[0] + " " + this.getOperationAlias("equals") + " " + functionArgs[1];
-            output += this.getSemiColon();
-            return [output, 0];
+            return [output, 1];
         };
         // string class, string function, [string argumentName, ...]
         Language.prototype.ClassStaticFunctionCall = function (functionArgs, isInline) {
@@ -1770,7 +1778,8 @@ var GLS;
             return output;
         };
         // string name, string type
-        // E.x. Dictionary<string, int> x = 
+        // E.x. var x: number
+        // E.x. var x: number = 7
         Language.prototype.VariableDeclareIncomplete = function (functionArgs, isInline) {
             this.requireArgumentsLength("VariableDeclareStartLine", functionArgs, 2);
             var variableType = this.parseType(functionArgs[1]), variableDeclarationArguments, variableDeclared;
@@ -1786,8 +1795,8 @@ var GLS;
             return variableDeclared;
         };
         // string name, string type[, string value]
-        // E.x. var x;
-        // E.x. var x = 7;
+        // E.x. x: number;
+        // E.x. x: number = 7;
         Language.prototype.VariableDeclarePartial = function (functionArgs, isInline) {
             this.requireArgumentsLength("VariableDeclarePartial", functionArgs, 2);
             var output = "", variableType = this.parseType(functionArgs[1]);

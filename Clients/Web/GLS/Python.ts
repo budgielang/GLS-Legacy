@@ -89,7 +89,7 @@ module GLS.Languages {
                 "usage": "function"
             },
             "find": {
-                "alias": "indexOf",
+                "alias": "index",
                 "placement": "member",
                 "usage": "function"
             }
