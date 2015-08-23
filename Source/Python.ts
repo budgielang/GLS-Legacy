@@ -72,5 +72,26 @@ module GLS.Languages {
         .addOperationAlias("and", "and")
         .addOperationAlias("or", "or")
         .addValueAlias("False", "false")
-        .addValueAlias("True", "true");
+        .addValueAlias("True", "true")
+        .addNativeFunctionAliases("array",
+        {
+            "length": {
+                "alias": "len",
+                "placement": "static",
+                "usage": "function"
+            }
+        })
+        .addNativeFunctionAliases("string",
+        {
+            "length": {
+                "alias": "len",
+                "placement": "static",
+                "usage": "function"
+            },
+            "find": {
+                "alias": "index",
+                "placement": "member",
+                "usage": "function"
+            }
+        });
 }

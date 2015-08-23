@@ -61,7 +61,7 @@ module GLS.Languages {
         .setLambdaTypeDeclarationMiddle(["", ";"])
         .setLambdaTypeDeclarationRequired(true)
         .setLambdaTypeDeclarationStart([" interface ", " {"])
-        .setMainEndLine("}") 
+        .setMainEndLine("}")
         .setMainStartLine("export function Main(): void {")
         .setToString("")
         .setUndefined("undefined")
@@ -73,5 +73,27 @@ module GLS.Languages {
         .addTypeAlias("number", "int")
         .addTypeAlias("number", "double")
         .addTypeAlias("number", "float")
-        .addTypeAlias("boolean", "bool");
+        .addTypeAlias("boolean", "bool")
+        .addTypeAlias("Array", "array")
+        .addNativeFunctionAliases("array",
+        {
+            "length": {
+                "alias": "length",
+                "placement": "member",
+                "usage": "variable"
+            }
+        })
+        .addNativeFunctionAliases("string",
+        {
+            "length": {
+                "alias": "length",
+                "placement": "member",
+                "usage": "variable"
+            },
+            "find": {
+                "alias": "indexOf",
+                "placement": "member",
+                "usage": "function"
+            }
+        });
 }

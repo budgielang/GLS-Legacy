@@ -58,6 +58,7 @@ var GLS;
                 "lambda type declare": this.LambdaTypeDeclare.bind(this),
                 "main end": this.MainEnd.bind(this),
                 "main start": this.MainStart.bind(this),
+                "native call": this.NativeCall.bind(this),
                 "not": this.Not.bind(this),
                 "operation": this.Operation.bind(this),
                 "parenthesis": this.Parenthesis.bind(this),
@@ -91,6 +92,11 @@ var GLS;
             };
             this.TypeAliases = {};
             this.ValueAliases = {};
+            this.NativeFunctionAliases = {
+                "array": {},
+                "dictionary": {},
+                "string": {}
+            };
         }
         /* Gets
         */
@@ -894,6 +900,21 @@ var GLS;
             this.ValueAliases[alias] = key;
             return this;
         };
+        Language.prototype.getNativeFunctionAlias = function (className, memberName) {
+            return this.NativeFunctionAliases[className][memberName];
+        };
+        Language.prototype.addNativeFunctionAlias = function (className, memberName, aliasInfo) {
+            this.NativeFunctionAliases[className][memberName] = aliasInfo;
+            return this;
+        };
+        Language.prototype.addNativeFunctionAliases = function (className, aliasInfos) {
+            for (var i in aliasInfos) {
+                if (aliasInfos.hasOwnProperty(i)) {
+                    this.addNativeFunctionAlias(className, i, aliasInfos[i]);
+                }
+            }
+            return this;
+        };
         Language.prototype.print = function (functionName, functionArgs, isInline) {
             if (!this.printers.hasOwnProperty(functionName)) {
                 throw new Error("Function not found: " + functionName);
@@ -1504,7 +1525,7 @@ var GLS;
             output += this.getConditionStartRight();
             return [output, 1];
         };
-        // string name
+        // string name[, string parameter, ...]
         Language.prototype.FunctionCall = function (functionArgs, isInline) {
             this.requireArgumentsLength("FunctionCall", functionArgs, 1);
             var output = functionArgs[0] + "(", i;
@@ -1659,6 +1680,37 @@ var GLS;
         Language.prototype.MainStart = function (functionArgs, isInline) {
             var output = this.getMainStartLine();
             return [output, output.length === 0 ? 0 : 1];
+        };
+        // string class, string function, string instance[, string parameter, ...]
+        Language.prototype.NativeCall = function (functionArgs, isInline) {
+            this.requireArgumentsLength("NativeFunction", functionArgs, 3);
+            var className = this.getTypeAlias(functionArgs[0]), aliasInfo = this.getNativeFunctionAlias(functionArgs[0], functionArgs[1]), caller, numArgs, start, output;
+            switch (aliasInfo.placement) {
+                case "member":
+                    caller = functionArgs[2] + "." + aliasInfo.alias;
+                    numArgs = functionArgs.length - 3;
+                    start = 2;
+                    break;
+                case "static":
+                    caller = aliasInfo.alias;
+                    numArgs = functionArgs.length - 2;
+                    start = 1;
+                    break;
+            }
+            switch (aliasInfo.usage) {
+                case "function":
+                    var functionCallArgs = new Array(numArgs), i;
+                    functionCallArgs[0] = caller;
+                    for (i = 1; i < functionArgs.length - start; i += 1) {
+                        functionCallArgs[i] = functionArgs[i + start];
+                    }
+                    output = this.FunctionCall(functionCallArgs, isInline)[0];
+                    break;
+                case "variable":
+                    output = caller;
+                    break;
+            }
+            return [output, 0];
         };
         // string value
         Language.prototype.Not = function (functionArgs, isInline) {
