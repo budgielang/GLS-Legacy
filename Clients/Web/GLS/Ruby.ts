@@ -70,4 +70,25 @@ module GLS.Languages {
         .setFunctionReturnsExplicit(false)
         .setVariableTypesExplicit(false)
         .setVariableDeclareStart("")
+        .addNativeFunctionAliases("array",
+        {
+            "length": {
+                "alias": "length",
+                "placement": "member",
+                "usage": "variable"
+            }
+        })
+        .addNativeFunctionAliases("string",
+        {
+            "length": {
+                "alias": "length",
+                "placement": "member",
+                "usage": "variable"
+            },
+            "find": {
+                "alias": "index",
+                "placement": "member",
+                "usage": "function"
+            }
+        });
 }

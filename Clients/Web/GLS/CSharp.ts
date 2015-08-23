@@ -70,5 +70,26 @@ module GLS.Languages {
         .setVariableTypesExplicit(true)
         .setVariableTypesAfterName(false)
         .addTypeAlias("int", "number")
-        .addTypeAlias("bool", "boolean");
+        .addTypeAlias("bool", "boolean")
+        .addNativeFunctionAliases("array",
+        {
+            "length": {
+                "alias": "Length",
+                "placement": "member",
+                "usage": "variable"
+            }
+        })
+        .addNativeFunctionAliases("string",
+        {
+            "length": {
+                "alias": "Length",
+                "placement": "member",
+                "usage": "variable"
+            },
+            "find": {
+                "alias": "IndexOf",
+                "placement": "member",
+                "usage": "function"
+            }
+        });
 }

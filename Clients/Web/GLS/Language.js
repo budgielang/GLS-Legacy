@@ -1692,7 +1692,7 @@ var GLS;
                     start = 2;
                     break;
                 case "static":
-                    caller = className + "." + aliasInfo.alias;
+                    caller = aliasInfo.alias;
                     numArgs = functionArgs.length - 2;
                     start = 1;
                     break;

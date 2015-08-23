@@ -7,16 +7,6 @@ var GLS;
                 "alias": "length",
                 "placement": "member",
                 "usage": "variable"
-            },
-            "find": {
-                "alias": "indexOf",
-                "placement": "member",
-                "usage": "function"
-            },
-            "join": {
-                "alias": "join",
-                "placement": "member",
-                "usage": "function"
             }
         }).addNativeFunctionAliases("string", {
             "length": {

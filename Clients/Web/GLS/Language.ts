@@ -2407,7 +2407,7 @@ module GLS {
                     break;
 
                 case "static":
-                    caller = className + "." + aliasInfo.alias;
+                    caller = aliasInfo.alias;
                     numArgs = functionArgs.length - 2;
                     start = 1;
                     break;
