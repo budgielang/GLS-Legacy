@@ -1,10 +1,12 @@
 file start : GLS
+    lambda type declare : public Printer any[] functionArgs string[] isInline boolean
+    
     class start : Language
-        class member variable declare : printers private { dictionary type : string XXX }
-        class member variable declare : OperationAliases private { dictionary type : string XXX }
-        class member variable declare : TypeAliases private { dictionary type : string XXX }
-        class member variable declare : ValueAliases private { dictionary type : string XXX }
-        class member variable declare : NativeFunctionAliases private { dictionary type : string XXX }
+        class member variable declare : printers private { dictionary type : string Printer }
+        class member variable declare : OperationAliases private { dictionary type : string string }
+        class member variable declare : TypeAliases private { dictionary type : string string }
+        class member variable declare : ValueAliases private { dictionary type : string string }
+        class member variable declare : NativeFunctionAliases private { dictionary type : string { dictionary type : string string } }
 
         comment line : General information
         class member variable declare : Name private string
