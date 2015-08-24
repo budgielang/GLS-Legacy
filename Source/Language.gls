@@ -147,10 +147,105 @@ file start : GLS
         class static variable declare : INT_MIN public int 9001
 
         class constructor start : Language
-            class member variable set : Printers { dictionary type : string XXX } { dictionary initialize start : string boolean }
-                dictionary initialize key : "foo" 7
-                dictionary initialize key : "bar" 14
-                dictionary initialize key : "baz" 21
+            class member variable set incomplete : Printers { dictionary initialize start : string XXX }
+                dictionary initialize key : ("array initialize") { class member function get : this ArrayInitialize } ,
+                dictionary initialize key : ("array initialize size") { class member function get : this ArrayInitializeSized } ,
+                dictionary initialize key : ("array get item") { class member function get : this ArrayGetItem } ,
+                dictionary initialize key : ("array get length") { class member function get : this ArrayGetLength } ,
+                dictionary initialize key : ("class constructor end") { class member function get : this ClassConstructorEnd } ,
+                dictionary initialize key : ("class constructor inherited call") { class member function get : this ClassConstructorInheritedCall } ,
+                dictionary initialize key : ("class constructor inherited start") { class member function get : this ClassConstructorInheritedStart } ,
+                dictionary initialize key : ("class constructor start") { class member function get : this ClassConstructorStart } ,
+                dictionary initialize key : ("class end") { class member function get : this ClassEnd } ,
+                dictionary initialize key : ("class member function call") { class member function get : this ClassMemberFunctionCall } ,
+                dictionary initialize key : ("class member function end") { class member function get : this ClassMemberFunctionEnd } ,
+                dictionary initialize key : ("class member function get") { class member function get : this ClassMemberFunctionGet } ,
+                dictionary initialize key : ("class member function start") { class member function get : this ClassMemberFunctionStart } ,
+                dictionary initialize key : ("class member variable set") { class member function get : this ClassMemberVariableDeclare } ,
+                dictionary initialize key : ("class member variable get") { class member function get : this ClassMemberVariableGet } ,
+                dictionary initialize key : ("class member variable set") { class member function get : this ClassMemberVariableSet } ,
+                dictionary initialize key : ("class member variable set incomplete") { class member function get : this ClassMemberVariableSetIncomplete } ,
+                dictionary initialize key : ("class static function call") { class member function get : this ClassStaticFunctionCall } ,
+                dictionary initialize key : ("class static function end") { class member function get : this ClassStaticFunctionEnd } ,
+                dictionary initialize key : ("class static function get") { class member function get : this ClassStaticFunctionGet } ,
+                dictionary initialize key : ("class static function start") { class member function get : this ClassStaticFunctionStart } ,
+                dictionary initialize key : ("class static variable set") { class member function get : this ClassStaticVariableDeclare } ,
+                dictionary initialize key : ("class static variable get") { class member function get : this ClassStaticVariableGet } ,
+                dictionary initialize key : ("class static variable set") { class member function get : this ClassStaticVariableSet } ,
+                dictionary initialize key : ("class new") { class member function get : this ClassNew } ,
+                dictionary initialize key : ("class start") { class member function get : this ClassStart } ,
+                dictionary initialize key : ("comment block") { class member function get : this CommentBlock } ,
+                dictionary initialize key : ("comment line") { class member function get : this CommentLine } ,
+                dictionary initialize key : ("comment inline") { class member function get : this CommentInline } ,
+                dictionary initialize key : ("comparison") { class member function get : this Comparison } ,
+                dictionary initialize key : ("concatenate") { class member function get : this Concatenate } ,
+                dictionary initialize key : ("dictionary key check") { class member function get : this DictionaryKeyCheck } ,
+                dictionary initialize key : ("dictionary key get") { class member function get : this DictionaryKeyGet } ,
+                dictionary initialize key : ("dictionary key set") { class member function get : this DictionaryKeySet } ,
+                dictionary initialize key : ("dictionary initialize") { class member function get : this DictionaryInitialize } ,
+                dictionary initialize key : ("dictionary initialize end") { class member function get : this DictionaryInitializeEnd } ,
+                dictionary initialize key : ("dictionary initialize key") { class member function get : this DictionaryInitializeKey } ,
+                dictionary initialize key : ("dictionary initialize start") { class member function get : this DictionaryInitializeStart } ,
+                dictionary initialize key : ("dictionary type") { class member function get : this DictionaryType } ,
+                dictionary initialize key : ("file end") { class member function get : this FileEnd } ,
+                dictionary initialize key : ("file start") { class member function get : this FileStart } ,
+                dictionary initialize key : ("for end") { class member function get : this ForEnd } ,
+                dictionary initialize key : ("for numbers start") { class member function get : this ForNumbersStart } ,
+                dictionary initialize key : ("function call") { class member function get : this FunctionCall } ,
+                dictionary initialize key : ("function call partial end") { class member function get : this FunctionCallPartialEnd } ,
+                dictionary initialize key : ("function call partial start") { class member function get : this FunctionCallPartialStart } ,
+                dictionary initialize key : ("function end") { class member function get : this FunctionEnd } ,
+                dictionary initialize key : ("function start") { class member function get : this FunctionStart } ,
+                dictionary initialize key : ("function return") { class member function get : this FunctionReturn } ,
+                dictionary initialize key : ("if condition start") { class member function get : this IfConditionStart } ,
+                dictionary initialize key : ("if end") { class member function get : this IfEnd } ,
+                dictionary initialize key : ("if variable start") { class member function get : this IfVariableStart } ,
+                dictionary initialize key : ("lambda declare inline") { class member function get : this LambdaDeclareInline } ,
+                dictionary initialize key : ("lambda type declare") { class member function get : this LambdaTypeDeclare } ,
+                dictionary initialize key : ("main end") { class member function get : this MainEnd } ,
+                dictionary initialize key : ("main start") { class member function get : this MainStart } ,
+                dictionary initialize key : ("native call") { class member function get : this NativeCall } ,
+                dictionary initialize key : ("not") { class member function get : this Not } ,
+                dictionary initialize key : ("operation") { class member function get : this Operation } ,
+                dictionary initialize key : ("parenthesis") { class member function get : this Parenthesis } ,
+                dictionary initialize key : ("print line") { class member function get : this PrintLine } ,
+                dictionary initialize key : ("type") { class member function get : this Type } ,
+                dictionary initialize key : ("value") { class member function get : this Value } ,
+                dictionary initialize key : ("variable set") { class member function get : this VariableDeclare } ,
+                dictionary initialize key : ("variable set incomplete") { class member function get : this VariableDeclareIncomplete } ,
+                dictionary initialize key : ("variable set partial") { class member function get : this VariableDeclarePartial } ,
+                dictionary initialize key : ("while condition start") { class member function get : this WhileConditionStart } ,
+                dictionary initialize key : ("while end") { class member function get : this WhileEnd } ,
+                dictionary initialize key : ("while variable start") { class member function get : this WhileVariableStart }
+            dictionary initialize end
+
+            class member variable set incomplete : OperationAliases { dictionary initialize start : string string }
+                dictionary initialize key : "equals" "=" ,
+                dictionary initialize key : "plus" "+" ,
+                dictionary initialize key : "minus" "-" ,
+                dictionary initialize key : "times" "*" ,
+                dictionary initialize key : "divide" "/" ,
+                dictionary initialize key : "increaseby" "+=" ,
+                dictionary initialize key : "decreaseby" "-=" ,
+                dictionary initialize key : "multiplyby" "*=" ,
+                dictionary initialize key : "divideby" "/=" ,
+                dictionary initialize key : "lessthan" "<" ,
+                dictionary initialize key : "greaterthan" ">" ,
+                dictionary initialize key : "lessthanequal" "<=" ,
+                dictionary initialize key : "greaterthanequal" ">=" ,
+                dictionary initialize key : "and" "&&" ,
+                dictionary initialize key : "or" "||" ,
+                dictionary initialize key : "mod" "%"
+            dictionary initialize end
+            
+            class member variable set : TypeAliases { dictionary initialize : string string }
+            
+            class member variable set : ValueAliases { dictionary initialize : string string }
+
+            class member variable set incomplete : NativeFunctionAliases { dictionary initialize start : string { dictionary type : string string } }
+                dictionary initialize key : ("array") { dictionary initialize : string { dictionary type : string string } } ,
+                dictionary initialize key : ("dictionary") { dictionary initialize : string { dictionary type : string string } } ,
+                dictionary initialize key : ("string") { dictionary initialize : string { dictionary type : string string } }
             dictionary initialize end
         class constructor end
     class end
