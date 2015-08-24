@@ -2442,6 +2442,17 @@ module GLS {
                 case "variable":
                     output = caller;
                     break;
+
+                case "array":
+                    output = caller + "[";
+
+                    for (i = 1; i < functionArgs.length - start; i += 1) {
+                        output += functionArgs[i + start] + aliasInfo.separator;
+                    }
+
+                    output = output.substring(0, aliasInfo.separator.length - 2);
+
+                    output += "]";
             }
 
             return [output, 0];

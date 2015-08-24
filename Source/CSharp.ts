@@ -90,6 +90,11 @@ module GLS.Languages {
                 "alias": "IndexOf",
                 "placement": "member",
                 "usage": "function"
+            },
+            "substring": {
+                "alias": "Substring",
+                "placement": "member",
+                "usage": "function"
             }
         });
 }

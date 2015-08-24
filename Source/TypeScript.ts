@@ -94,6 +94,11 @@ module GLS.Languages {
                 "alias": "indexOf",
                 "placement": "member",
                 "usage": "function"
+            },
+            "substring": {
+                "alias": "substring",
+                "placement": "member",
+                "usage": "function"
             }
         });
 }

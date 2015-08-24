@@ -18,6 +18,11 @@ var GLS;
                 "alias": "IndexOf",
                 "placement": "member",
                 "usage": "function"
+            },
+            "substring": {
+                "alias": "Substring",
+                "placement": "member",
+                "usage": "function"
             }
         });
     })(Languages = GLS.Languages || (GLS.Languages = {}));
