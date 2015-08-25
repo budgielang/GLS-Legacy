@@ -1,6 +1,6 @@
 module GLS {
     export class Language {
-        private printers: any;
+        private Printers: any;
         private OperationAliases: any;
         private TypeAliases: any;
         private ValueAliases: any;
@@ -147,7 +147,7 @@ module GLS {
         public static INT_MIN: number = 9001;
 
         constructor() {
-            this.printers = {
+            this.Printers = {
                 "array initialize": this.ArrayInitialize.bind(this),
                 "array initialize size": this.ArrayInitializeSized.bind(this),
                 "array get item": this.ArrayGetItem.bind(this),
@@ -1316,11 +1316,11 @@ module GLS {
         }
 
         public print(functionName: string, functionArgs: string[], isInline?: boolean): any[] {
-            if (!this.printers.hasOwnProperty(functionName)) {
+            if (!this.Printers.hasOwnProperty(functionName)) {
                 throw new Error("Function not found: " + functionName);
             }
 
-            return this.printers[functionName](functionArgs, isInline);
+            return this.Printers[functionName](functionArgs, isInline);
         }
 
 

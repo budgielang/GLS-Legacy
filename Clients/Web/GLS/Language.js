@@ -2,7 +2,7 @@ var GLS;
 (function (GLS) {
     var Language = (function () {
         function Language() {
-            this.printers = {
+            this.Printers = {
                 "array initialize": this.ArrayInitialize.bind(this),
                 "array initialize size": this.ArrayInitializeSized.bind(this),
                 "array get item": this.ArrayGetItem.bind(this),
@@ -917,10 +917,10 @@ var GLS;
             return this;
         };
         Language.prototype.print = function (functionName, functionArgs, isInline) {
-            if (!this.printers.hasOwnProperty(functionName)) {
+            if (!this.Printers.hasOwnProperty(functionName)) {
                 throw new Error("Function not found: " + functionName);
             }
-            return this.printers[functionName](functionArgs, isInline);
+            return this.Printers[functionName](functionArgs, isInline);
         };
         /* Printers
         */
