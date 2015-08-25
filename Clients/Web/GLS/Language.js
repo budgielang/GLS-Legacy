@@ -57,6 +57,8 @@ var GLS;
                 "if variable start": this.IfVariableStart.bind(this),
                 "lambda declare inline": this.LambdaDeclareInline.bind(this),
                 "lambda type declare": this.LambdaTypeDeclare.bind(this),
+                "loop break": this.LoopBreak.bind(this),
+                "loop continue": this.LoopContinue.bind(this),
                 "main end": this.MainEnd.bind(this),
                 "main start": this.MainStart.bind(this),
                 "native call": this.NativeCall.bind(this),
@@ -202,6 +204,12 @@ var GLS;
         };
         Language.prototype.getToStringAsFunction = function () {
             return this.ToStringAsFunction;
+        };
+        Language.prototype.getBreak = function () {
+            return this.Break;
+        };
+        Language.prototype.getContinue = function () {
+            return this.Continue;
         };
         Language.prototype.getRangedForLoops = function () {
             return this.RangedForLoops;
@@ -541,6 +549,14 @@ var GLS;
         };
         Language.prototype.setStringLength = function (value) {
             this.StringLength = value;
+            return this;
+        };
+        Language.prototype.setBreak = function (value) {
+            this.Break = value;
+            return this;
+        };
+        Language.prototype.setContinue = function (value) {
+            this.Continue = value;
             return this;
         };
         Language.prototype.setRangedForLoops = function (value) {
@@ -1682,6 +1698,12 @@ var GLS;
                 return [line, 0];
             }
         };
+        Language.prototype.LoopBreak = function (functionArgs, isInline) {
+            return [this.getBreak(), 0];
+        };
+        Language.prototype.LoopContinue = function (functionArgs, isInline) {
+            return [this.getContinue(), 0];
+        };
         Language.prototype.MainEnd = function (functionArgs, isInline) {
             return [this.getMainEndLine(), this.getMainStartLine().length === 0 ? 0 : -1];
         };
@@ -1738,6 +1760,7 @@ var GLS;
                         }
                     }
                     output += "]";
+                    break;
             }
             return [output, 0];
         };
