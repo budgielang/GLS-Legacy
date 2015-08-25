@@ -5,7 +5,7 @@ module GLS {
         private TypeAliases: any;
         private ValueAliases: any;
         private NativeFunctionAliases: any;
-
+        
         // General information
         private Name: string;
         private Extension: string;
@@ -1854,7 +1854,7 @@ module GLS {
         }
 
         // string class, string name
-        public ClassStaticVariableGet(functionArgs: string[], isInline?: boolean): any[]{
+        public ClassStaticVariableGet(functionArgs: string[], isInline?: boolean): any[] {
             this.requireArgumentsLength("ClassStaticVariableGet", functionArgs, 2);
 
             return [functionArgs[0] + "." + functionArgs[1], 0];
@@ -2418,13 +2418,19 @@ module GLS {
                     start = 2;
                     break;
 
+                case "array":
+                    caller = functionArgs[2];
+                    numArgs = functionArgs.length - 3;
+                    start = 2;
+                    break;
+
                 case "static":
                     caller = aliasInfo.alias;
                     numArgs = functionArgs.length - 2;
                     start = 1;
                     break;
             }
-            
+
             switch (aliasInfo.usage) {
                 case "function":
                     var functionCallArgs: any[] = new Array(numArgs),
@@ -2446,11 +2452,19 @@ module GLS {
                 case "array":
                     output = caller + "[";
 
-                    for (i = 1; i < functionArgs.length - start; i += 1) {
-                        output += functionArgs[i + start] + aliasInfo.separator;
-                    }
+                    // Default to just the separator if there are no arguments
+                    if (functionArgs.length - 1 === start) {
+                        output += aliasInfo["separator"];
+                    } else {
+                        for (i = 1; i < functionArgs.length - start; i += 1) {
+                            output += functionArgs[i + start] + aliasInfo["separator"];
+                        }
 
-                    output = output.substring(0, aliasInfo.separator.length - 2);
+                        // Remove the last separator if more than one argument is added
+                        if (functionArgs.length - start > 2) {
+                            output = output.substring(0, output.length - aliasInfo.separator.length);
+                        }
+                    }
 
                     output += "]";
             }

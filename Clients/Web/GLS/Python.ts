@@ -1,3 +1,5 @@
+/// <reference path="Language.ts" />
+
 module GLS.Languages {
     export var Python: Language = new GLS.Language()
         .setName("Python")
@@ -94,9 +96,10 @@ module GLS.Languages {
                 "usage": "function"
             },
             "substring": {
-                "alias": "substring",
-                "placement": "member",
-                "usage": "function"
+                "alias": "",
+                "placement": "array",
+                "usage": "array",
+                "separator": ":"
             }
         });
 }
