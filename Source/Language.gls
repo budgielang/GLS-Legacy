@@ -1224,9 +1224,9 @@ file start : GLS
         class member function end
 
         class member function start : Language public parseTypeWithTemplate string text string
-            variable declare : ltIndex number { native call : text find "<" }
-            variable declare : output string { native call : text substring 0 ltIndex }
-            variable declare : i number { operation ltIndex + 1 }
+            variable declare : ltIndex number { native call : string find text "<" }
+            variable declare : output string { native call : string substring text 0 ltIndex }
+            variable declare : i number { operation : ltIndex + 1 }
             variable declare : templateType string
             variable declare : spaceNext number
 
@@ -1238,7 +1238,7 @@ file start : GLS
 
             while condition start : i < text.length
                 operation : spaceNext = { native call : string find text (" ") i }
-                if condition start : { operation : spaceNext == -1 }
+                if condition start : spaceNext == -1
                     loop break
                 if end
 
