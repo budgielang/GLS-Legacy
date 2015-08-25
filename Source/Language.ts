@@ -2467,6 +2467,7 @@ module GLS {
                     }
 
                     output += "]";
+                    break;
             }
 
             return [output, 0];
