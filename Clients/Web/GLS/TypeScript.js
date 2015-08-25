@@ -18,6 +18,11 @@ var GLS;
                 "alias": "indexOf",
                 "placement": "member",
                 "usage": "function"
+            },
+            "substring": {
+                "alias": "substring",
+                "placement": "member",
+                "usage": "function"
             }
         });
     })(Languages = GLS.Languages || (GLS.Languages = {}));

@@ -1,3 +1,4 @@
+/// <reference path="Language.ts" />
 var GLS;
 (function (GLS) {
     var Languages;
@@ -18,6 +19,12 @@ var GLS;
                 "alias": "index",
                 "placement": "member",
                 "usage": "function"
+            },
+            "substring": {
+                "alias": "",
+                "placement": "array",
+                "usage": "array",
+                "separator": ":"
             }
         });
     })(Languages = GLS.Languages || (GLS.Languages = {}));
