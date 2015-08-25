@@ -1699,6 +1699,11 @@ var GLS;
                     numArgs = functionArgs.length - 3;
                     start = 2;
                     break;
+                case "array":
+                    caller = functionArgs[2];
+                    numArgs = functionArgs.length - 3;
+                    start = 2;
+                    break;
                 case "static":
                     caller = aliasInfo.alias;
                     numArgs = functionArgs.length - 2;
@@ -1717,6 +1722,22 @@ var GLS;
                 case "variable":
                     output = caller;
                     break;
+                case "array":
+                    output = caller + "[";
+                    // Default to just the separator if there are no arguments
+                    if (functionArgs.length - 1 === start) {
+                        output += aliasInfo["separator"];
+                    }
+                    else {
+                        for (i = 1; i < functionArgs.length - start; i += 1) {
+                            output += functionArgs[i + start] + aliasInfo["separator"];
+                        }
+                        // Remove the last separator if more than one argument is added
+                        if (functionArgs.length - start > 2) {
+                            output = output.substring(0, output.length - aliasInfo.separator.length);
+                        }
+                    }
+                    output += "]";
             }
             return [output, 0];
         };
