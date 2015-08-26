@@ -1703,10 +1703,10 @@ var GLS;
             }
         };
         Language.prototype.LoopBreak = function (functionArgs, isInline) {
-            return [this.getBreak(), 0];
+            return [this.getBreak() + this.getSemiColon(), 0];
         };
         Language.prototype.LoopContinue = function (functionArgs, isInline) {
-            return [this.getContinue(), 0];
+            return [this.getContinue() + this.getSemiColon(), 0];
         };
         Language.prototype.MainEnd = function (functionArgs, isInline) {
             return [this.getMainEndLine(), this.getMainStartLine().length === 0 ? 0 : -1];

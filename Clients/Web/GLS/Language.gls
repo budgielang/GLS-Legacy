@@ -59,6 +59,8 @@ file start : GLS
         class member variable declare : ToStringAsFunction private boolean
 
         comment line : Loops
+        class member variable declare : Break private string
+        class member variable declare : Continue private string
         class member variable declare : RangedForLoops private boolean
         class member variable declare : RangedForLoopsStart private string
         class member variable declare : RangedForLoopsMiddle private string
@@ -199,9 +201,8 @@ file start : GLS
                 dictionary initialize key : ("function end") { class member function get : this FunctionEnd } ,
                 dictionary initialize key : ("function start") { class member function get : this FunctionStart } ,
                 dictionary initialize key : ("function return") { class member function get : this FunctionReturn } ,
-                dictionary initialize key : ("if condition start") { class member function get : this IfConditionStart } ,
                 dictionary initialize key : ("if end") { class member function get : this IfEnd } ,
-                dictionary initialize key : ("if variable start") { class member function get : this IfVariableStart } ,
+                dictionary initialize key : ("if start") { class member function get : this IfVariableStart } ,
                 dictionary initialize key : ("lambda declare inline") { class member function get : this LambdaDeclareInline } ,
                 dictionary initialize key : ("lambda type declare") { class member function get : this LambdaTypeDeclare } ,
                 dictionary initialize key : ("main end") { class member function get : this MainEnd } ,
@@ -387,6 +388,14 @@ file start : GLS
 
         class member function start : Language public getToStringAsFunction boolean
             function return : { class member variable get : ToStringAsFunction }
+        class member function end
+
+        class member function start : Language public getBreak string
+            function return : { class member variable get : Break }
+        class member function end
+
+        class member function start : Language public getContinue string
+            function return : { class member variable get : Continue }
         class member function end
 
         class member function start : Language public getRangedForLoops boolean
@@ -832,6 +841,16 @@ file start : GLS
             function return : this
         class member function end
 
+        class member function start : Language public setBreak Language value string
+            class member variable set : Break value
+            function return : this
+        class member function end
+
+        class member function start : Language public setContinue Language value string
+            class member variable set : Continue value
+            function return : this
+        class member function end
+
         class member function start : Language public setRangedForLoops Language value boolean
             class member variable set : RangedForLoops value
             function return : this
@@ -1196,11 +1215,11 @@ file start : GLS
         comment block : (Array & Template parsing)
 
         class member function start : Language public parseType string text string
-            if variable start : { class member function call : this typeContainsArray text }
+            if start : { class member function call : this typeContainsArray text }
                 function return : { class member function call : this parseTypeWithArray text }
             if end
 
-            if variable start : { class member function call : this typeContainsTemplate text }
+            if start : { class member function call : this typeContainsTemplate text }
                 function return : { class member function call : this parseTypeWithTemplate text }
             if end
 
@@ -1224,13 +1243,13 @@ file start : GLS
         class member function end
 
         class member function start : Language public parseTypeWithTemplate string text string
-            variable declare : ltIndex number { native call : text find "<" }
-            variable declare : output string { native call : text substring 0 ltIndex }
-            variable declare : i number { operation ltIndex + 1 }
+            variable declare : ltIndex number { native call : string find text "<" }
+            variable declare : output string { native call : string substring text 0 ltIndex }
+            variable declare : i number { operation : ltIndex + 1 }
             variable declare : templateType string
             variable declare : spaceNext number
 
-            if variable start : { not : { class member function call : this getClassTemplates } }
+            if start : { not : { class member function call : this getClassTemplates } }
                 function return : output
             if end
 
@@ -1238,14 +1257,14 @@ file start : GLS
 
             while condition start : i < text.length
                 operation : spaceNext = { native call : string find text (" ") i }
-                if condition start : { operation : spaceNext == -1 }
+                if start : { operation : spaceNext equalto -1 }
                     loop break
                 if end
 
                 operation : templateType = { native call : string substring text i spaceNext }
 
                 comment line : These may have commas already (such as from DictionaryType)
-                if condition start : { array get item : templateType { operation : { native call : array length templateType } - 1 } } == ","
+                if start : { operation : { array get item : templateType { operation : { native call : array length templateType } - 1 } } equalto "," }
                     operation : templateType = { native call : string substring templateType 0 { operation : { native call : array length templateType } - 1 } }
                 if end
 

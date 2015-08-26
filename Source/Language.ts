@@ -2417,11 +2417,11 @@ module GLS {
         }
 
         public LoopBreak(functionArgs: string[], isInline?: boolean): any[] {
-            return [this.getBreak(), 0];
+            return [this.getBreak() + this.getSemiColon(), 0];
         }
 
         public LoopContinue(functionArgs: string[], isInline?: boolean): any[] {
-            return [this.getContinue(), 0];
+            return [this.getContinue() + this.getSemiColon(), 0];
         }
 
         public MainEnd(functionArgs: string[], isInline?: boolean): any[] {
