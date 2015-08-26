@@ -189,6 +189,8 @@ module GLS {
                 "dictionary initialize key": this.DictionaryInitializeKey.bind(this),
                 "dictionary initialize start": this.DictionaryInitializeStart.bind(this),
                 "dictionary type": this.DictionaryType.bind(this),
+                "elif start": this.ElifStart.bind(this),
+                "else start": this.ElseStart.bind(this),
                 "file end": this.FileEnd.bind(this),
                 "file start": this.FileStart.bind(this),
                 "for end": this.ForEnd.bind(this),
@@ -199,9 +201,8 @@ module GLS {
                 "function end": this.FunctionEnd.bind(this),
                 "function start": this.FunctionStart.bind(this),
                 "function return": this.FunctionReturn.bind(this),
-                "if condition start": this.IfConditionStart.bind(this),
                 "if end": this.IfEnd.bind(this),
-                "if variable start": this.IfVariableStart.bind(this),
+                "if start": this.IfStart.bind(this),
                 "lambda declare inline": this.LambdaDeclareInline.bind(this),
                 "lambda type declare": this.LambdaTypeDeclare.bind(this),
                 "loop break": this.LoopBreak.bind(this),
@@ -237,6 +238,7 @@ module GLS {
                 "greaterthan": ">",
                 "lessthanequal": "<=",
                 "greaterthanequal": ">=",
+                "equalto": "==",
                 "and": "&&",
                 "or": "||",
                 "mod": "%"
@@ -2131,7 +2133,21 @@ module GLS {
             }
 
             return [output, 0];
+        }
 
+        // string value
+        public ElifStart(functionArgs: string[], isInline?: boolean): any[] {
+            this.requireArgumentsLength("ElifStart", functionArgs, 1);
+
+            var output: string = this.getElif() + this.getConditionStartLeft();
+
+            output += functionArgs[0] + this.getConditionStartRight();
+
+            return ["\0", -1, output, 1];
+        }
+
+        public ElseStart(functionArgs: string[], isInline?: boolean): any[] {
+            return ["\0", -1, this.getElse() + this.getConditionContinueRight(), 1];
         }
 
         public FileEnd(functionArgs: string[], isInline?: boolean): any[] {
@@ -2283,27 +2299,15 @@ module GLS {
             return ["return " + functionArgs[0] + this.getSemiColon(), 0];
         }
 
-        // string left, string operator, string right
-        public IfConditionStart(functionArgs: string[], isInline?: boolean): any[] {
-            this.requireArgumentsLength("IfConditionStart", functionArgs, 3);
-
-            var output: string = "if" + this.getConditionStartLeft();
-
-            output += functionArgs[0] + " " + this.getOperationAlias(functionArgs[1]) + " ";
-            output += functionArgs[2] + this.getConditionStartRight();
-
-            return [output, 1];
-        }
-
         public IfEnd(functionArgs: string[], isInline?: boolean): any[] {
             return [this.getConditionEnd(), -1];
         }
         
-        // string variable
-        public IfVariableStart(functionArgs: string[], isInline?: boolean): any[] {
-            this.requireArgumentsLength("IfVariable", functionArgs, 1);
+        // string value
+        public IfStart(functionArgs: string[], isInline?: boolean): any[] {
+            this.requireArgumentsLength("IfStart", functionArgs, 1);
 
-            var output: string = "if" + this.getConditionStartLeft();
+            var output: string = this.getIf() + this.getConditionStartLeft();
 
             output += functionArgs[0] + this.getConditionStartRight();
 
