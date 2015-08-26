@@ -42,6 +42,8 @@ var GLS;
                 "dictionary initialize key": this.DictionaryInitializeKey.bind(this),
                 "dictionary initialize start": this.DictionaryInitializeStart.bind(this),
                 "dictionary type": this.DictionaryType.bind(this),
+                "elif start": this.ElifStart.bind(this),
+                "else start": this.ElseStart.bind(this),
                 "file end": this.FileEnd.bind(this),
                 "file start": this.FileStart.bind(this),
                 "for end": this.ForEnd.bind(this),
@@ -52,9 +54,8 @@ var GLS;
                 "function end": this.FunctionEnd.bind(this),
                 "function start": this.FunctionStart.bind(this),
                 "function return": this.FunctionReturn.bind(this),
-                "if condition start": this.IfConditionStart.bind(this),
                 "if end": this.IfEnd.bind(this),
-                "if variable start": this.IfVariableStart.bind(this),
+                "if start": this.IfStart.bind(this),
                 "lambda declare inline": this.LambdaDeclareInline.bind(this),
                 "lambda type declare": this.LambdaTypeDeclare.bind(this),
                 "loop break": this.LoopBreak.bind(this),
@@ -89,6 +90,7 @@ var GLS;
                 "greaterthan": ">",
                 "lessthanequal": "<=",
                 "greaterthanequal": ">=",
+                "equalto": "==",
                 "and": "&&",
                 "or": "||",
                 "mod": "%"
@@ -1510,6 +1512,16 @@ var GLS;
             }
             return [output, 0];
         };
+        // string value
+        Language.prototype.ElifStart = function (functionArgs, isInline) {
+            this.requireArgumentsLength("ElifStart", functionArgs, 1);
+            var output = this.getElif() + this.getConditionStartLeft();
+            output += functionArgs[0] + this.getConditionStartRight();
+            return ["\0", -1, output, 1];
+        };
+        Language.prototype.ElseStart = function (functionArgs, isInline) {
+            return ["\0", -1, this.getElse() + this.getConditionContinueRight(), 1];
+        };
         Language.prototype.FileEnd = function (functionArgs, isInline) {
             var output = this.getFileEndLine();
             return [output, output.length === 0 ? Language.INT_MIN : -1];
@@ -1610,21 +1622,13 @@ var GLS;
             this.requireArgumentsLength("FunctionReturn", functionArgs, 1);
             return ["return " + functionArgs[0] + this.getSemiColon(), 0];
         };
-        // string left, string operator, string right
-        Language.prototype.IfConditionStart = function (functionArgs, isInline) {
-            this.requireArgumentsLength("IfConditionStart", functionArgs, 3);
-            var output = "if" + this.getConditionStartLeft();
-            output += functionArgs[0] + " " + this.getOperationAlias(functionArgs[1]) + " ";
-            output += functionArgs[2] + this.getConditionStartRight();
-            return [output, 1];
-        };
         Language.prototype.IfEnd = function (functionArgs, isInline) {
             return [this.getConditionEnd(), -1];
         };
-        // string variable
-        Language.prototype.IfVariableStart = function (functionArgs, isInline) {
-            this.requireArgumentsLength("IfVariable", functionArgs, 1);
-            var output = "if" + this.getConditionStartLeft();
+        // string value
+        Language.prototype.IfStart = function (functionArgs, isInline) {
+            this.requireArgumentsLength("IfStart", functionArgs, 1);
+            var output = this.getIf() + this.getConditionStartLeft();
             output += functionArgs[0] + this.getConditionStartRight();
             return [output, 1];
         };
