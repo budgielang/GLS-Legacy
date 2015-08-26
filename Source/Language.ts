@@ -57,6 +57,8 @@ module GLS {
         private ToStringAsFunction: boolean;
 
         // Loops
+        private Break: string;
+        private Continue: string;
         private RangedForLoops: boolean;
         private RangedForLoopsStart: string;
         private RangedForLoopsMiddle: string;
@@ -202,6 +204,8 @@ module GLS {
                 "if variable start": this.IfVariableStart.bind(this),
                 "lambda declare inline": this.LambdaDeclareInline.bind(this),
                 "lambda type declare": this.LambdaTypeDeclare.bind(this),
+                "loop break": this.LoopBreak.bind(this),
+                "loop continue": this.LoopContinue.bind(this),
                 "main end": this.MainEnd.bind(this),
                 "main start": this.MainStart.bind(this),
                 "native call": this.NativeCall.bind(this),
@@ -387,6 +391,14 @@ module GLS {
 
         public getToStringAsFunction(): boolean {
             return this.ToStringAsFunction;
+        }
+
+        public getBreak(): string {
+            return this.Break;
+        }
+
+        public getContinue(): string {
+            return this.Continue;
         }
 
         public getRangedForLoops(): boolean {
@@ -830,6 +842,16 @@ module GLS {
 
         public setStringLength(value: string): Language {
             this.StringLength = value;
+            return this;
+        }
+
+        public setBreak(value: string): Language {
+            this.Break = value;
+            return this;
+        }
+
+        public setContinue(value: string): Language {
+            this.Continue = value;
             return this;
         }
 
@@ -2388,6 +2410,14 @@ module GLS {
                 line = end[0] + line + end[1];
                 return [line, 0];
             }
+        }
+
+        public LoopBreak(functionArgs: string[], isInline?: boolean): any[] {
+            return [this.getBreak(), 0];
+        }
+
+        public LoopContinue(functionArgs: string[], isInline?: boolean): any[] {
+            return [this.getContinue(), 0];
         }
 
         public MainEnd(functionArgs: string[], isInline?: boolean): any[] {
