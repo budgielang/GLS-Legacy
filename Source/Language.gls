@@ -1276,5 +1276,20 @@ file start : GLS
 
             function return : output
         class member function end
+
+
+        comment block : Miscellaneous
+
+        class member function start : Language public getAliasOrDefault string aliases { dictionary type : string string } key string
+            if start : { dictionary key check : aliases key }
+                function return : { dictionary key get : aliases key }
+            else start
+                function return : key
+            if end
+        class member function end
+
+        class member function start : Language public getTypeAlias string key string
+            function return : { class member function call : getAliasOrDefault { class member variable get : this TypeAliases } key }
+        class member function end
     class end
 file end

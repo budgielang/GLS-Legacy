@@ -1719,16 +1719,16 @@ module GLS {
             return variableDeclared;
         }
 
-        // string name
+        // string name, string variable
         public ClassMemberVariableGet(functionArgs: string[], isInline?: boolean): any[] {
-            this.requireArgumentsLength("ClassMemberVariableGet", functionArgs, 1);
+            this.requireArgumentsLength("ClassMemberVariableGet", functionArgs, 2);
 
-            return [this.getClassThis() + this.getClassThisAccess() + functionArgs[0], 0];
+            return [functionArgs[0] + this.getClassThisAccess() + functionArgs[1], 0];
         }
 
-        // string name, string value
+        // string variable, string name, string value
         public ClassMemberVariableSet(functionArgs: string[], isInline?: boolean): any[] {
-            this.requireArgumentsLength("ClassMemberVariableSet", functionArgs, 2);
+            this.requireArgumentsLength("ClassMemberVariableSet", functionArgs, 3);
 
             var output: any = this.ClassMemberVariableSetIncomplete(functionArgs, isInline);
 
@@ -1738,13 +1738,13 @@ module GLS {
             return output;
         }
 
-        // string name, string value
+        // string name, string variable, string value
         public ClassMemberVariableSetIncomplete(functionArgs: string[], isInline?: boolean): any[] {
-            this.requireArgumentsLength("ClassMemberVariableSetIncomplete", functionArgs, 2);
+            this.requireArgumentsLength("ClassMemberVariableSetIncomplete", functionArgs, 3);
 
-            var output: string = this.getClassThis() + this.getClassThisAccess();
+            var output: string = functionArgs[0] + this.getClassThisAccess();
 
-            output += functionArgs[0] + " " + this.getOperationAlias("equals") + " " + functionArgs[1];
+            output += functionArgs[1] + " " + this.getOperationAlias("equals") + " " + functionArgs[2];
 
             return [output, 1];
         }
