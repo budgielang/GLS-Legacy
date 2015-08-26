@@ -1208,24 +1208,24 @@ var GLS;
             variableDeclared[0] = this.getClassMemberVariableStarter() + variableDeclared[0];
             return variableDeclared;
         };
-        // string name
+        // string name, string variable
         Language.prototype.ClassMemberVariableGet = function (functionArgs, isInline) {
-            this.requireArgumentsLength("ClassMemberVariableGet", functionArgs, 1);
-            return [this.getClassThis() + this.getClassThisAccess() + functionArgs[0], 0];
+            this.requireArgumentsLength("ClassMemberVariableGet", functionArgs, 2);
+            return [functionArgs[0] + this.getClassThisAccess() + functionArgs[1], 0];
         };
-        // string name, string value
+        // string variable, string name, string value
         Language.prototype.ClassMemberVariableSet = function (functionArgs, isInline) {
-            this.requireArgumentsLength("ClassMemberVariableSet", functionArgs, 2);
+            this.requireArgumentsLength("ClassMemberVariableSet", functionArgs, 3);
             var output = this.ClassMemberVariableSetIncomplete(functionArgs, isInline);
             output[0] += this.getSemiColon();
             output[1] = 0;
             return output;
         };
-        // string name, string value
+        // string name, string variable, string value
         Language.prototype.ClassMemberVariableSetIncomplete = function (functionArgs, isInline) {
-            this.requireArgumentsLength("ClassMemberVariableSetIncomplete", functionArgs, 2);
-            var output = this.getClassThis() + this.getClassThisAccess();
-            output += functionArgs[0] + " " + this.getOperationAlias("equals") + " " + functionArgs[1];
+            this.requireArgumentsLength("ClassMemberVariableSetIncomplete", functionArgs, 3);
+            var output = functionArgs[0] + this.getClassThisAccess();
+            output += functionArgs[1] + " " + this.getOperationAlias("equals") + " " + functionArgs[2];
             return [output, 1];
         };
         // string class, string function, [string argumentName, ...]
@@ -1703,10 +1703,10 @@ var GLS;
             }
         };
         Language.prototype.LoopBreak = function (functionArgs, isInline) {
-            return [this.getBreak(), 0];
+            return [this.getBreak() + this.getSemiColon(), 0];
         };
         Language.prototype.LoopContinue = function (functionArgs, isInline) {
-            return [this.getContinue(), 0];
+            return [this.getContinue() + this.getSemiColon(), 0];
         };
         Language.prototype.MainEnd = function (functionArgs, isInline) {
             return [this.getMainEndLine(), this.getMainStartLine().length === 0 ? 0 : -1];
