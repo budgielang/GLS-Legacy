@@ -1289,7 +1289,43 @@ file start : GLS
         class member function end
 
         class member function start : Language public getTypeAlias string key string
-            function return : { class member function call : getAliasOrDefault { class member variable get : this TypeAliases } key }
+            function return : { class member function call : this getAliasOrDefault { class member variable get : this TypeAliases } key }
+        class member function end
+
+        class member function start : Language public getOperationAlias string key string
+            function return : { class member function call : this getAliasOrDefault { class member variable get : this OperationAliases } key }
+        class member function end
+
+        class member function start : Language public getValueAlias string key string
+            function return : { class member function call : this getAliasOrDefault { class member variable get : this ValueAliases } key }
+        class member function end
+
+        class member function start : Language public addTypeAlias Language key string alias string
+            dictionary key set : { class member variable get : this TypeAliases } alias key
+            function return : this
+        class member function end
+
+        class member function start : Language public addOperationAlias Language key string alias string
+            dictionary key set : { class member variable get : this OperationAliases } alias key
+            function return : this
+        class member function end
+
+        class member function start : Language public addValueAlias Language key string alias string
+            dictionary key set : { class member variable get : this ValueAliases } alias key
+            function return : this
+        class member function end
+
+        class member function start : Language public getNativeFunctionAlias { dictionary type : string string } className string memberName string
+            function return : { dictionary key get : { dictionary key get : { class member variable get : this NativeFunctionAliases } className } memberName }
+        class member function end
+
+        class member function start : Language public addNativeFunctionAlias Language className string memberName string aliasInfo { dictionary type : string string }
+             class member variable set : this { dictionary key get : { dictionary key get : NativeFunctionAliases className } memberName } aliasInfo
+            function return : this
+        class member function end
+
+        class member function start : Language public addNativeFunctionAliases Language className string aliasInfos { dictionary type : string { dictionary type : string string } }
+            comment line : ...will need for loop over dictionary for this!
         class member function end
     class end
 file end
