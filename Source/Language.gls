@@ -61,6 +61,16 @@ file start : GLS
         comment line : Loops
         class member variable declare : Break private string
         class member variable declare : Continue private string
+        class member variable declare : ForEachAsMethod private boolean
+        class member variable declare : ForEachInner private string
+        class member variable declare : ForEachKeysAsStatic private boolean
+        class member variable declare : ForEachKeysGet private string
+        class member variable declare : ForEachPairsGet private string
+        class member variable declare : ForEachPairsPairClass private string
+        class member variable declare : ForEachPairsAsPair private boolean
+        class member variable declare : ForEachPairsRetrieveKey private string
+        class member variable declare : ForEachPairsRetrieveValue private string
+        class member variable declare : ForEachStarter private string
         class member variable declare : RangedForLoops private boolean
         class member variable declare : RangedForLoopsStart private string
         class member variable declare : RangedForLoopsMiddle private string
@@ -396,6 +406,46 @@ file start : GLS
 
         class member function start : Language public getContinue string
             function return : { class member variable get : Continue }
+        class member function end
+
+        class member function start : Language public getForEachAsMethod boolean
+            function return : { class member variable get : ForEachAsMethod }
+        class member function end
+
+        class member function start : Language public getForEachInner string
+            function return : { class member variable get : ForEachInner }
+        class member function end
+
+        class member function start : Language public getForEachKeysAsStatic boolean
+            function return : { class member variable get : ForEachKeysAsStatic }
+        class member function end
+
+        class member function start : Language public getForEachKeysGet string
+            function return : { class member variable get : ForEachKeysGet }
+        class member function end
+
+        class member function start : Language public getForEachPairsGet string
+            function return : { class member variable get : ForEachPairsGet }
+        class member function end
+
+        class member function start : Language public getForEachPairsPairClass string
+            function return : { class member variable get : ForEachPairsPairClass }
+        class member function end
+
+        class member function start : Language public getForEachPairsAsPair boolean
+            function return : { class member variable get : ForEachPairsAsPair }
+        class member function end
+
+        class member function start : Language public getForEachPairsRetrieveKey string
+            function return : { class member variable get : ForEachPairsRetrieveKey }
+        class member function end
+
+        class member function start : Language public getForEachPairsRetrieveValue string
+            function return : { class member variable get : ForEachPairsRetrieveValue }
+        class member function end
+
+        class member function start : Language public getForEachStarter string
+            function return : { class member variable get : ForEachStarter }
         class member function end
 
         class member function start : Language public getRangedForLoops boolean
@@ -848,6 +898,56 @@ file start : GLS
 
         class member function start : Language public setContinue Language value string
             class member variable set : Continue value
+            function return : this
+        class member function end
+
+        class member function start : Language public setForEachAsMethod value boolean
+            class member variable set : ForEachAsMethod value
+            function return : this
+        class member function end
+
+        class member function start : Language public setForEachInner value string
+            class member variable set : ForEachInner value
+            function return : this
+        class member function end
+
+        class member function start : Language public setForEachKeysAsStatic value boolean
+            class member variable set : ForEachKeysAsStatic value
+            function return : this
+        class member function end
+
+        class member function start : Language public setForEachKeysGet value string
+            class member variable set : ForEachKeysGet value
+            function return : this
+        class member function end
+
+        class member function start : Language public setForEachPairsGet value string
+            class member variable set : ForEachPairsGet value
+            function return : this
+        class member function end
+
+        class member function start : Language public setForEachPairsPairClass value string
+            class member variable set : ForEachPairsPairClass value
+            function return : this
+        class member function end
+
+        class member function start : Language public setForEachPairsAsPair value boolean
+            class member variable set : ForEachPairsAsPair value
+            function return : this
+        class member function end
+
+        class member function start : Language public setForEachPairsRetrieveKey value string
+            class member variable set : ForEachPairsRetrieveKey value
+            function return : this
+        class member function end
+
+        class member function start : Language public setForEachPairsRetrieveValue value string
+            class member variable set : ForEachPairsRetrieveValue value
+            function return : this
+        class member function end
+
+        class member function start : Language public setForEachStarter value string
+            class member variable set : ForEachStarter value
             function return : this
         class member function end
 
