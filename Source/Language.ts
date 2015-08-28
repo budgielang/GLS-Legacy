@@ -59,6 +59,15 @@ module GLS {
         // Loops
         private Break: string;
         private Continue: string;
+        private ForEachInner: string;
+        private ForEachKeysAsStatic: boolean;
+        private ForEachKeysGet: string;
+        private ForEachPairsGet: string;
+        private ForEachPairPairClass: string;
+        private ForEachPairWithPair: boolean;
+        private ForEachPairRetrieveKey: string;
+        private ForEachPairRetrieveValue: string;
+        private ForEachStarter: string;
         private RangedForLoops: boolean;
         private RangedForLoopsStart: string;
         private RangedForLoopsMiddle: string;
@@ -193,6 +202,8 @@ module GLS {
                 "else start": this.ElseStart.bind(this),
                 "file end": this.FileEnd.bind(this),
                 "file start": this.FileStart.bind(this),
+                "for each keys start": this.ForEachKeysStart.bind(this),
+                "for each pairs start": this.ForEachPairsStart.bind(this),
                 "for end": this.ForEnd.bind(this),
                 "for numbers start": this.ForNumbersStart.bind(this),
                 "function call": this.FunctionCall.bind(this),
@@ -2167,6 +2178,99 @@ module GLS {
             }
 
             return [left + functionArgs[0] + right, 1];
+        }
+
+        // string keyName, string keyType, string container
+        public ForEachKeysStart(functionArgs: string[], isInline?: boolean): any[] {
+            var output: string = this.getForEachStarter(),
+                variableDeclareArgs: any[] = [functionArgs[0], functionArgs[1]];
+
+            output += this.VariableDeclarePartial(variableDeclareArgs, true)[0];
+            output += this.getForEachInner();
+
+            if (this.getForEachKeysAsStatic()) {
+                output += this.getForEachKeysGet() + "(" + functionArgs[2] + ")";
+            } else {
+                output += functionArgs[2] + this.getForEachKeysGet();
+            }
+
+            output += this.getConditionStartRight();
+
+            return [output, 1];
+        }
+
+        // Must assume keyName and valueName exist; pairName is created
+        // Some languages will not use pairName
+        // string pairName, string keyName, string keyType, string valueName, string valueType, string container
+        public ForEachPairsStart(functionArgs: string[], isInline?: boolean): any[] {
+            var pairName: string = functionArgs[0],
+                keyName: string = functionArgs[1],
+                keyType: string = functionArgs[2],
+                valueName: string = functionArgs[3],
+                valueType: string = functionArgs[4],
+                container: string = functionArgs[5],
+                variableDeclareArgs: string[],
+                line: string,
+                output: any[];
+
+            if (this.getForEachPairWithPair()) {
+                output = new Array<string>(6);
+
+                // foreach (KeyValuePair<string, int> pairName in container) {
+                line = this.getForEachStarter();
+                variableDeclareArgs = new Array<string>(2);
+                variableDeclareArgs[0] = pairName;
+                variableDeclareArgs[1] = this.getForEachPairPairClass() + "<" + keyType + ", " + valueType + ">";
+                line += this.VariableDeclarePartial(variableDeclareArgs, true)[0];
+                line += this.getForEachInner();
+                line += container;
+                line += this.getConditionStartRight();
+                output[0] = line;
+                output[1] = 1;
+
+                // keyName = pairName.Key;
+                variableDeclareArgs = new Array<string>(3);
+                variableDeclareArgs[0] = keyName;
+                variableDeclareArgs[1] = "equals";
+                variableDeclareArgs[2] = pairName + this.getForEachPairRetrieveKey();
+                line = this.Operation(variableDeclareArgs, true)[0];
+                output[2] = line;
+                output[3] = 0;
+                
+                // valueName = pairName.Value;
+                variableDeclareArgs = new Array<string>(3);
+                variableDeclareArgs[0] = valueName;
+                variableDeclareArgs[1] = "equals";
+                variableDeclareArgs[2] = pairName + this.getForEachPairRetrieveValue();
+                line = this.Operation(variableDeclareArgs, true)[0];
+                output[4] = line;
+                output[5] = 0;
+
+                return output;
+            }
+            else {
+                output = new Array(4);
+
+                // for (keyName in container) {
+                line = this.getForEachStarter();
+                line += keyName;
+                line += this.getForEachInner();
+                line += container;
+                line += this.getConditionStartRight();
+                output[0] = line;
+                output[1] = 1;
+
+                // valueName = container[keyName];
+                variableDeclareArgs = new Array(3);
+                variableDeclareArgs[0] = valueName;
+                variableDeclareArgs[1] = "equals";
+                variableDeclareArgs[2] = container + "[" + keyName + "]";
+                line = this.Operation(variableDeclareArgs, true)[0];
+                output[2] = line;
+                output[3] = 0;
+
+                return output;
+            }
         }
 
         public ForEnd(functionArgs: string[], isInline?: boolean): any[] {
