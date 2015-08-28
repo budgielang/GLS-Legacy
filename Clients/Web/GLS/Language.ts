@@ -2347,7 +2347,7 @@ module GLS {
                 variableDeclareArgs[0] = valueName;
                 variableDeclareArgs[1] = "equals";
                 variableDeclareArgs[2] = container + "[" + keyName + "]";
-                line = this.Operation(variableDeclareArgs, true)[0];
+                line = this.Operation(variableDeclareArgs, false)[0];
                 output[2] = line;
                 output[3] = 0;
 
