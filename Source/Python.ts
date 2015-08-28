@@ -58,6 +58,7 @@ module GLS.Languages {
         .setFileStartLeft("")
         .setFileStartRight("")
         .setForEachInner(" in ")
+        .setForEachKeysGet("")
         .setForEachPairsGet("")
         .setForEachStarter("for ")
         .setFunctionDefine("def ")

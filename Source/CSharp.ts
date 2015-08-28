@@ -54,6 +54,7 @@ module GLS.Languages {
         .setFileStartLeft("public class ")
         .setFileStartRight(" {")
         .setForEachInner(" in ")
+        .setForEachKeysGet(".Keys")
         .setForEachPairsGet("")
         .setForEachPairsPairClass("KeyValuePair")
         .setForEachPairsAsPair(true)

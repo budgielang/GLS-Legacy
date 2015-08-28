@@ -59,6 +59,7 @@ module GLS {
         // Loops
         private Break: string;
         private Continue: string;
+        private ForEachAsMethod: boolean;
         private ForEachInner: string;
         private ForEachKeysAsStatic: boolean;
         private ForEachKeysGet: string;
@@ -412,6 +413,10 @@ module GLS {
 
         public getContinue(): string {
             return this.Continue;
+        }
+
+        public getForEachAsMethod(): boolean {
+            return this.ForEachAsMethod;
         }
 
         public getForEachInner(): string {
@@ -901,6 +906,11 @@ module GLS {
 
         public setContinue(value: string): Language {
             this.Continue = value;
+            return this;
+        }
+
+        public setForEachAsMethod(value: boolean): Language {
+            this.ForEachAsMethod = value;
             return this;
         }
 
@@ -2262,29 +2272,41 @@ module GLS {
         }
 
         // string keyName, string keyType, string container
+        // Ex. for each keys start : i string names
         public ForEachKeysStart(functionArgs: string[], isInline?: boolean): any[] {
-            var output: string = this.getForEachStarter(),
-                variableDeclareArgs: any[] = [functionArgs[0], functionArgs[1]];
+            this.requireArgumentsLength("ForEachKeysStart", functionArgs, 3);
 
-            output += this.VariableDeclarePartial(variableDeclareArgs, true)[0];
-            output += this.getForEachInner();
+            var variableDeclareArgs: any[] = [functionArgs[0], functionArgs[1]],
+                output: string;
 
-            if (this.getForEachKeysAsStatic()) {
-                output += this.getForEachKeysGet() + "(" + functionArgs[2] + ")";
+            if (this.getForEachAsMethod()) {
+                output = functionArgs[2];
+                output += this.getForEachStarter();
+                output += this.VariableDeclarePartial(variableDeclareArgs, true)[0];
+                output += this.getForEachInner();
             } else {
-                output += functionArgs[2] + this.getForEachKeysGet();
-            }
+                output = this.getForEachStarter();
+                output += this.VariableDeclarePartial(variableDeclareArgs, true)[0];
+                output += this.getForEachInner();
 
-            output += this.getConditionStartRight();
+                if (this.getForEachKeysAsStatic()) {
+                    output += this.getForEachKeysGet() + "(" + functionArgs[2] + ")";
+                } else {
+                    output += functionArgs[2] + this.getForEachKeysGet();
+                }
+
+                output += this.getConditionStartRight();
+            }
 
             return [output, 1];
         }
 
-        // Must assume keyName and valueName exist; pairName is created
-        // Some languages will not use pairName
+        // Must assume keyName and valueName exist; pairName is created (some languages won't use pairName)
         // Ex. for each pairs start : pair name string count int names
         // string pairName, string keyName, string keyType, string valueName, string valueType, string container
         public ForEachPairsStart(functionArgs: string[], isInline?: boolean): any[] {
+            this.requireArgumentsLength("ForEachPairsStart", functionArgs, 6);
+
             var pairName: string = functionArgs[0],
                 keyName: string = functionArgs[1],
                 keyType: string = functionArgs[2],
@@ -2295,7 +2317,25 @@ module GLS {
                 line: string,
                 output: any[];
 
-            if (this.getForEachPairsAsPair()) {
+            if (this.getForEachAsMethod()) {
+                output = new Array<string>(4);
+                variableDeclareArgs = new Array<string>(2);
+
+                // container.each do |keyName, valueName|
+                line = container;
+                line += this.getForEachStarter();
+
+                variableDeclareArgs[0] = keyName;
+                variableDeclareArgs[1] = keyType;
+                line += this.VariableDeclarePartial(variableDeclareArgs, true)[0];
+
+                variableDeclareArgs[0] = valueName;
+                variableDeclareArgs[1] = valueType;
+                line += ", " + this.VariableDeclarePartial(variableDeclareArgs, true)[0];
+
+                line += this.getForEachInner();
+                output = [line, 1];
+            } else if (this.getForEachPairsAsPair()) {
                 output = new Array<string>(6);
 
                 // foreach (KeyValuePair<string, int> pairName in container) {
@@ -2327,10 +2367,7 @@ module GLS {
                 line = this.Operation(variableDeclareArgs, false)[0];
                 output[4] = line;
                 output[5] = 0;
-
-                return output;
-            }
-            else {
+            } else {
                 output = new Array(4);
 
                 // for (keyName in container) {
@@ -2350,9 +2387,9 @@ module GLS {
                 line = this.Operation(variableDeclareArgs, false)[0];
                 output[2] = line;
                 output[3] = 0;
-
-                return output;
             }
+
+            return output;
         }
 
         public ForEnd(functionArgs: string[], isInline?: boolean): any[] {
