@@ -2315,7 +2315,7 @@ module GLS {
                 variableDeclareArgs[0] = keyName;
                 variableDeclareArgs[1] = "equals";
                 variableDeclareArgs[2] = pairName + this.getForEachPairsRetrieveKey();
-                line = this.Operation(variableDeclareArgs, true)[0];
+                line = this.Operation(variableDeclareArgs, false)[0];
                 output[2] = line;
                 output[3] = 0;
                 
@@ -2324,7 +2324,7 @@ module GLS {
                 variableDeclareArgs[0] = valueName;
                 variableDeclareArgs[1] = "equals";
                 variableDeclareArgs[2] = pairName + this.getForEachPairsRetrieveValue();
-                line = this.Operation(variableDeclareArgs, true)[0];
+                line = this.Operation(variableDeclareArgs, false)[0];
                 output[4] = line;
                 output[5] = 0;
 
