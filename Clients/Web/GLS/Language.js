@@ -1639,28 +1639,34 @@ var GLS;
             this.requireArgumentsLength("ForEachPairsStart", functionArgs, 6);
             var pairName = functionArgs[0], keyName = functionArgs[1], keyType = functionArgs[2], valueName = functionArgs[3], valueType = functionArgs[4], container = functionArgs[5], variableDeclareArgs, line, output;
             if (this.getForEachAsMethod()) {
+                // container.each do |keyName, valueName|
                 output = new Array(4);
                 variableDeclareArgs = new Array(2);
-                // container.each do |keyName, valueName|
+                // container.each do |
                 line = container;
                 line += this.getForEachStarter();
+                //                    keyName
                 variableDeclareArgs[0] = keyName;
                 variableDeclareArgs[1] = keyType;
                 line += this.VariableDeclarePartial(variableDeclareArgs, true)[0];
+                //                           , valueName
                 variableDeclareArgs[0] = valueName;
                 variableDeclareArgs[1] = valueType;
                 line += ", " + this.VariableDeclarePartial(variableDeclareArgs, true)[0];
+                //                                      |
                 line += this.getForEachInner();
                 output = [line, 1];
             }
             else if (this.getForEachPairsAsPair()) {
-                output = new Array(6);
                 // foreach (KeyValuePair<string, int> pairName in container) {
+                output = new Array(6);
+                // foreach (KeyValuePair<string, int> pairName
                 line = this.getForEachStarter();
                 variableDeclareArgs = new Array(2);
                 variableDeclareArgs[0] = pairName;
                 variableDeclareArgs[1] = this.getForEachPairsPairClass() + "<" + keyType + ", " + valueType + ">";
                 line += this.VariableDeclarePartial(variableDeclareArgs, true)[0];
+                //                                             in container) {
                 line += this.getForEachInner();
                 line += container;
                 line += this.getConditionStartRight();

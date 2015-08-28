@@ -2318,35 +2318,44 @@ module GLS {
                 output: any[];
 
             if (this.getForEachAsMethod()) {
+                // container.each do |keyName, valueName|
                 output = new Array<string>(4);
                 variableDeclareArgs = new Array<string>(2);
 
-                // container.each do |keyName, valueName|
+                // container.each do |
                 line = container;
                 line += this.getForEachStarter();
 
+                //                    keyName
                 variableDeclareArgs[0] = keyName;
                 variableDeclareArgs[1] = keyType;
                 line += this.VariableDeclarePartial(variableDeclareArgs, true)[0];
 
+                //                           , valueName
                 variableDeclareArgs[0] = valueName;
                 variableDeclareArgs[1] = valueType;
                 line += ", " + this.VariableDeclarePartial(variableDeclareArgs, true)[0];
 
+                //                                      |
                 line += this.getForEachInner();
+
                 output = [line, 1];
             } else if (this.getForEachPairsAsPair()) {
+                // foreach (KeyValuePair<string, int> pairName in container) {
                 output = new Array<string>(6);
 
-                // foreach (KeyValuePair<string, int> pairName in container) {
+                // foreach (KeyValuePair<string, int> pairName
                 line = this.getForEachStarter();
                 variableDeclareArgs = new Array<string>(2);
                 variableDeclareArgs[0] = pairName;
                 variableDeclareArgs[1] = this.getForEachPairsPairClass() + "<" + keyType + ", " + valueType + ">";
                 line += this.VariableDeclarePartial(variableDeclareArgs, true)[0];
+
+                //                                             in container) {
                 line += this.getForEachInner();
                 line += container;
                 line += this.getConditionStartRight();
+
                 output[0] = line;
                 output[1] = 1;
 
