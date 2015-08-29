@@ -226,6 +226,7 @@ module GLS {
                 "operation": this.Operation.bind(this),
                 "parenthesis": this.Parenthesis.bind(this),
                 "print line": this.PrintLine.bind(this),
+                "this": this.This.bind(this),
                 "type": this.Type.bind(this),
                 "value": this.Value.bind(this),
                 "variable declare": this.VariableDeclare.bind(this),
@@ -2793,6 +2794,10 @@ module GLS {
             }
 
             return [output, 0];
+        }
+
+        public This(functionArgs: string[], isInline?: boolean): any[] {
+            return [this.getClassThis(), 0];
         }
 
         // string type
