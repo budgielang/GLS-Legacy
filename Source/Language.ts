@@ -1554,6 +1554,15 @@ module GLS {
             }
         }
 
+        // string name
+        public Catch(functionArgs: string[], isInline?: boolean): any[] {
+            var output: string = this.getConditionContinueLeft();
+            output += this.getExceptionCatch();
+            output += this.getConditionContinueRight();
+
+            return ["\0", -1, output, 1];
+        }
+
         public ClassConstructorEnd(functionArgs: string[], isInline?: boolean): any[] {
             return [this.getFunctionDefineEnd(), -1];
         }
@@ -2283,6 +2292,14 @@ module GLS {
             return [left + functionArgs[0] + right, 1];
         }
 
+        public Finally(functionArgs: string[], isInline?: boolean): any[] {
+            var output: string = this.getConditionContinueLeft();
+            output += this.getExceptionFinally();
+            output += this.getConditionContinueRight();
+
+            return ["\0", -1, output, 1];
+        }
+
         // string keyName, string keyType, string container
         // Ex. for each keys start : i string names
         public ForEachKeysStart(functionArgs: string[], isInline?: boolean): any[] {
@@ -2809,6 +2826,27 @@ module GLS {
 
         public This(functionArgs: string[], isInline?: boolean): any[] {
             return [this.getClassThis(), 0];
+        }
+        
+        // [string message]
+        public Throw(functionArgs: string[], isInline?: boolean): any[] {
+            var output: string = this.getExceptionThrow() + "(";
+
+            if (functionArgs.length > 0) {
+                output += functionArgs[0];
+            }
+
+            output += ")";
+
+            if (!isInline) {
+                output += this.getSemiColon();
+            }
+
+            return [output, 0];
+        }
+
+        public Try(functionArgs: string[], isInline?: boolean): any[] {
+            return [this.getExceptionTryer(), 1];
         }
 
         // string type
