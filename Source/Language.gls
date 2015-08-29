@@ -61,6 +61,16 @@ file start : GLS
         comment line : Loops
         class member variable declare : Break private string
         class member variable declare : Continue private string
+        class member variable declare : ForEachAsMethod private boolean
+        class member variable declare : ForEachInner private string
+        class member variable declare : ForEachKeysAsStatic private boolean
+        class member variable declare : ForEachKeysGet private string
+        class member variable declare : ForEachPairsGet private string
+        class member variable declare : ForEachPairsPairClass private string
+        class member variable declare : ForEachPairsAsPair private boolean
+        class member variable declare : ForEachPairsRetrieveKey private string
+        class member variable declare : ForEachPairsRetrieveValue private string
+        class member variable declare : ForEachStarter private string
         class member variable declare : RangedForLoops private boolean
         class member variable declare : RangedForLoopsStart private string
         class member variable declare : RangedForLoopsMiddle private string
@@ -151,78 +161,78 @@ file start : GLS
         class static variable declare : INT_MIN public int 9001
 
         class constructor start : Language
-            class member variable set incomplete : Printers { dictionary initialize start : string XXX }
-                dictionary initialize key : ("array initialize") { class member function get : this ArrayInitialize } ,
-                dictionary initialize key : ("array initialize size") { class member function get : this ArrayInitializeSized } ,
-                dictionary initialize key : ("array get item") { class member function get : this ArrayGetItem } ,
-                dictionary initialize key : ("array get length") { class member function get : this ArrayGetLength } ,
-                dictionary initialize key : ("class constructor end") { class member function get : this ClassConstructorEnd } ,
-                dictionary initialize key : ("class constructor inherited call") { class member function get : this ClassConstructorInheritedCall } ,
-                dictionary initialize key : ("class constructor inherited start") { class member function get : this ClassConstructorInheritedStart } ,
-                dictionary initialize key : ("class constructor start") { class member function get : this ClassConstructorStart } ,
-                dictionary initialize key : ("class end") { class member function get : this ClassEnd } ,
-                dictionary initialize key : ("class member function call") { class member function get : this ClassMemberFunctionCall } ,
-                dictionary initialize key : ("class member function end") { class member function get : this ClassMemberFunctionEnd } ,
-                dictionary initialize key : ("class member function get") { class member function get : this ClassMemberFunctionGet } ,
-                dictionary initialize key : ("class member function start") { class member function get : this ClassMemberFunctionStart } ,
-                dictionary initialize key : ("class member variable set") { class member function get : this ClassMemberVariableDeclare } ,
-                dictionary initialize key : ("class member variable get") { class member function get : this ClassMemberVariableGet } ,
-                dictionary initialize key : ("class member variable set") { class member function get : this ClassMemberVariableSet } ,
-                dictionary initialize key : ("class member variable set incomplete") { class member function get : this ClassMemberVariableSetIncomplete } ,
-                dictionary initialize key : ("class static function call") { class member function get : this ClassStaticFunctionCall } ,
-                dictionary initialize key : ("class static function end") { class member function get : this ClassStaticFunctionEnd } ,
-                dictionary initialize key : ("class static function get") { class member function get : this ClassStaticFunctionGet } ,
-                dictionary initialize key : ("class static function start") { class member function get : this ClassStaticFunctionStart } ,
-                dictionary initialize key : ("class static variable set") { class member function get : this ClassStaticVariableDeclare } ,
-                dictionary initialize key : ("class static variable get") { class member function get : this ClassStaticVariableGet } ,
-                dictionary initialize key : ("class static variable set") { class member function get : this ClassStaticVariableSet } ,
-                dictionary initialize key : ("class new") { class member function get : this ClassNew } ,
-                dictionary initialize key : ("class start") { class member function get : this ClassStart } ,
-                dictionary initialize key : ("comment block") { class member function get : this CommentBlock } ,
-                dictionary initialize key : ("comment line") { class member function get : this CommentLine } ,
-                dictionary initialize key : ("comment inline") { class member function get : this CommentInline } ,
-                dictionary initialize key : ("comparison") { class member function get : this Comparison } ,
-                dictionary initialize key : ("concatenate") { class member function get : this Concatenate } ,
-                dictionary initialize key : ("dictionary key check") { class member function get : this DictionaryKeyCheck } ,
-                dictionary initialize key : ("dictionary key get") { class member function get : this DictionaryKeyGet } ,
-                dictionary initialize key : ("dictionary key set") { class member function get : this DictionaryKeySet } ,
-                dictionary initialize key : ("dictionary initialize") { class member function get : this DictionaryInitialize } ,
-                dictionary initialize key : ("dictionary initialize end") { class member function get : this DictionaryInitializeEnd } ,
-                dictionary initialize key : ("dictionary initialize key") { class member function get : this DictionaryInitializeKey } ,
-                dictionary initialize key : ("dictionary initialize start") { class member function get : this DictionaryInitializeStart } ,
-                dictionary initialize key : ("dictionary type") { class member function get : this DictionaryType } ,
-                dictionary initialize key : ("file end") { class member function get : this FileEnd } ,
-                dictionary initialize key : ("file start") { class member function get : this FileStart } ,
-                dictionary initialize key : ("for end") { class member function get : this ForEnd } ,
-                dictionary initialize key : ("for numbers start") { class member function get : this ForNumbersStart } ,
-                dictionary initialize key : ("function call") { class member function get : this FunctionCall } ,
-                dictionary initialize key : ("function call partial end") { class member function get : this FunctionCallPartialEnd } ,
-                dictionary initialize key : ("function call partial start") { class member function get : this FunctionCallPartialStart } ,
-                dictionary initialize key : ("function end") { class member function get : this FunctionEnd } ,
-                dictionary initialize key : ("function start") { class member function get : this FunctionStart } ,
-                dictionary initialize key : ("function return") { class member function get : this FunctionReturn } ,
-                dictionary initialize key : ("if end") { class member function get : this IfEnd } ,
-                dictionary initialize key : ("if start") { class member function get : this IfVariableStart } ,
-                dictionary initialize key : ("lambda declare inline") { class member function get : this LambdaDeclareInline } ,
-                dictionary initialize key : ("lambda type declare") { class member function get : this LambdaTypeDeclare } ,
-                dictionary initialize key : ("main end") { class member function get : this MainEnd } ,
-                dictionary initialize key : ("main start") { class member function get : this MainStart } ,
-                dictionary initialize key : ("native call") { class member function get : this NativeCall } ,
-                dictionary initialize key : ("not") { class member function get : this Not } ,
-                dictionary initialize key : ("operation") { class member function get : this Operation } ,
-                dictionary initialize key : ("parenthesis") { class member function get : this Parenthesis } ,
-                dictionary initialize key : ("print line") { class member function get : this PrintLine } ,
-                dictionary initialize key : ("type") { class member function get : this Type } ,
-                dictionary initialize key : ("value") { class member function get : this Value } ,
-                dictionary initialize key : ("variable set") { class member function get : this VariableDeclare } ,
-                dictionary initialize key : ("variable set incomplete") { class member function get : this VariableDeclareIncomplete } ,
-                dictionary initialize key : ("variable set partial") { class member function get : this VariableDeclarePartial } ,
-                dictionary initialize key : ("while condition start") { class member function get : this WhileConditionStart } ,
-                dictionary initialize key : ("while end") { class member function get : this WhileEnd } ,
-                dictionary initialize key : ("while variable start") { class member function get : this WhileVariableStart }
+            class member variable set incomplete : { this } Printers { dictionary initialize start : string XXX }
+                dictionary initialize key : ("array initialize") { class member function get : { this } ArrayInitialize } ,
+                dictionary initialize key : ("array initialize size") { class member function get : { this } ArrayInitializeSized } ,
+                dictionary initialize key : ("array get item") { class member function get : { this } ArrayGetItem } ,
+                dictionary initialize key : ("array get length") { class member function get : { this } ArrayGetLength } ,
+                dictionary initialize key : ("class constructor end") { class member function get : { this } ClassConstructorEnd } ,
+                dictionary initialize key : ("class constructor inherited call") { class member function get : { this } ClassConstructorInheritedCall } ,
+                dictionary initialize key : ("class constructor inherited start") { class member function get : { this } ClassConstructorInheritedStart } ,
+                dictionary initialize key : ("class constructor start") { class member function get : { this } ClassConstructorStart } ,
+                dictionary initialize key : ("class end") { class member function get : { this } ClassEnd } ,
+                dictionary initialize key : ("class member function call") { class member function get : { this } ClassMemberFunctionCall } ,
+                dictionary initialize key : ("class member function end") { class member function get : { this } ClassMemberFunctionEnd } ,
+                dictionary initialize key : ("class member function get") { class member function get : { this } ClassMemberFunctionGet } ,
+                dictionary initialize key : ("class member function start") { class member function get : { this } ClassMemberFunctionStart } ,
+                dictionary initialize key : ("class member variable set") { class member function get : { this } ClassMemberVariableDeclare } ,
+                dictionary initialize key : ("class member variable get") { class member function get : { this } ClassMemberVariableGet } ,
+                dictionary initialize key : ("class member variable set") { class member function get : { this } ClassMemberVariableSet } ,
+                dictionary initialize key : ("class member variable set incomplete") { class member function get : { this } ClassMemberVariableSetIncomplete } ,
+                dictionary initialize key : ("class static function call") { class member function get : { this } ClassStaticFunctionCall } ,
+                dictionary initialize key : ("class static function end") { class member function get : { this } ClassStaticFunctionEnd } ,
+                dictionary initialize key : ("class static function get") { class member function get : { this } ClassStaticFunctionGet } ,
+                dictionary initialize key : ("class static function start") { class member function get : { this } ClassStaticFunctionStart } ,
+                dictionary initialize key : ("class static variable set") { class member function get : { this } ClassStaticVariableDeclare } ,
+                dictionary initialize key : ("class static variable get") { class member function get : { this } ClassStaticVariableGet } ,
+                dictionary initialize key : ("class static variable set") { class member function get : { this } ClassStaticVariableSet } ,
+                dictionary initialize key : ("class new") { class member function get : { this } ClassNew } ,
+                dictionary initialize key : ("class start") { class member function get : { this } ClassStart } ,
+                dictionary initialize key : ("comment block") { class member function get : { this } CommentBlock } ,
+                dictionary initialize key : ("comment line") { class member function get : { this } CommentLine } ,
+                dictionary initialize key : ("comment inline") { class member function get : { this } CommentInline } ,
+                dictionary initialize key : ("comparison") { class member function get : { this } Comparison } ,
+                dictionary initialize key : ("concatenate") { class member function get : { this } Concatenate } ,
+                dictionary initialize key : ("dictionary key check") { class member function get : { this } DictionaryKeyCheck } ,
+                dictionary initialize key : ("dictionary key get") { class member function get : { this } DictionaryKeyGet } ,
+                dictionary initialize key : ("dictionary key set") { class member function get : { this } DictionaryKeySet } ,
+                dictionary initialize key : ("dictionary initialize") { class member function get : { this } DictionaryInitialize } ,
+                dictionary initialize key : ("dictionary initialize end") { class member function get : { this } DictionaryInitializeEnd } ,
+                dictionary initialize key : ("dictionary initialize key") { class member function get : { this } DictionaryInitializeKey } ,
+                dictionary initialize key : ("dictionary initialize start") { class member function get : { this } DictionaryInitializeStart } ,
+                dictionary initialize key : ("dictionary type") { class member function get : { this } DictionaryType } ,
+                dictionary initialize key : ("file end") { class member function get : { this } FileEnd } ,
+                dictionary initialize key : ("file start") { class member function get : { this } FileStart } ,
+                dictionary initialize key : ("for end") { class member function get : { this } ForEnd } ,
+                dictionary initialize key : ("for numbers start") { class member function get : { this } ForNumbersStart } ,
+                dictionary initialize key : ("function call") { class member function get : { this } FunctionCall } ,
+                dictionary initialize key : ("function call partial end") { class member function get : { this } FunctionCallPartialEnd } ,
+                dictionary initialize key : ("function call partial start") { class member function get : { this } FunctionCallPartialStart } ,
+                dictionary initialize key : ("function end") { class member function get : { this } FunctionEnd } ,
+                dictionary initialize key : ("function start") { class member function get : { this } FunctionStart } ,
+                dictionary initialize key : ("function return") { class member function get : { this } FunctionReturn } ,
+                dictionary initialize key : ("if end") { class member function get : { this } IfEnd } ,
+                dictionary initialize key : ("if start") { class member function get : { this } IfVariableStart } ,
+                dictionary initialize key : ("lambda declare inline") { class member function get : { this } LambdaDeclareInline } ,
+                dictionary initialize key : ("lambda type declare") { class member function get : { this } LambdaTypeDeclare } ,
+                dictionary initialize key : ("main end") { class member function get : { this } MainEnd } ,
+                dictionary initialize key : ("main start") { class member function get : { this } MainStart } ,
+                dictionary initialize key : ("native call") { class member function get : { this } NativeCall } ,
+                dictionary initialize key : ("not") { class member function get : { this } Not } ,
+                dictionary initialize key : ("operation") { class member function get : { this } Operation } ,
+                dictionary initialize key : ("parenthesis") { class member function get : { this } Parenthesis } ,
+                dictionary initialize key : ("print line") { class member function get : { this } PrintLine } ,
+                dictionary initialize key : ("type") { class member function get : { this } Type } ,
+                dictionary initialize key : ("value") { class member function get : { this } Value } ,
+                dictionary initialize key : ("variable set") { class member function get : { this } VariableDeclare } ,
+                dictionary initialize key : ("variable set incomplete") { class member function get : { this } VariableDeclareIncomplete } ,
+                dictionary initialize key : ("variable set partial") { class member function get : { this } VariableDeclarePartial } ,
+                dictionary initialize key : ("while condition start") { class member function get : { this } WhileConditionStart } ,
+                dictionary initialize key : ("while end") { class member function get : { this } WhileEnd } ,
+                dictionary initialize key : ("while variable start") { class member function get : { this } WhileVariableStart }
             dictionary initialize end
 
-            class member variable set incomplete : OperationAliases { dictionary initialize start : string string }
+            class member variable set incomplete : { this } OperationAliases { dictionary initialize start : string string }
                 dictionary initialize key : "equals" "=" ,
                 dictionary initialize key : "plus" "+" ,
                 dictionary initialize key : "minus" "-" ,
@@ -241,11 +251,11 @@ file start : GLS
                 dictionary initialize key : "mod" "%"
             dictionary initialize end
             
-            class member variable set : TypeAliases { dictionary initialize : string string }
+            class member variable set : { this } TypeAliases { dictionary initialize : string string }
             
-            class member variable set : ValueAliases { dictionary initialize : string string }
+            class member variable set : { this } ValueAliases { dictionary initialize : string string }
 
-            class member variable set incomplete : NativeFunctionAliases { dictionary initialize start : string { dictionary type : string string } }
+            class member variable set incomplete : { this } NativeFunctionAliases { dictionary initialize start : string { dictionary type : string string } }
                 dictionary initialize key : ("array") { dictionary initialize : string { dictionary type : string string } } ,
                 dictionary initialize key : ("dictionary") { dictionary initialize : string { dictionary type : string string } } ,
                 dictionary initialize key : ("string") { dictionary initialize : string { dictionary type : string string } }
@@ -255,975 +265,1065 @@ file start : GLS
         comment block : Gets
 
         class member function start : Language public getName string
-            function return : { class member variable get : Name }
+            function return : { class member variable get : { this } Name }
         class member function end
 
         class member function start : Language public getExtension string
-            function return : { class member variable get : Extension }
+            function return : { class member variable get : { this } Extension }
         class member function end
 
         class member function start : Language public getPrintFunction string
-            function return : { class member variable get : PrintFunction }
+            function return : { class member variable get : { this } PrintFunction }
         class member function end
 
         class member function start : Language public getSemiColon string
-            function return : { class member variable get : SemiColon }
+            function return : { class member variable get : { this } SemiColon }
         class member function end
 
         class member function start : Language public getCommentorBlockStart string
-            function return : { class member variable get : CommentorBlockStart }
+            function return : { class member variable get : { this } CommentorBlockStart }
         class member function end
 
         class member function start : Language public getCommentorBlockEnd string
-            function return : { class member variable get : CommentorBlockEnd }
+            function return : { class member variable get : { this } CommentorBlockEnd }
         class member function end
 
         class member function start : Language public getCommentorInline string
-            function return : { class member variable get : CommentorInline }
+            function return : { class member variable get : { this } CommentorInline }
         class member function end
 
         class member function start : Language public getConditionStartLeft string
-            function return : { class member variable get : ConditionStartLeft }
+            function return : { class member variable get : { this } ConditionStartLeft }
         class member function end
 
         class member function start : Language public getConditionStartRight string
-            function return : { class member variable get : ConditionStartRight }
+            function return : { class member variable get : { this } ConditionStartRight }
         class member function end
 
         class member function start : Language public getConditionContinueLeft string
-            function return : { class member variable get : ConditionContinueLeft }
+            function return : { class member variable get : { this } ConditionContinueLeft }
         class member function end
 
         class member function start : Language public getConditionContinueRight string
-            function return : { class member variable get : ConditionContinueRight }
+            function return : { class member variable get : { this } ConditionContinueRight }
         class member function end
 
         class member function start : Language public getConditionEnd string
-            function return : { class member variable get : ConditionEnd }
+            function return : { class member variable get : { this } ConditionEnd }
         class member function end
 
         class member function start : Language public getElif string
-            function return : { class member variable get : Elif }
+            function return : { class member variable get : { this } Elif }
         class member function end
 
         class member function start : Language public getElse string
-            function return : { class member variable get : Else }
+            function return : { class member variable get : { this } Else }
         class member function end
 
         class member function start : Language public getIf string
-            function return : { class member variable get : If }
+            function return : { class member variable get : { this } If }
         class member function end
 
         class member function start : Language public getAnd string
-            function return : { class member variable get : And }
+            function return : { class member variable get : { this } And }
         class member function end
 
         class member function start : Language public getGreaterThan string
-            function return : { class member variable get : GreaterThan }
+            function return : { class member variable get : { this } GreaterThan }
         class member function end
 
         class member function start : Language public getGreaterThanOrEqual string
-            function return : { class member variable get : GreaterThanOrEqual }
+            function return : { class member variable get : { this } GreaterThanOrEqual }
         class member function end
 
         class member function start : Language public getLessThan string
-            function return : { class member variable get : LessThan }
+            function return : { class member variable get : { this } LessThan }
         class member function end
 
         class member function start : Language public getLessThanOrEqual string
-            function return : { class member variable get : LessThanOrEqual }
+            function return : { class member variable get : { this } LessThanOrEqual }
         class member function end
 
         class member function start : Language public getOr string
-            function return : { class member variable get : Or }
+            function return : { class member variable get : { this } Or }
         class member function end
 
         class member function start : Language public getUndefined string
-            function return : { class member variable get : Undefined }
+            function return : { class member variable get : { this } Undefined }
         class member function end
 
         class member function start : Language public getVariableTypesExplicit boolean
-            function return : { class member variable get : VariableTypesExplicit }
+            function return : { class member variable get : { this } VariableTypesExplicit }
         class member function end
 
         class member function start : Language public getVariableTypesAfterName boolean
-            function return : { class member variable get : VariableTypesAfterName }
+            function return : { class member variable get : { this } VariableTypesAfterName }
         class member function end
 
         class member function start : Language public getVariableTypeMarker string
-            function return : { class member variable get : VariableTypeMarker }
+            function return : { class member variable get : { this } VariableTypeMarker }
         class member function end
 
         class member function start : Language public getVariableDeclareStart string
-            function return : { class member variable get : VariableDeclareStart }
+            function return : { class member variable get : { this } VariableDeclareStart }
         class member function end
 
         class member function start : Language public getBooleanClass string
-            function return : { class member variable get : BooleanClass }
+            function return : { class member variable get : { this } BooleanClass }
         class member function end
 
         class member function start : Language public getTrue string
-            function return : { class member variable get : True }
+            function return : { class member variable get : { this } True }
         class member function end
 
         class member function start : Language public getFalse string
-            function return : { class member variable get : False }
+            function return : { class member variable get : { this } False }
         class member function end
 
         class member function start : Language public getNumberClass string
-            function return : { class member variable get : NumberClass }
+            function return : { class member variable get : { this } NumberClass }
         class member function end
 
         class member function start : Language public getStringClass string
-            function return : { class member variable get : StringClass }
+            function return : { class member variable get : { this } StringClass }
         class member function end
 
         class member function start : Language public getStringLength string
-            function return : { class member variable get : StringLength }
+            function return : { class member variable get : { this } StringLength }
         class member function end
 
         class member function start : Language public getToString string
-            function return : { class member variable get : ToString }
+            function return : { class member variable get : { this } ToString }
         class member function end
 
         class member function start : Language public getToStringAsFunction boolean
-            function return : { class member variable get : ToStringAsFunction }
+            function return : { class member variable get : { this } ToStringAsFunction }
         class member function end
 
         class member function start : Language public getBreak string
-            function return : { class member variable get : Break }
+            function return : { class member variable get : { this } Break }
         class member function end
 
         class member function start : Language public getContinue string
-            function return : { class member variable get : Continue }
+            function return : { class member variable get : { this } Continue }
+        class member function end
+
+        class member function start : Language public getForEachAsMethod boolean
+            function return : { class member variable get : { this } ForEachAsMethod }
+        class member function end
+
+        class member function start : Language public getForEachInner string
+            function return : { class member variable get : { this } ForEachInner }
+        class member function end
+
+        class member function start : Language public getForEachKeysAsStatic boolean
+            function return : { class member variable get : { this } ForEachKeysAsStatic }
+        class member function end
+
+        class member function start : Language public getForEachKeysGet string
+            function return : { class member variable get : { this } ForEachKeysGet }
+        class member function end
+
+        class member function start : Language public getForEachPairsGet string
+            function return : { class member variable get : { this } ForEachPairsGet }
+        class member function end
+
+        class member function start : Language public getForEachPairsPairClass string
+            function return : { class member variable get : { this } ForEachPairsPairClass }
+        class member function end
+
+        class member function start : Language public getForEachPairsAsPair boolean
+            function return : { class member variable get : { this } ForEachPairsAsPair }
+        class member function end
+
+        class member function start : Language public getForEachPairsRetrieveKey string
+            function return : { class member variable get : { this } ForEachPairsRetrieveKey }
+        class member function end
+
+        class member function start : Language public getForEachPairsRetrieveValue string
+            function return : { class member variable get : { this } ForEachPairsRetrieveValue }
+        class member function end
+
+        class member function start : Language public getForEachStarter string
+            function return : { class member variable get : { this } ForEachStarter }
         class member function end
 
         class member function start : Language public getRangedForLoops boolean
-            function return : { class member variable get : RangedForLoops }
+            function return : { class member variable get : { this } RangedForLoops }
         class member function end
 
         class member function start : Language public getRangedForLoopsStart string
-            function return : { class member variable get : RangedForLoopsStart }
+            function return : { class member variable get : { this } RangedForLoopsStart }
         class member function end
 
         class member function start : Language public getRangedForLoopsMiddle string
-            function return : { class member variable get : RangedForLoopsMiddle }
+            function return : { class member variable get : { this } RangedForLoopsMiddle }
         class member function end
 
         class member function start : Language public getRangedForLoopsEnd string
-            function return : { class member variable get : RangedForLoopsEnd }
+            function return : { class member variable get : { this } RangedForLoopsEnd }
         class member function end
 
         class member function start : Language public getArrayClass string
-            function return : { class member variable get : ArrayClass }
+            function return : { class member variable get : { this } ArrayClass }
         class member function end
 
         class member function start : Language public getArrayInitializationAsNew boolean
-            function return : { class member variable get : ArrayInitializationAsNew }
+            function return : { class member variable get : { this } ArrayInitializationAsNew }
         class member function end
 
         class member function start : Language public getArrayInitializationAsNewMultiplied boolean
-            function return : { class member variable get : ArrayInitializationAsNewMultiplied }
+            function return : { class member variable get : { this } ArrayInitializationAsNewMultiplied }
         class member function end
 
         class member function start : Language public getArrayInitializationAsNewStatic boolean
-            function return : { class member variable get : ArrayInitializationAsNewStatic }
+            function return : { class member variable get : { this } ArrayInitializationAsNewStatic }
         class member function end
 
         class member function start : Language public getArrayInitializationAsNewTyped boolean
-            function return : { class member variable get : ArrayInitializationAsNewTyped }
+            function return : { class member variable get : { this } ArrayInitializationAsNewTyped }
         class member function end
 
         class member function start : Language public getArrayLength string
-            function return : { class member variable get : ArrayLength }
+            function return : { class member variable get : { this } ArrayLength }
         class member function end
 
         class member function start : Language public getArrayLengthAsFunction boolean
-            function return : { class member variable get : ArrayLengthAsFunction }
+            function return : { class member variable get : { this } ArrayLengthAsFunction }
         class member function end
 
         class member function start : Language public getArrayNegativeIndices boolean
-            function return : { class member variable get : ArrayNegativeIndices }
+            function return : { class member variable get : { this } ArrayNegativeIndices }
         class member function end
 
         class member function start : Language public getDictionaryClass string
-            function return : { class member variable get : DictionaryClass }
+            function return : { class member variable get : { this } DictionaryClass }
         class member function end
 
         class member function start : Language public getDictionaryKeyCheckAsFunction boolean
-            function return : { class member variable get : DictionaryKeyCheckAsFunction }
+            function return : { class member variable get : { this } DictionaryKeyCheckAsFunction }
         class member function end
 
         class member function start : Language public getDictionaryKeyChecker string
-            function return : { class member variable get : DictionaryKeyChecker }
+            function return : { class member variable get : { this } DictionaryKeyChecker }
         class member function end
 
         class member function start : Language public getDictionaryKeyLeft string
-            function return : { class member variable get : DictionaryKeyLeft }
+            function return : { class member variable get : { this } DictionaryKeyLeft }
         class member function end
 
         class member function start : Language public getDictionaryKeyMiddle string
-            function return : { class member variable get : DictionaryKeyMiddle }
+            function return : { class member variable get : { this } DictionaryKeyMiddle }
         class member function end
 
         class member function start : Language public getDictionaryKeyRight string
-            function return : { class member variable get : DictionaryKeyRight }
+            function return : { class member variable get : { this } DictionaryKeyRight }
         class member function end
 
         class member function start : Language public getDictionaryInitializationAsNew boolean
-            function return : { class member variable get : DictionaryInitializationAsNew }
+            function return : { class member variable get : { this } DictionaryInitializationAsNew }
         class member function end
 
         class member function start : Language public getDictionaryInitializeStarter string
-            function return : { class member variable get : DictionaryInitializeStarter }
+            function return : { class member variable get : { this } DictionaryInitializeStarter }
         class member function end
 
         class member function start : Language public getDictionaryInitializeEnder string
-            function return : { class member variable get : DictionaryInitializeEnder }
+            function return : { class member variable get : { this } DictionaryInitializeEnder }
         class member function end
 
         class member function start : Language public getDictionaryInitializeKeyComma string
-            function return : { class member variable get : DictionaryInitializeKeyComma }
+            function return : { class member variable get : { this } DictionaryInitializeKeyComma }
         class member function end
 
         class member function start : Language public getDictionaryInitializeKeyWithSemicolon boolean
-            function return : { class member variable get : DictionaryInitializeKeyWithSemicolon }
+            function return : { class member variable get : { this } DictionaryInitializeKeyWithSemicolon }
         class member function end
 
         class member function start : Language public getFunctionDefine string
-            function return : { class member variable get : FunctionDefine }
+            function return : { class member variable get : { this } FunctionDefine }
         class member function end
 
         class member function start : Language public getFunctionDefineRight string
-            function return : { class member variable get : FunctionDefineRight }
+            function return : { class member variable get : { this } FunctionDefineRight }
         class member function end
 
         class member function start : Language public getFunctionDefineEnd string
-            function return : { class member variable get : FunctionDefineEnd }
+            function return : { class member variable get : { this } FunctionDefineEnd }
         class member function end
 
         class member function start : Language public getFunctionReturnsExplicit boolean
-            function return : { class member variable get : FunctionReturnsExplicit }
+            function return : { class member variable get : { this } FunctionReturnsExplicit }
         class member function end
 
         class member function start : Language public getFunctionTypeAfterName boolean
-            function return : { class member variable get : FunctionTypeAfterName }
+            function return : { class member variable get : { this } FunctionTypeAfterName }
         class member function end
 
         class member function start : Language public getFunctionTypeMarker string
-            function return : { class member variable get : FunctionTypeMarker }
+            function return : { class member variable get : { this } FunctionTypeMarker }
         class member function end
 
         class member function start : Language public getLambdaDeclareEnder string
-            function return : { class member variable get : LambdaDeclareEnder }
+            function return : { class member variable get : { this } LambdaDeclareEnder }
         class member function end
 
         class member function start : Language public getLambdaDeclareMiddle string
-            function return : { class member variable get : LambdaDeclareMiddle }
+            function return : { class member variable get : { this } LambdaDeclareMiddle }
         class member function end
 
         class member function start : Language public getLambdaDeclareStarter string
-            function return : { class member variable get : LambdaDeclareStarter }
+            function return : { class member variable get : { this } LambdaDeclareStarter }
         class member function end
 
         class member function start : Language public getLambdaTypeDeclarationAsInterface boolean
-            function return : { class member variable get : LambdaTypeDeclarationAsInterface }
+            function return : { class member variable get : { this } LambdaTypeDeclarationAsInterface }
         class member function end
 
         class member function start : Language public getLambdaTypeDeclarationRequired boolean
-            function return : { class member variable get : LambdaTypeDeclarationRequired }
+            function return : { class member variable get : { this } LambdaTypeDeclarationRequired }
         class member function end
 
         class member function start : Language public getLambdaTypeDeclarationEnd any[]
-            function return : { class member variable get : LambdaTypeDeclarationEnd }
+            function return : { class member variable get : { this } LambdaTypeDeclarationEnd }
         class member function end
 
         class member function start : Language public getLambdaTypeDeclarationMiddle any[]
-            function return : { class member variable get : LambdaTypeDeclarationMiddle }
+            function return : { class member variable get : { this } LambdaTypeDeclarationMiddle }
         class member function end
 
         class member function start : Language public getLambdaTypeDeclarationStart any[]
-            function return : { class member variable get : LambdaTypeDeclarationStart }
+            function return : { class member variable get : { this } LambdaTypeDeclarationStart }
         class member function end
 
         class member function start : Language public getClassConstructorAsStatic boolean
-            function return : { class member variable get : ClassConstructorAsStatic }
+            function return : { class member variable get : { this } ClassConstructorAsStatic }
         class member function end
 
         class member function start : Language public getClassConstructorInheritedShorthand boolean
-            function return : { class member variable get : ClassConstructorInheritedShorthand }
+            function return : { class member variable get : { this } ClassConstructorInheritedShorthand }
         class member function end
 
         class member function start : Language public getClassConstructorName string
-            function return : { class member variable get : ClassConstructorName }
+            function return : { class member variable get : { this } ClassConstructorName }
         class member function end
 
         class member function start : Language public getClassConstructorLoose boolean
-            function return : { class member variable get : ClassConstructorLoose }
+            function return : { class member variable get : { this } ClassConstructorLoose }
         class member function end
 
         class member function start : Language public getClassEnder string
-            function return : { class member variable get : ClassEnder }
+            function return : { class member variable get : { this } ClassEnder }
         class member function end
 
         class member function start : Language public getClassExtends string
-            function return : { class member variable get : ClassExtends }
+            function return : { class member variable get : { this } ClassExtends }
         class member function end
 
         class member function start : Language public getClassExtendsAsFunction boolean
-            function return : { class member variable get : ClassExtendsAsFunction }
+            function return : { class member variable get : { this } ClassExtendsAsFunction }
         class member function end
 
         class member function start : Language public getClassFunctionsTakeThis boolean
-            function return : { class member variable get : ClassFunctionsTakeThis }
+            function return : { class member variable get : { this } ClassFunctionsTakeThis }
         class member function end
 
         class member function start : Language public getClassFunctionsStart string
-            function return : { class member variable get : ClassFunctionsStart }
+            function return : { class member variable get : { this } ClassFunctionsStart }
         class member function end
 
         class member function start : Language public getClassFunctionsThis string
-            function return : { class member variable get : ClassFunctionsThis }
+            function return : { class member variable get : { this } ClassFunctionsThis }
         class member function end
 
         class member function start : Language public getClassMemberFunctionGetBind boolean
-            function return : { class member variable get : ClassMemberFunctionGetBind }
+            function return : { class member variable get : { this } ClassMemberFunctionGetBind }
         class member function end
 
         class member function start : Language public getClassMemberFunctionGetEnd string
-            function return : { class member variable get : ClassMemberFunctionGetEnd }
+            function return : { class member variable get : { this } ClassMemberFunctionGetEnd }
         class member function end
 
         class member function start : Language public getClassMemberFunctionGetStart string
-            function return : { class member variable get : ClassMemberFunctionGetStart }
+            function return : { class member variable get : { this } ClassMemberFunctionGetStart }
         class member function end
 
         class member function start : Language public getClassMemberVariableDefault string
-            function return : { class member variable get : ClassMemberVariableDefault }
+            function return : { class member variable get : { this } ClassMemberVariableDefault }
         class member function end
 
         class member function start : Language public getClassMemberVariablePrivacy boolean
-            function return : { class member variable get : ClassMemberVariablePrivacy }
+            function return : { class member variable get : { this } ClassMemberVariablePrivacy }
         class member function end
 
         class member function start : Language public getClassMemberVariableStarter string
-            function return : { class member variable get : ClassMemberVariableStarter }
+            function return : { class member variable get : { this } ClassMemberVariableStarter }
         class member function end
 
         class member function start : Language public getClassNewer string
-            function return : { class member variable get : ClassNewer }
+            function return : { class member variable get : { this } ClassNewer }
         class member function end
 
         class member function start : Language public getClassParentName string
-            function return : { class member variable get : ClassParentName }
+            function return : { class member variable get : { this } ClassParentName }
         class member function end
 
         class member function start : Language public getClassPrivacy boolean
-            function return : { class member variable get : ClassPrivacy }
+            function return : { class member variable get : { this } ClassPrivacy }
         class member function end
 
         class member function start : Language public getClassStaticLabel string
-            function return : { class member variable get : ClassStaticLabel }
+            function return : { class member variable get : { this } ClassStaticLabel }
         class member function end
 
         class member function start : Language public getClassStaticFunctionDecorator string
-            function return : { class member variable get : ClassStaticFunctionDecorator }
+            function return : { class member variable get : { this } ClassStaticFunctionDecorator }
         class member function end
 
         class member function start : Language public getClassStaticFunctionRequiresDecorator boolean
-            function return : { class member variable get : ClassStaticFunctionRequiresDecorator }
+            function return : { class member variable get : { this } ClassStaticFunctionRequiresDecorator }
         class member function end
 
         class member function start : Language public getClassStartLeft string
-            function return : { class member variable get : ClassStartLeft }
+            function return : { class member variable get : { this } ClassStartLeft }
         class member function end
 
         class member function start : Language public getClassStartRight string
-            function return : { class member variable get : ClassStartRight }
+            function return : { class member variable get : { this } ClassStartRight }
         class member function end
 
         class member function start : Language public getClassTemplates boolean
-            function return : { class member variable get : ClassTemplates }
+            function return : { class member variable get : { this } ClassTemplates }
         class member function end
 
         class member function start : Language public getClassTemplatesBetween string
-            function return : { class member variable get : ClassTemplatesBetween }
+            function return : { class member variable get : { this } ClassTemplatesBetween }
         class member function end
 
         class member function start : Language public getClassThis string
-            function return : { class member variable get : ClassThis }
+            function return : { class member variable get : { this } ClassThis }
         class member function end
 
         class member function start : Language public getClassThisAccess string
-            function return : { class member variable get : ClassThisAccess }
+            function return : { class member variable get : { this } ClassThisAccess }
         class member function end
 
         class member function start : Language public getFileEndLine string
-            function return : { class member variable get : FileEndLine }
+            function return : { class member variable get : { this } FileEndLine }
         class member function end
 
         class member function start : Language public getFileStartLeft string
-            function return : { class member variable get : FileStartLeft }
+            function return : { class member variable get : { this } FileStartLeft }
         class member function end
 
         class member function start : Language public getFileStartRight string
-            function return : { class member variable get : FileStartRight }
+            function return : { class member variable get : { this } FileStartRight }
         class member function end
 
         class member function start : Language public getMainEndLine string
-            function return : { class member variable get : MainEndLine }
+            function return : { class member variable get : { this } MainEndLine }
         class member function end
 
         class member function start : Language public getMainStartLine string
-            function return : { class member variable get : MainStartLine }
+            function return : { class member variable get : { this } MainStartLine }
         class member function end
 
 
         comment block : Sets
 
         class member function start : Language public setName Language value string
-            class member variable set : Name value
-            function return : this
+            class member variable set : { this } Name value
+            function return : { this }
         class member function end
 
         class member function start : Language public setExtension Language value string
-            class member variable set : Extension value
-            function return : this
+            class member variable set : { this } Extension value
+            function return : { this }
         class member function end
 
         class member function start : Language public setPrintFunction Language value string
-            class member variable set : PrintFunction value
-            function return : this
+            class member variable set : { this } PrintFunction value
+            function return : { this }
         class member function end
 
         class member function start : Language public setSemiColon Language value string
-            class member variable set : SemiColon value
-            function return : this
+            class member variable set : { this } SemiColon value
+            function return : { this }
         class member function end
 
         class member function start : Language public setCommentorBlockStart Language value string
-            class member variable set : CommentorBlockStart value
-            function return : this
+            class member variable set : { this } CommentorBlockStart value
+            function return : { this }
         class member function end
 
         class member function start : Language public setCommentorBlockEnd Language value string
-            class member variable set : CommentorBlockEnd value
-            function return : this
+            class member variable set : { this } CommentorBlockEnd value
+            function return : { this }
         class member function end
 
         class member function start : Language public setCommentorInline Language value string
-            class member variable set : CommentorInline value
-            function return : this
+            class member variable set : { this } CommentorInline value
+            function return : { this }
         class member function end
 
         class member function start : Language public setConditionStartLeft Language value string
-            class member variable set : ConditionStartLeft value
-            function return : this
+            class member variable set : { this } ConditionStartLeft value
+            function return : { this }
         class member function end
 
         class member function start : Language public setConditionStartRight Language value string
-            class member variable set : ConditionStartRight value
-            function return : this
+            class member variable set : { this } ConditionStartRight value
+            function return : { this }
         class member function end
 
         class member function start : Language public setConditionContinueLeft Language value string
-            class member variable set : ConditionContinueLeft value
-            function return : this
+            class member variable set : { this } ConditionContinueLeft value
+            function return : { this }
         class member function end
 
         class member function start : Language public setConditionContinueRight Language value string
-            class member variable set : ConditionContinueRight value
-            function return : this
+            class member variable set : { this } ConditionContinueRight value
+            function return : { this }
         class member function end
 
         class member function start : Language public setConditionEnd Language value string
-            class member variable set : ConditionEnd value
-            function return : this
+            class member variable set : { this } ConditionEnd value
+            function return : { this }
         class member function end
 
         class member function start : Language public setElif Language value string
-            class member variable set : Elif value
-            function return : this
+            class member variable set : { this } Elif value
+            function return : { this }
         class member function end
 
         class member function start : Language public setElse Language value string
-            class member variable set : Else value
-            function return : this
+            class member variable set : { this } Else value
+            function return : { this }
         class member function end
 
         class member function start : Language public setIf Language value string
-            class member variable set : If value
-            function return : this
+            class member variable set : { this } If value
+            function return : { this }
         class member function end
 
         class member function start : Language public setAnd Language value string
-            class member variable set : And value
-            function return : this
+            class member variable set : { this } And value
+            function return : { this }
         class member function end
 
         class member function start : Language public setGreaterThan Language value string
-            class member variable set : GreaterThan value
-            function return : this
+            class member variable set : { this } GreaterThan value
+            function return : { this }
         class member function end
 
         class member function start : Language public setGreaterThanOrEqual Language value string
-            class member variable set : GreaterThanOrEqual value
-            function return : this
+            class member variable set : { this } GreaterThanOrEqual value
+            function return : { this }
         class member function end
 
         class member function start : Language public setLessThan Language value string
-            class member variable set : LessThan value
-            function return : this
+            class member variable set : { this } LessThan value
+            function return : { this }
         class member function end
 
         class member function start : Language public setLessThanOrEqual Language value string
-            class member variable set : LessThanOrEqual value
-            function return : this
+            class member variable set : { this } LessThanOrEqual value
+            function return : { this }
         class member function end
 
         class member function start : Language public setOr Language value string
-            class member variable set : Or value
-            function return : this
+            class member variable set : { this } Or value
+            function return : { this }
         class member function end
 
         class member function start : Language public setUndefined Language value string
-            class member variable set : Undefined value
-            function return : this
+            class member variable set : { this } Undefined value
+            function return : { this }
         class member function end
 
         class member function start : Language public setVariableTypesExplicit Language value boolean
-            class member variable set : VariableTypesExplicit value
-            function return : this
+            class member variable set : { this } VariableTypesExplicit value
+            function return : { this }
         class member function end
 
         class member function start : Language public setVariableTypesAfterName Language value boolean
-            class member variable set : VariableTypesAfterName value
-            function return : this
+            class member variable set : { this } VariableTypesAfterName value
+            function return : { this }
         class member function end
 
         class member function start : Language public setVariableTypeMarker Language value string
-            class member variable set : VariableTypeMarker value
-            function return : this
+            class member variable set : { this } VariableTypeMarker value
+            function return : { this }
         class member function end
 
         class member function start : Language public setVariableDeclareStart Language value string
-            class member variable set : VariableDeclareStart value
-            function return : this
+            class member variable set : { this } VariableDeclareStart value
+            function return : { this }
         class member function end
 
         class member function start : Language public setBooleanClass Language value string
-            class member variable set : BooleanClass value
-            function return : this
+            class member variable set : { this } BooleanClass value
+            function return : { this }
         class member function end
 
         class member function start : Language public setTrue Language value string
-            class member variable set : True value
-            function return : this
+            class member variable set : { this } True value
+            function return : { this }
         class member function end
 
         class member function start : Language public setFalse Language value string
-            class member variable set : False value
-            function return : this
+            class member variable set : { this } False value
+            function return : { this }
         class member function end
 
         class member function start : Language public setNumberClass Language value string
-            class member variable set : NumberClass value
-            function return : this
+            class member variable set : { this } NumberClass value
+            function return : { this }
         class member function end
 
         class member function start : Language public setStringClass Language value string
-            class member variable set : StringClass value
-            function return : this
+            class member variable set : { this } StringClass value
+            function return : { this }
         class member function end
 
         class member function start : Language public setStringLength Language value string
-            class member variable set : StringLength value
-            function return : this
+            class member variable set : { this } StringLength value
+            function return : { this }
         class member function end
 
         class member function start : Language public setBreak Language value string
-            class member variable set : Break value
-            function return : this
+            class member variable set : { this } Break value
+            function return : { this }
         class member function end
 
         class member function start : Language public setContinue Language value string
-            class member variable set : Continue value
-            function return : this
+            class member variable set : { this } Continue value
+            function return : { this }
+        class member function end
+
+        class member function start : Language public setForEachAsMethod Language value boolean
+            class member variable set : { this } ForEachAsMethod value
+            function return : { this }
+        class member function end
+
+        class member function start : Language public setForEachInner Language value string
+            class member variable set : { this } ForEachInner value
+            function return : { this }
+        class member function end
+
+        class member function start : Language public setForEachKeysAsStatic Language value boolean
+            class member variable set : { this } ForEachKeysAsStatic value
+            function return : { this }
+        class member function end
+
+        class member function start : Language public setForEachKeysGet Language value string
+            class member variable set : { this } ForEachKeysGet value
+            function return : { this }
+        class member function end
+
+        class member function start : Language public setForEachPairsGet Language value string
+            class member variable set : { this } ForEachPairsGet value
+            function return : { this }
+        class member function end
+
+        class member function start : Language public setForEachPairsPairClass Language value string
+            class member variable set : { this } ForEachPairsPairClass value
+            function return : { this }
+        class member function end
+
+        class member function start : Language public setForEachPairsAsPair Language value boolean
+            class member variable set : { this } ForEachPairsAsPair value
+            function return : { this }
+        class member function end
+
+        class member function start : Language public setForEachPairsRetrieveKey Language value string
+            class member variable set : { this } ForEachPairsRetrieveKey value
+            function return : { this }
+        class member function end
+
+        class member function start : Language public setForEachPairsRetrieveValue Language value string
+            class member variable set : { this } ForEachPairsRetrieveValue value
+            function return : { this }
+        class member function end
+
+        class member function start : Language public setForEachStarter Language value string
+            class member variable set : { this } ForEachStarter value
+            function return : { this }
         class member function end
 
         class member function start : Language public setRangedForLoops Language value boolean
-            class member variable set : RangedForLoops value
-            function return : this
+            class member variable set : { this } RangedForLoops value
+            function return : { this }
         class member function end
 
         class member function start : Language public setRangedForLoopsStart Language value string
-            class member variable set : RangedForLoopsStart value
-            function return : this
+            class member variable set : { this } RangedForLoopsStart value
+            function return : { this }
         class member function end
 
         class member function start : Language public setRangedForLoopsMiddle Language value string
-            class member variable set : RangedForLoopsMiddle value
-            function return : this
+            class member variable set : { this } RangedForLoopsMiddle value
+            function return : { this }
         class member function end
 
         class member function start : Language public setRangedForLoopsEnd Language value string
-            class member variable set : RangedForLoopsEnd value
-            function return : this
+            class member variable set : { this } RangedForLoopsEnd value
+            function return : { this }
         class member function end
 
         class member function start : Language public setToString Language value string
-            class member variable set : ToString value
-            function return : this
+            class member variable set : { this } ToString value
+            function return : { this }
         class member function end
 
         class member function start : Language public setToStringAsFunction Language value boolean
-            class member variable set : ToStringAsFunction value
-            function return : this
+            class member variable set : { this } ToStringAsFunction value
+            function return : { this }
         class member function end
 
         class member function start : Language public setArrayClass Language value string
-            class member variable set : ArrayClass value
-            function return : this
+            class member variable set : { this } ArrayClass value
+            function return : { this }
         class member function end
 
         class member function start : Language public setArrayInitializationAsNew Language value boolean
-            class member variable set : ArrayInitializationAsNew value
-            function return : this
+            class member variable set : { this } ArrayInitializationAsNew value
+            function return : { this }
         class member function end
 
         class member function start : Language public setArrayInitializationAsNewMultiplied Language value boolean
-            class member variable set : ArrayInitializationAsNewMultiplied value
-            function return : this
+            class member variable set : { this } ArrayInitializationAsNewMultiplied value
+            function return : { this }
         class member function end
 
         class member function start : Language public setArrayInitializationAsNewTyped Language value boolean
-            class member variable set : ArrayInitializationAsNewTyped value
-            function return : this
+            class member variable set : { this } ArrayInitializationAsNewTyped value
+            function return : { this }
         class member function end
 
         class member function start : Language public setArrayInitializationAsNewStatic Language value boolean
-            class member variable set : ArrayInitializationAsNewStatic value
-            function return : this
+            class member variable set : { this } ArrayInitializationAsNewStatic value
+            function return : { this }
         class member function end
 
         class member function start : Language public setArrayLength Language value string
-            class member variable set : ArrayLength value
-            function return : this
+            class member variable set : { this } ArrayLength value
+            function return : { this }
         class member function end
 
         class member function start : Language public setArrayLengthAsFunction Language value boolean
-            class member variable set : ArrayLengthAsFunction value
-            function return : this
+            class member variable set : { this } ArrayLengthAsFunction value
+            function return : { this }
         class member function end
 
         class member function start : Language public setArrayNegativeIndices Language value boolean
-            class member variable set : ArrayNegativeIndices value
-            function return : this
+            class member variable set : { this } ArrayNegativeIndices value
+            function return : { this }
         class member function end
 
         class member function start : Language public setFunctionDefine Language value string
-            class member variable set : FunctionDefine value
-            function return : this
+            class member variable set : { this } FunctionDefine value
+            function return : { this }
         class member function end
 
         class member function start : Language public setFunctionDefineRight Language value string
-            class member variable set : FunctionDefineRight value
-            function return : this
+            class member variable set : { this } FunctionDefineRight value
+            function return : { this }
         class member function end
 
         class member function start : Language public setFunctionDefineEnd Language value string
-            class member variable set : FunctionDefineEnd value
-            function return : this
+            class member variable set : { this } FunctionDefineEnd value
+            function return : { this }
         class member function end
 
         class member function start : Language public setFunctionReturnsExplicit Language value boolean
-            class member variable set : FunctionReturnsExplicit value
-            function return : this
+            class member variable set : { this } FunctionReturnsExplicit value
+            function return : { this }
         class member function end
 
         class member function start : Language public setFunctionTypeAfterName Language value boolean
-            class member variable set : FunctionTypeAfterName value
-            function return : this
+            class member variable set : { this } FunctionTypeAfterName value
+            function return : { this }
         class member function end
 
         class member function start : Language public setFunctionTypeMarker Language value string
-            class member variable set : FunctionTypeMarker value
-            function return : this
+            class member variable set : { this } FunctionTypeMarker value
+            function return : { this }
         class member function end
 
         class member function start : Language public setLambdaDeclareEnder Language value string
-            class member variable set : LambdaDeclareEnder value
-            function return : this
+            class member variable set : { this } LambdaDeclareEnder value
+            function return : { this }
         class member function end
 
         class member function start : Language public setLambdaDeclareMiddle Language value string
-            class member variable set : LambdaDeclareMiddle value
-            function return : this
+            class member variable set : { this } LambdaDeclareMiddle value
+            function return : { this }
         class member function end
 
         class member function start : Language public setLambdaDeclareStarter Language value string
-            class member variable set : LambdaDeclareStarter value
-            function return : this
+            class member variable set : { this } LambdaDeclareStarter value
+            function return : { this }
         class member function end
 
         class member function start : Language public setLambdaTypeDeclarationAsInterface Language value boolean
-            class member variable set : LambdaTypeDeclarationAsInterface value
-            function return : this
+            class member variable set : { this } LambdaTypeDeclarationAsInterface value
+            function return : { this }
         class member function end
 
         class member function start : Language public setLambdaTypeDeclarationRequired Language value boolean
-            class member variable set : LambdaTypeDeclarationRequired value
-            function return : this
+            class member variable set : { this } LambdaTypeDeclarationRequired value
+            function return : { this }
         class member function end
 
         class member function start : Language public setLambdaTypeDeclarationEnd Language value string
-            class member variable set : LambdaTypeDeclarationEnd value
-            function return : this
+            class member variable set : { this } LambdaTypeDeclarationEnd value
+            function return : { this }
         class member function end
 
         class member function start : Language public setLambdaTypeDeclarationMiddle Language value string
-            class member variable set : LambdaTypeDeclarationMiddle value
-            function return : this
+            class member variable set : { this } LambdaTypeDeclarationMiddle value
+            function return : { this }
         class member function end
 
         class member function start : Language public setLambdaTypeDeclarationStart Language value string
-            class member variable set : LambdaTypeDeclarationStart value
-            function return : this
+            class member variable set : { this } LambdaTypeDeclarationStart value
+            function return : { this }
         class member function end
 
         class member function start : Language public setDictionaryClass Language value string
-            class member variable set : DictionaryClass value
-            function return : this
+            class member variable set : { this } DictionaryClass value
+            function return : { this }
         class member function end
 
         class member function start : Language public setDictionaryKeyCheckAsFunction Language value boolean
-            class member variable set : DictionaryKeyCheckAsFunction value
-            function return : this
+            class member variable set : { this } DictionaryKeyCheckAsFunction value
+            function return : { this }
         class member function end
 
         class member function start : Language public setDictionaryKeyChecker Language value string
-            class member variable set : DictionaryKeyChecker value
-            function return : this
+            class member variable set : { this } DictionaryKeyChecker value
+            function return : { this }
         class member function end
 
         class member function start : Language public setDictionaryKeyLeft Language value string
-            class member variable set : DictionaryKeyLeft value
-            function return : this
+            class member variable set : { this } DictionaryKeyLeft value
+            function return : { this }
         class member function end
 
         class member function start : Language public setDictionaryKeyMiddle Language value string
-            class member variable set : DictionaryKeyMiddle value
-            function return : this
+            class member variable set : { this } DictionaryKeyMiddle value
+            function return : { this }
         class member function end
 
         class member function start : Language public setDictionaryKeyRight Language value string
-            class member variable set : DictionaryKeyRight value
-            function return : this
+            class member variable set : { this } DictionaryKeyRight value
+            function return : { this }
         class member function end
 
         class member function start : Language public setDictionaryInitializationAsNew Language value boolean
-            class member variable set : DictionaryInitializationAsNew value
-            function return : this
+            class member variable set : { this } DictionaryInitializationAsNew value
+            function return : { this }
         class member function end
 
         class member function start : Language public setDictionaryInitializeStarter Language value string
-            class member variable set : DictionaryInitializeStarter value
-            function return : this
+            class member variable set : { this } DictionaryInitializeStarter value
+            function return : { this }
         class member function end
 
         class member function start : Language public setDictionaryInitializeEnder Language value string
-            class member variable set : DictionaryInitializeEnder value
-            function return : this
+            class member variable set : { this } DictionaryInitializeEnder value
+            function return : { this }
         class member function end
 
         class member function start : Language public setDictionaryInitializeKeyComma Language value string
-            class member variable set : DictionaryInitializeKeyComma value
-            function return : this
+            class member variable set : { this } DictionaryInitializeKeyComma value
+            function return : { this }
         class member function end
 
         class member function start : Language public setDictionaryInitializeKeyWithSemicolon Language value boolean
-            class member variable set : DictionaryInitializeKeyWithSemicolon value
-            function return : this
+            class member variable set : { this } DictionaryInitializeKeyWithSemicolon value
+            function return : { this }
         class member function end
 
         class member function start : Language public setClassConstructorAsStatic Language value boolean
-            class member variable set : ClassConstructorAsStatic value
-            function return : this
+            class member variable set : { this } ClassConstructorAsStatic value
+            function return : { this }
         class member function end
 
         class member function start : Language public setClassConstructorInheritedShorthand Language value boolean
-            class member variable set : ClassConstructorInheritedShorthand value
-            function return : this
+            class member variable set : { this } ClassConstructorInheritedShorthand value
+            function return : { this }
         class member function end
 
         class member function start : Language public setClassConstructorName Language value string
-            class member variable set : ClassConstructorName value
-            function return : this
+            class member variable set : { this } ClassConstructorName value
+            function return : { this }
         class member function end
 
         class member function start : Language public setClassConstructorLoose Language value boolean
-            class member variable set : ClassConstructorLoose value
-            function return : this
+            class member variable set : { this } ClassConstructorLoose value
+            function return : { this }
         class member function end
 
         class member function start : Language public setClassEnder Language value string
-            class member variable set : ClassEnder value
-            function return : this
+            class member variable set : { this } ClassEnder value
+            function return : { this }
         class member function end
 
         class member function start : Language public setClassExtends Language value string
-            class member variable set : ClassExtends value
-            function return : this
+            class member variable set : { this } ClassExtends value
+            function return : { this }
         class member function end
 
         class member function start : Language public setClassExtendsAsFunction Language value boolean
-            class member variable set : ClassExtendsAsFunction value
-            function return : this
+            class member variable set : { this } ClassExtendsAsFunction value
+            function return : { this }
         class member function end
 
         class member function start : Language public setClassFunctionsTakeThis Language value boolean
-            class member variable set : ClassFunctionsTakeThis value
-            function return : this
+            class member variable set : { this } ClassFunctionsTakeThis value
+            function return : { this }
         class member function end
 
         class member function start : Language public setClassFunctionsStart Language value string
-            class member variable set : ClassFunctionsStart value
-            function return : this
+            class member variable set : { this } ClassFunctionsStart value
+            function return : { this }
         class member function end
 
         class member function start : Language public setClassFunctionsThis Language value string
-            class member variable set : ClassFunctionsThis value
-            function return : this
+            class member variable set : { this } ClassFunctionsThis value
+            function return : { this }
         class member function end
 
         class member function start : Language public setClassMemberFunctionGetBind Language value boolean
-            class member variable set : ClassMemberFunctionGetBind value
-            function return : this
+            class member variable set : { this } ClassMemberFunctionGetBind value
+            function return : { this }
         class member function end
 
         class member function start : Language public setClassMemberFunctionGetEnd Language value string
-            class member variable set : ClassMemberFunctionGetEnd value
-            function return : this
+            class member variable set : { this } ClassMemberFunctionGetEnd value
+            function return : { this }
         class member function end
 
         class member function start : Language public setClassMemberFunctionGetStart Language value string
-            class member variable set : ClassMemberFunctionGetStart value
-            function return : this
+            class member variable set : { this } ClassMemberFunctionGetStart value
+            function return : { this }
         class member function end
 
         class member function start : Language public setClassMemberVariableDefault Language value string
-            class member variable set : ClassMemberVariableDefault value
-            function return : this
+            class member variable set : { this } ClassMemberVariableDefault value
+            function return : { this }
         class member function end
 
         class member function start : Language public setClassMemberVariablePrivacy Language value boolean
-            class member variable set : ClassMemberVariablePrivacy value
-            function return : this
+            class member variable set : { this } ClassMemberVariablePrivacy value
+            function return : { this }
         class member function end
 
         class member function start : Language public setClassMemberVariableStarter Language value string
-            class member variable set : ClassMemberVariableStarter value
-            function return : this
+            class member variable set : { this } ClassMemberVariableStarter value
+            function return : { this }
         class member function end
 
         class member function start : Language public setClassNewer Language value string
-            class member variable set : ClassNewer value
-            function return : this
+            class member variable set : { this } ClassNewer value
+            function return : { this }
         class member function end
 
         class member function start : Language public setClassParentName Language value string
-            class member variable set : ClassParentName value
-            function return : this
+            class member variable set : { this } ClassParentName value
+            function return : { this }
         class member function end
 
         class member function start : Language public setClassPrivacy Language value boolean
-            class member variable set : ClassPrivacy value
-            function return : this
+            class member variable set : { this } ClassPrivacy value
+            function return : { this }
         class member function end
 
         class member function start : Language public setClassStaticLabel Language value string
-            class member variable set : ClassStaticLabel value
-            function return : this
+            class member variable set : { this } ClassStaticLabel value
+            function return : { this }
         class member function end
 
         class member function start : Language public setClassStaticFunctionDecorator Language value string
-            class member variable set : ClassStaticFunctionDecorator value
-            function return : this
+            class member variable set : { this } ClassStaticFunctionDecorator value
+            function return : { this }
         class member function end
 
         class member function start : Language public setClassStaticFunctionRequiresDecorator Language value boolean
-            class member variable set : ClassStaticFunctionRequiresDecorator value
-            function return : this
+            class member variable set : { this } ClassStaticFunctionRequiresDecorator value
+            function return : { this }
         class member function end
 
         class member function start : Language public setClassStartLeft Language value string
-            class member variable set : ClassStartLeft value
-            function return : this
+            class member variable set : { this } ClassStartLeft value
+            function return : { this }
         class member function end
 
         class member function start : Language public setClassStartRight Language value string
-            class member variable set : ClassStartRight value
-            function return : this
+            class member variable set : { this } ClassStartRight value
+            function return : { this }
         class member function end
 
         class member function start : Language public setClassTemplates Language value boolean
-            class member variable set : ClassTemplates value
-            function return : this
+            class member variable set : { this } ClassTemplates value
+            function return : { this }
         class member function end
 
         class member function start : Language public setClassTemplatesBetween Language value string
-            class member variable set : ClassTemplatesBetween value
-            function return : this
+            class member variable set : { this } ClassTemplatesBetween value
+            function return : { this }
         class member function end
 
         class member function start : Language public setClassThis Language value string
-            class member variable set : ClassThis value
-            function return : this
+            class member variable set : { this } ClassThis value
+            function return : { this }
         class member function end
 
         class member function start : Language public setClassThisAccess Language value string
-            class member variable set : ClassThisAccess value
-            function return : this
+            class member variable set : { this } ClassThisAccess value
+            function return : { this }
         class member function end
 
         class member function start : Language public setFileEndLine Language value string
-            class member variable set : FileEndLine value
-            function return : this
+            class member variable set : { this } FileEndLine value
+            function return : { this }
         class member function end
 
         class member function start : Language public setFileStartLeft Language value string
-            class member variable set : FileStartLeft value
-            function return : this
+            class member variable set : { this } FileStartLeft value
+            function return : { this }
         class member function end
 
         class member function start : Language public setFileStartRight Language value string
-            class member variable set : FileStartRight value
-            function return : this
+            class member variable set : { this } FileStartRight value
+            function return : { this }
         class member function end
 
         class member function start : Language public setMainEndLine Language value string
-            class member variable set : MainEndLine value
-            function return : this
+            class member variable set : { this } MainEndLine value
+            function return : { this }
         class member function end
 
         class member function start : Language public setMainStartLine Language value string
-            class member variable set : MainStartLine value
-            function return : this
+            class member variable set : { this } MainStartLine value
+            function return : { this }
         class member function end
 
         
         comment block : (Array & Template parsing)
 
         class member function start : Language public parseType string text string
-            if start : { class member function call : this typeContainsArray text }
-                function return : { class member function call : this parseTypeWithArray text }
+            if start : { class member function call : { this } typeContainsArray text }
+                function return : { class member function call : { this } parseTypeWithArray text }
             if end
 
-            if start : { class member function call : this typeContainsTemplate text }
-                function return : { class member function call : this parseTypeWithTemplate text }
+            if start : { class member function call : { this } typeContainsTemplate text }
+                function return : { class member function call : { this } parseTypeWithTemplate text }
             if end
 
-            function return : { class member function call : this getTypeAlias text }
+            function return : { class member function call : { this } getTypeAlias text }
         class member function end
 
         class member function start : Language public typeContainsArray boolean text string
@@ -1239,7 +1339,7 @@ file start : GLS
             variable declare : name string { native call : string substring text 0 bracketIndex }
             variable declare : remainder string { native call : string substring text bracketIndex }
 
-            function return : { concatenate : { class member function call : this parseType name } remainder }
+            function return : { concatenate : { class member function call : { this } parseType name } remainder }
         class member function end
 
         class member function start : Language public parseTypeWithTemplate string text string
@@ -1249,7 +1349,7 @@ file start : GLS
             variable declare : templateType string
             variable declare : spaceNext number
 
-            if start : { not : { class member function call : this getClassTemplates } }
+            if start : { not : { class member function call : { this } getClassTemplates } }
                 function return : output
             if end
 
@@ -1268,11 +1368,11 @@ file start : GLS
                     operation : templateType = { native call : string substring templateType 0 { operation : { native call : array length templateType } - 1 } }
                 if end
 
-                operation : output += { operation : { class member function call : this parseType templateType } + { class member function call : this getClassTemplatesBetween } }
+                operation : output += { operation : { class member function call : { this } parseType templateType } + { class member function call : { this } getClassTemplatesBetween } }
                 operation : i = { operation : spaceNext + 1 }
             while end
 
-            operation : output += { class member function call : this parseType { native call : string substring text i { operation : { native call : string length text } - 1 } } }
+            operation : output += { class member function call : { this } parseType { native call : string substring text i { operation : { native call : string length text } - 1 } } }
 
             function return : output
         class member function end
@@ -1289,43 +1389,53 @@ file start : GLS
         class member function end
 
         class member function start : Language public getTypeAlias string key string
-            function return : { class member function call : this getAliasOrDefault { class member variable get : this TypeAliases } key }
+            function return : { class member function call : { this } getAliasOrDefault { class member variable get : { this } TypeAliases } key }
         class member function end
 
         class member function start : Language public getOperationAlias string key string
-            function return : { class member function call : this getAliasOrDefault { class member variable get : this OperationAliases } key }
+            function return : { class member function call : { this } getAliasOrDefault { class member variable get : { this } OperationAliases } key }
         class member function end
 
         class member function start : Language public getValueAlias string key string
-            function return : { class member function call : this getAliasOrDefault { class member variable get : this ValueAliases } key }
+            function return : { class member function call : { this } getAliasOrDefault { class member variable get : { this } ValueAliases } key }
         class member function end
 
         class member function start : Language public addTypeAlias Language key string alias string
-            dictionary key set : { class member variable get : this TypeAliases } alias key
-            function return : this
+            dictionary key set : { class member variable get : { this } TypeAliases } alias key
+            function return : { this }
         class member function end
 
         class member function start : Language public addOperationAlias Language key string alias string
-            dictionary key set : { class member variable get : this OperationAliases } alias key
-            function return : this
+            dictionary key set : { class member variable get : { this } OperationAliases } alias key
+            function return : { this }
         class member function end
 
         class member function start : Language public addValueAlias Language key string alias string
-            dictionary key set : { class member variable get : this ValueAliases } alias key
-            function return : this
+            dictionary key set : { class member variable get : { this } ValueAliases } alias key
+            function return : { this }
         class member function end
 
         class member function start : Language public getNativeFunctionAlias { dictionary type : string string } className string memberName string
-            function return : { dictionary key get : { dictionary key get : { class member variable get : this NativeFunctionAliases } className } memberName }
+            function return : { dictionary key get : { dictionary key get : { class member variable get : { this } NativeFunctionAliases } className } memberName }
         class member function end
 
         class member function start : Language public addNativeFunctionAlias Language className string memberName string aliasInfo { dictionary type : string string }
-             class member variable set : this { dictionary key get : { dictionary key get : NativeFunctionAliases className } memberName } aliasInfo
-            function return : this
+             class member variable set : { this } { dictionary key get : { dictionary key get : NativeFunctionAliases className } memberName } aliasInfo
+            function return : { this }
         class member function end
 
         class member function start : Language public addNativeFunctionAliases Language className string aliasInfos { dictionary type : string { dictionary type : string string } }
-            comment line : ...will need for loop over dictionary for this!
+            for each pairs start : pair i string aliasInfo { dictionary type : string string } aliasInfos
+                class member function call : { this } addNativeFunctionAlias className i aliasInfo
+            for end
+        class member function end
+
+        class member function start : Language public print any[] functionName string functionArgs string[] isInline boolean
+            if start : { not : { dictionary key check : { class member variable get : { this } Printers } durp } }
+                comment line : throw new Error("Function not found: " + functionName);
+            if end
+
+            function return : { function call : { dictionary key get : { class member variable get : { this } Printers } functionName } functionArgs isInline }
         class member function end
     class end
 file end
