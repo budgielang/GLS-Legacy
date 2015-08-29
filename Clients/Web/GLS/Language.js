@@ -69,6 +69,7 @@ var GLS;
                 "operation": this.Operation.bind(this),
                 "parenthesis": this.Parenthesis.bind(this),
                 "print line": this.PrintLine.bind(this),
+                "this": this.This.bind(this),
                 "type": this.Type.bind(this),
                 "value": this.Value.bind(this),
                 "variable declare": this.VariableDeclare.bind(this),
@@ -1980,6 +1981,9 @@ var GLS;
                 output += this.getSemiColon();
             }
             return [output, 0];
+        };
+        Language.prototype.This = function (functionArgs, isInline) {
+            return [this.getClassThis(), 0];
         };
         // string type
         Language.prototype.Type = function (functionArgs, isInline) {
