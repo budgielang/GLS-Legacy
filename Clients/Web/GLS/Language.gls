@@ -499,6 +499,26 @@ file start : GLS
         class member function start : Language public getDictionaryClass string
             function return : { class member variable get : { this } DictionaryClass }
         class member function end
+        
+        class member function start : Language public getDictionaryInitializationAsNew boolean
+            function return : { class member variable get : { this } DictionaryInitializationAsNew }
+        class member function end
+
+        class member function start : Language public getDictionaryInitializeStarter string
+            function return : { class member variable get : { this } DictionaryInitializeStarter }
+        class member function end
+
+        class member function start : Language public getDictionaryInitializeEnder string
+            function return : { class member variable get : { this } DictionaryInitializeEnder }
+        class member function end
+
+        class member function start : Language public getDictionaryInitializeKeyComma string
+            function return : { class member variable get : { this } DictionaryInitializeKeyComma }
+        class member function end
+
+        class member function start : Language public getDictionaryInitializeKeyWithSemicolon boolean
+            function return : { class member variable get : { this } DictionaryInitializeKeyWithSemicolon }
+        class member function end
 
         class member function start : Language public getDictionaryKeyCheckAsFunction boolean
             function return : { class member variable get : { this } DictionaryKeyCheckAsFunction }
@@ -520,24 +540,28 @@ file start : GLS
             function return : { class member variable get : { this } DictionaryKeyRight }
         class member function end
 
-        class member function start : Language public getDictionaryInitializationAsNew boolean
-            function return : { class member variable get : { this } DictionaryInitializationAsNew }
+        class member function start : Language public getExceptionCatch string
+            function return : { class member variable get : { this } ExceptionCatch }
         class member function end
 
-        class member function start : Language public getDictionaryInitializeStarter string
-            function return : { class member variable get : { this } DictionaryInitializeStarter }
+        class member function start : Language public getExceptionClass string
+            function return : { class member variable get : { this } ExceptionClass }
         class member function end
 
-        class member function start : Language public getDictionaryInitializeEnder string
-            function return : { class member variable get : { this } DictionaryInitializeEnder }
+        class member function start : Language public getExceptionErrorPrefix string
+            function return : { class member variable get : { this } ExceptionErrorPrefix }
         class member function end
 
-        class member function start : Language public getDictionaryInitializeKeyComma string
-            function return : { class member variable get : { this } DictionaryInitializeKeyComma }
+        class member function start : Language public getExceptionFinally string
+            function return : { class member variable get : { this } ExceptionFinally }
         class member function end
 
-        class member function start : Language public getDictionaryInitializeKeyWithSemicolon boolean
-            function return : { class member variable get : { this } DictionaryInitializeKeyWithSemicolon }
+        class member function start : Language public getExceptionThrow string
+            function return : { class member variable get : { this } ExceptionThrow }
+        class member function end
+
+        class member function start : Language public getExceptionTry string
+            function return : { class member variable get : { this } ExceptionTry }
         class member function end
 
         class member function start : Language public getFunctionDefine string
@@ -1018,6 +1042,36 @@ file start : GLS
 
         class member function start : Language public setArrayNegativeIndices Language value boolean
             class member variable set : { this } ArrayNegativeIndices value
+            function return : { this }
+        class member function end
+
+        class member function start : Language public setExceptionCatch Language value string
+            class member variable set : { this } ExceptionCatch value
+            function return : { this }
+        class member function end
+
+        class member function start : Language public setExceptionClass Language value string
+            class member variable set : { this } ExceptionClass value
+            function return : { this }
+        class member function end
+
+        class member function start : Language public setExceptionErrorPrefix Language value string
+            class member variable set : { this } ExceptionErrorPrefix value
+            function return : { this }
+        class member function end
+
+        class member function start : Language public setExceptionFinally Language value string
+            class member variable set : { this } ExceptionFinally value
+            function return : { this }
+        class member function end
+
+        class member function start : Language public setExceptionThrow Language value string
+            class member variable set : { this } ExceptionThrow value
+            function return : { this }
+        class member function end
+
+        class member function start : Language public setExceptionTry Language value string
+            class member variable set : { this } ExceptionTry value
             function return : { this }
         class member function end
 
