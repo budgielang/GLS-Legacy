@@ -1486,7 +1486,7 @@ file start : GLS
 
         class member function start : Language public print any[] functionName string functionArgs string[] isInline boolean
             if start : { not : { dictionary key check : { class member variable get : { this } Printers } durp } }
-                comment line : throw new Error("Function not found: " + functionName);
+                throw : { operation : ("Function not found: ") plus functionName }
             if end
 
             function return : { function call : { dictionary key get : { class member variable get : { this } Printers } functionName } functionArgs isInline }
