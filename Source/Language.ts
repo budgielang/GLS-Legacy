@@ -2891,13 +2891,13 @@ module GLS {
         
         // [string message]
         public Throw(functionArgs: string[], isInline?: boolean): any[] {
-            var output: string = this.getExceptionThrow() + "(";
+            var output: string = this.getExceptionThrow() + " ";
 
             if (functionArgs.length > 0) {
-                output += functionArgs[0];
+                output += this.ClassNew([this.getExceptionClass(), functionArgs[0]], true)[0];
+            } else {
+                output += this.ClassNew([this.getExceptionClass()], true)[0];
             }
-
-            output += ")";
 
             if (!isInline) {
                 output += this.getSemiColon();

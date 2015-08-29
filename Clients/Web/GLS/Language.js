@@ -2051,11 +2051,13 @@ var GLS;
         };
         // [string message]
         Language.prototype.Throw = function (functionArgs, isInline) {
-            var output = this.getExceptionThrow() + "(";
+            var output = this.getExceptionThrow() + " ";
             if (functionArgs.length > 0) {
-                output += functionArgs[0];
+                output += this.ClassNew([this.getExceptionClass(), functionArgs[0]], true)[0];
             }
-            output += ")";
+            else {
+                output += this.ClassNew([this.getExceptionClass()], true)[0];
+            }
             if (!isInline) {
                 output += this.getSemiColon();
             }
