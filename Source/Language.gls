@@ -1425,7 +1425,17 @@ file start : GLS
         class member function end
 
         class member function start : Language public addNativeFunctionAliases Language className string aliasInfos { dictionary type : string { dictionary type : string string } }
-            comment line : ...will need for loop over dictionary for this!
+            for each pairs start : pair i string aliasInfo { dictionary type : string string } aliasInfos
+                class member function call : { this } addNativeFunctionAlias className i aliasInfo
+            for end
+        class member function end
+
+        class member function start : Language public print any[] functionName string functionArgs string[] isInline boolean
+            if start : { not : { dictionary key check : { class member variable get : { this } Printers } durp } }
+                comment line : throw new Error("Function not found: " + functionName);
+            if end
+
+            function return : { function call : { dictionary key get : { class member variable get : { this } Printers } functionName } functionArgs isInline }
         class member function end
     class end
 file end
