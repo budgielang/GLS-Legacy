@@ -161,7 +161,7 @@ file start : GLS
         class static variable declare : INT_MIN public int 9001
 
         class constructor start : Language
-            class member variable set incomplete : Printers { dictionary initialize start : string XXX }
+            class member variable set incomplete : this Printers { dictionary initialize start : string XXX }
                 dictionary initialize key : ("array initialize") { class member function get : this ArrayInitialize } ,
                 dictionary initialize key : ("array initialize size") { class member function get : this ArrayInitializeSized } ,
                 dictionary initialize key : ("array get item") { class member function get : this ArrayGetItem } ,
@@ -232,7 +232,7 @@ file start : GLS
                 dictionary initialize key : ("while variable start") { class member function get : this WhileVariableStart }
             dictionary initialize end
 
-            class member variable set incomplete : OperationAliases { dictionary initialize start : string string }
+            class member variable set incomplete : this OperationAliases { dictionary initialize start : string string }
                 dictionary initialize key : "equals" "=" ,
                 dictionary initialize key : "plus" "+" ,
                 dictionary initialize key : "minus" "-" ,
@@ -255,7 +255,7 @@ file start : GLS
             
             class member variable set : this ValueAliases { dictionary initialize : string string }
 
-            class member variable set incomplete : NativeFunctionAliases { dictionary initialize start : string { dictionary type : string string } }
+            class member variable set incomplete : this NativeFunctionAliases { dictionary initialize start : string { dictionary type : string string } }
                 dictionary initialize key : ("array") { dictionary initialize : string { dictionary type : string string } } ,
                 dictionary initialize key : ("dictionary") { dictionary initialize : string { dictionary type : string string } } ,
                 dictionary initialize key : ("string") { dictionary initialize : string { dictionary type : string string } }
@@ -901,52 +901,52 @@ file start : GLS
             function return : this
         class member function end
 
-        class member function start : Language public setForEachAsMethod value boolean
+        class member function start : Language public setForEachAsMethod Language value boolean
             class member variable set : this ForEachAsMethod value
             function return : this
         class member function end
 
-        class member function start : Language public setForEachInner value string
+        class member function start : Language public setForEachInner Language value string
             class member variable set : this ForEachInner value
             function return : this
         class member function end
 
-        class member function start : Language public setForEachKeysAsStatic value boolean
+        class member function start : Language public setForEachKeysAsStatic Language value boolean
             class member variable set : this ForEachKeysAsStatic value
             function return : this
         class member function end
 
-        class member function start : Language public setForEachKeysGet value string
+        class member function start : Language public setForEachKeysGet Language value string
             class member variable set : this ForEachKeysGet value
             function return : this
         class member function end
 
-        class member function start : Language public setForEachPairsGet value string
+        class member function start : Language public setForEachPairsGet Language value string
             class member variable set : this ForEachPairsGet value
             function return : this
         class member function end
 
-        class member function start : Language public setForEachPairsPairClass value string
+        class member function start : Language public setForEachPairsPairClass Language value string
             class member variable set : this ForEachPairsPairClass value
             function return : this
         class member function end
 
-        class member function start : Language public setForEachPairsAsPair value boolean
+        class member function start : Language public setForEachPairsAsPair Language value boolean
             class member variable set : this ForEachPairsAsPair value
             function return : this
         class member function end
 
-        class member function start : Language public setForEachPairsRetrieveKey value string
+        class member function start : Language public setForEachPairsRetrieveKey Language value string
             class member variable set : this ForEachPairsRetrieveKey value
             function return : this
         class member function end
 
-        class member function start : Language public setForEachPairsRetrieveValue value string
+        class member function start : Language public setForEachPairsRetrieveValue Language value string
             class member variable set : this ForEachPairsRetrieveValue value
             function return : this
         class member function end
 
-        class member function start : Language public setForEachStarter value string
+        class member function start : Language public setForEachStarter Language value string
             class member variable set : this ForEachStarter value
             function return : this
         class member function end
