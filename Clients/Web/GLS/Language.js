@@ -7,6 +7,7 @@ var GLS;
                 "array initialize size": this.ArrayInitializeSized.bind(this),
                 "array get item": this.ArrayGetItem.bind(this),
                 "array get length": this.ArrayGetLength.bind(this),
+                "catch": this.Catch.bind(this),
                 "class constructor end": this.ClassConstructorEnd.bind(this),
                 "class constructor inherited call": this.ClassConstructorInheritedCall.bind(this),
                 "class constructor inherited start": this.ClassConstructorInheritedStart.bind(this),
@@ -46,6 +47,7 @@ var GLS;
                 "else start": this.ElseStart.bind(this),
                 "file end": this.FileEnd.bind(this),
                 "file start": this.FileStart.bind(this),
+                "finally": this.Finally.bind(this),
                 "for each keys start": this.ForEachKeysStart.bind(this),
                 "for each pairs start": this.ForEachPairsStart.bind(this),
                 "for end": this.ForEnd.bind(this),
@@ -70,6 +72,9 @@ var GLS;
                 "parenthesis": this.Parenthesis.bind(this),
                 "print line": this.PrintLine.bind(this),
                 "this": this.This.bind(this),
+                "throw": this.Throw.bind(this),
+                "try start": this.TryStart.bind(this),
+                "try end": this.TryEnd.bind(this),
                 "type": this.Type.bind(this),
                 "value": this.Value.bind(this),
                 "variable declare": this.VariableDeclare.bind(this),
@@ -285,6 +290,21 @@ var GLS;
         Language.prototype.getDictionaryClass = function () {
             return this.DictionaryClass;
         };
+        Language.prototype.getDictionaryInitializationAsNew = function () {
+            return this.DictionaryInitializationAsNew;
+        };
+        Language.prototype.getDictionaryInitializeStarter = function () {
+            return this.DictionaryInitializeStarter;
+        };
+        Language.prototype.getDictionaryInitializeEnder = function () {
+            return this.DictionaryInitializeEnder;
+        };
+        Language.prototype.getDictionaryInitializeKeyComma = function () {
+            return this.DictionaryInitializeKeyComma;
+        };
+        Language.prototype.getDictionaryInitializeKeyWithSemicolon = function () {
+            return this.DictionaryInitializeKeyWithSemicolon;
+        };
         Language.prototype.getDictionaryKeyCheckAsFunction = function () {
             return this.DictionaryKeyCheckAsFunction;
         };
@@ -300,20 +320,20 @@ var GLS;
         Language.prototype.getDictionaryKeyRight = function () {
             return this.DictionaryKeyRight;
         };
-        Language.prototype.getDictionaryInitializationAsNew = function () {
-            return this.DictionaryInitializationAsNew;
+        Language.prototype.getExceptionCatch = function () {
+            return this.ExceptionCatch;
         };
-        Language.prototype.getDictionaryInitializeStarter = function () {
-            return this.DictionaryInitializeStarter;
+        Language.prototype.getExceptionClass = function () {
+            return this.ExceptionClass;
         };
-        Language.prototype.getDictionaryInitializeEnder = function () {
-            return this.DictionaryInitializeEnder;
+        Language.prototype.getExceptionFinally = function () {
+            return this.ExceptionFinally;
         };
-        Language.prototype.getDictionaryInitializeKeyComma = function () {
-            return this.DictionaryInitializeKeyComma;
+        Language.prototype.getExceptionThrow = function () {
+            return this.ExceptionThrow;
         };
-        Language.prototype.getDictionaryInitializeKeyWithSemicolon = function () {
-            return this.DictionaryInitializeKeyWithSemicolon;
+        Language.prototype.getExceptionTry = function () {
+            return this.ExceptionTry;
         };
         Language.prototype.getFunctionDefine = function () {
             return this.FunctionDefine;
@@ -688,6 +708,26 @@ var GLS;
         };
         Language.prototype.setArrayNegativeIndices = function (value) {
             this.ArrayNegativeIndices = value;
+            return this;
+        };
+        Language.prototype.setExceptionCatch = function (value) {
+            this.ExceptionCatch = value;
+            return this;
+        };
+        Language.prototype.setExceptionClass = function (value) {
+            this.ExceptionClass = value;
+            return this;
+        };
+        Language.prototype.setExceptionFinally = function (value) {
+            this.ExceptionFinally = value;
+            return this;
+        };
+        Language.prototype.setExceptionThrow = function (value) {
+            this.ExceptionThrow = value;
+            return this;
+        };
+        Language.prototype.setExceptionTry = function (value) {
+            this.ExceptionTry = value;
             return this;
         };
         Language.prototype.setFunctionDefine = function (value) {
@@ -1084,6 +1124,16 @@ var GLS;
             else {
                 return [functionArgs[0] + this.getArrayLength(), 0];
             }
+        };
+        // [string name]
+        Language.prototype.Catch = function (functionArgs, isInline) {
+            var output = this.getConditionContinueLeft();
+            output += this.getExceptionCatch() + this.getExceptionClass();
+            if (functionArgs.length > 0) {
+                output += " " + functionArgs[0];
+            }
+            output += this.getConditionStartRight();
+            return ["\0", -1, output, 1];
         };
         Language.prototype.ClassConstructorEnd = function (functionArgs, isInline) {
             return [this.getFunctionDefineEnd(), -1];
@@ -1608,6 +1658,12 @@ var GLS;
             }
             return [left + functionArgs[0] + right, 1];
         };
+        Language.prototype.Finally = function (functionArgs, isInline) {
+            var output = this.getConditionContinueLeft();
+            output += this.getExceptionFinally();
+            output += this.getConditionContinueRight();
+            return ["\0", -1, output, 1];
+        };
         // string keyName, string keyType, string container
         // Ex. for each keys start : i string names
         Language.prototype.ForEachKeysStart = function (functionArgs, isInline) {
@@ -1984,6 +2040,24 @@ var GLS;
         };
         Language.prototype.This = function (functionArgs, isInline) {
             return [this.getClassThis(), 0];
+        };
+        // [string message]
+        Language.prototype.Throw = function (functionArgs, isInline) {
+            var output = this.getExceptionThrow() + "(";
+            if (functionArgs.length > 0) {
+                output += functionArgs[0];
+            }
+            output += ")";
+            if (!isInline) {
+                output += this.getSemiColon();
+            }
+            return [output, 0];
+        };
+        Language.prototype.TryStart = function (functionArgs, isInline) {
+            return [this.getExceptionTry() + this.getConditionContinueRight(), 1];
+        };
+        Language.prototype.TryEnd = function (functionArgs, isInline) {
+            return [this.getConditionEnd(), -1];
         };
         // string type
         Language.prototype.Type = function (functionArgs, isInline) {

@@ -96,7 +96,13 @@ module GLS {
         private DictionaryKeyLeft: string;
         private DictionaryKeyMiddle: string;
         private DictionaryKeyRight: string;
-        private DictionaryKeysNatural: boolean;
+
+        // Exceptions
+        private ExceptionCatch: string;
+        private ExceptionClass: string;
+        private ExceptionFinally: string;
+        private ExceptionThrow: string;
+        private ExceptionTry: string;
 
         // Functions
         private FunctionDefine: string;
@@ -164,6 +170,7 @@ module GLS {
                 "array initialize size": this.ArrayInitializeSized.bind(this),
                 "array get item": this.ArrayGetItem.bind(this),
                 "array get length": this.ArrayGetLength.bind(this),
+                "catch": this.Catch.bind(this),
                 "class constructor end": this.ClassConstructorEnd.bind(this),
                 "class constructor inherited call": this.ClassConstructorInheritedCall.bind(this),
                 "class constructor inherited start": this.ClassConstructorInheritedStart.bind(this),
@@ -203,6 +210,7 @@ module GLS {
                 "else start": this.ElseStart.bind(this),
                 "file end": this.FileEnd.bind(this),
                 "file start": this.FileStart.bind(this),
+                "finally": this.Finally.bind(this),
                 "for each keys start": this.ForEachKeysStart.bind(this),
                 "for each pairs start": this.ForEachPairsStart.bind(this),
                 "for end": this.ForEnd.bind(this),
@@ -227,6 +235,9 @@ module GLS {
                 "parenthesis": this.Parenthesis.bind(this),
                 "print line": this.PrintLine.bind(this),
                 "this": this.This.bind(this),
+                "throw": this.Throw.bind(this),
+                "try start": this.TryStart.bind(this),
+                "try end": this.TryEnd.bind(this),
                 "type": this.Type.bind(this),
                 "value": this.Value.bind(this),
                 "variable declare": this.VariableDeclare.bind(this),
@@ -508,6 +519,26 @@ module GLS {
             return this.DictionaryClass;
         }
 
+        public getDictionaryInitializationAsNew(): boolean {
+            return this.DictionaryInitializationAsNew;
+        }
+
+        public getDictionaryInitializeStarter(): string {
+            return this.DictionaryInitializeStarter;
+        }
+
+        public getDictionaryInitializeEnder(): string {
+            return this.DictionaryInitializeEnder;
+        }
+
+        public getDictionaryInitializeKeyComma(): string {
+            return this.DictionaryInitializeKeyComma;
+        }
+
+        public getDictionaryInitializeKeyWithSemicolon(): boolean {
+            return this.DictionaryInitializeKeyWithSemicolon;
+        }
+
         public getDictionaryKeyCheckAsFunction(): boolean {
             return this.DictionaryKeyCheckAsFunction;
         }
@@ -528,24 +559,24 @@ module GLS {
             return this.DictionaryKeyRight;
         }
 
-        public getDictionaryInitializationAsNew(): boolean {
-            return this.DictionaryInitializationAsNew;
+        public getExceptionCatch(): string {
+            return this.ExceptionCatch;
         }
 
-        public getDictionaryInitializeStarter(): string {
-            return this.DictionaryInitializeStarter;
+        public getExceptionClass(): string {
+            return this.ExceptionClass;
         }
 
-        public getDictionaryInitializeEnder(): string {
-            return this.DictionaryInitializeEnder;
+        public getExceptionFinally(): string {
+            return this.ExceptionFinally;
         }
 
-        public getDictionaryInitializeKeyComma(): string {
-            return this.DictionaryInitializeKeyComma;
+        public getExceptionThrow(): string {
+            return this.ExceptionThrow;
         }
 
-        public getDictionaryInitializeKeyWithSemicolon(): boolean {
-            return this.DictionaryInitializeKeyWithSemicolon;
+        public getExceptionTry(): string {
+            return this.ExceptionTry;
         }
 
         public getFunctionDefine(): string {
@@ -1027,6 +1058,31 @@ module GLS {
 
         public setArrayNegativeIndices(value: boolean): Language {
             this.ArrayNegativeIndices = value;
+            return this;
+        }
+
+        public setExceptionCatch(value: string): Language {
+            this.ExceptionCatch = value;
+            return this;
+        }
+
+        public setExceptionClass(value: string): Language {
+            this.ExceptionClass = value;
+            return this;
+        }
+
+        public setExceptionFinally(value: string): Language {
+            this.ExceptionFinally = value;
+            return this;
+        }
+
+        public setExceptionThrow(value: string): Language {
+            this.ExceptionThrow = value;
+            return this;
+        }
+
+        public setExceptionTry(value: string): Language {
+            this.ExceptionTry = value;
             return this;
         }
 
@@ -1541,6 +1597,21 @@ module GLS {
             } else {
                 return [functionArgs[0] + this.getArrayLength(), 0];
             }
+        }
+
+        // [string name]
+        public Catch(functionArgs: string[], isInline?: boolean): any[] {
+            var output: string = this.getConditionContinueLeft();
+
+            output += this.getExceptionCatch() + this.getExceptionClass();
+
+            if (functionArgs.length > 0) {
+                output += " " + functionArgs[0];
+            }
+
+            output += this.getConditionStartRight();
+
+            return ["\0", -1, output, 1];
         }
 
         public ClassConstructorEnd(functionArgs: string[], isInline?: boolean): any[] {
@@ -2272,6 +2343,14 @@ module GLS {
             return [left + functionArgs[0] + right, 1];
         }
 
+        public Finally(functionArgs: string[], isInline?: boolean): any[] {
+            var output: string = this.getConditionContinueLeft();
+            output += this.getExceptionFinally();
+            output += this.getConditionContinueRight();
+
+            return ["\0", -1, output, 1];
+        }
+
         // string keyName, string keyType, string container
         // Ex. for each keys start : i string names
         public ForEachKeysStart(functionArgs: string[], isInline?: boolean): any[] {
@@ -2798,6 +2877,31 @@ module GLS {
 
         public This(functionArgs: string[], isInline?: boolean): any[] {
             return [this.getClassThis(), 0];
+        }
+        
+        // [string message]
+        public Throw(functionArgs: string[], isInline?: boolean): any[] {
+            var output: string = this.getExceptionThrow() + "(";
+
+            if (functionArgs.length > 0) {
+                output += functionArgs[0];
+            }
+
+            output += ")";
+
+            if (!isInline) {
+                output += this.getSemiColon();
+            }
+
+            return [output, 0];
+        }
+
+        public TryStart(functionArgs: string[], isInline?: boolean): any[] {
+            return [this.getExceptionTry() + this.getConditionContinueRight(), 1];
+        }
+
+        public TryEnd(functionArgs: string[], isInline?: boolean): any[] {
+            return [this.getConditionEnd(), -1];
         }
 
         // string type
