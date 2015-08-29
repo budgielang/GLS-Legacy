@@ -2135,18 +2135,21 @@ module GLS {
 
         // [string message, ...]
         public CommentBlock(functionArgs: string[], isInline?: boolean): any[] {
-            this.requireArgumentsLength("ClassStart", functionArgs, 1);
-
-            var output: string = this.getCommentorBlockStart() + "\n",
+            var output: any[] = new Array((functionArgs.length + 2) * 2),
                 i: number;
 
+            output[0] = this.getCommentorBlockStart();
+            output[1] = 0;
+
             for (i = 0; i < functionArgs.length; i += 1) {
-                output += functionArgs[i] + "\n";
+                output[i * 1 + 2] = functionArgs[i];
+                output[i * 2 + 3] = 0;
             }
 
-            output += this.getCommentorBlockEnd();
+            output[i * 2 + 2] = this.getCommentorBlockEnd();
+            output[i * 2 + 3] = 0;
 
-            return [output, 0];
+            return output;
         }
 
         // [string message, ...]

@@ -1399,7 +1399,7 @@ file start : GLS
         class member function start : Language public parseTypeWithTemplate string text string
             variable declare : ltIndex number { native call : string find text "<" }
             variable declare : output string { native call : string substring text 0 ltIndex }
-            variable declare : i number { operation : ltIndex + 1 }
+            variable declare : i number { operation : ltIndex plus 1 }
             variable declare : templateType string
             variable declare : spaceNext number
 
@@ -1407,26 +1407,26 @@ file start : GLS
                 function return : output
             if end
 
-            operation : output += "<"
+            operation : output increaseby "<"
 
             while condition start : i < text.length
-                operation : spaceNext = { native call : string find text (" ") i }
+                operation : spaceNext equals { native call : string find text (" ") i }
                 if start : { operation : spaceNext equalto -1 }
                     loop break
                 if end
 
-                operation : templateType = { native call : string substring text i spaceNext }
+                operation : templateType equals { native call : string substring text i spaceNext }
 
                 comment line : These may have commas already (such as from DictionaryType)
-                if start : { operation : { array get item : templateType { operation : { native call : array length templateType } - 1 } } equalto "," }
-                    operation : templateType = { native call : string substring templateType 0 { operation : { native call : array length templateType } - 1 } }
+                if start : { operation : { array get item : templateType { operation : { native call : array length templateType } minus 1 } } equalto "," }
+                    operation : templateType equals { native call : string substring templateType 0 { operation : { native call : array length templateType } minus 1 } }
                 if end
 
-                operation : output += { operation : { class member function call : { this } parseType templateType } + { class member function call : { this } getClassTemplatesBetween } }
-                operation : i = { operation : spaceNext + 1 }
+                operation : output increaseby { operation : { class member function call : { this } parseType templateType } plus { class member function call : { this } getClassTemplatesBetween } }
+                operation : i equals { operation : spaceNext plus 1 }
             while end
 
-            operation : output += { class member function call : { this } parseType { native call : string substring text i { operation : { native call : string length text } - 1 } } }
+            operation : output increaseby { class member function call : { this } parseType { native call : string substring text i { operation : { native call : string length text } minus 1 } } }
 
             function return : output
         class member function end
@@ -1486,7 +1486,7 @@ file start : GLS
 
         class member function start : Language public print any[] functionName string functionArgs string[] isInline boolean
             if start : { not : { dictionary key check : { class member variable get : { this } Printers } durp } }
-                comment line : throw new Error("Function not found: " + functionName);
+                throw : { operation : ("Function not found: ") plus functionName }
             if end
 
             function return : { function call : { dictionary key get : { class member variable get : { this } Printers } functionName } functionArgs isInline }

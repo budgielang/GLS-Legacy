@@ -1506,13 +1506,16 @@ var GLS;
         };
         // [string message, ...]
         Language.prototype.CommentBlock = function (functionArgs, isInline) {
-            this.requireArgumentsLength("ClassStart", functionArgs, 1);
-            var output = this.getCommentorBlockStart() + "\n", i;
+            var output = new Array((functionArgs.length + 2) * 2), i;
+            output[0] = this.getCommentorBlockStart();
+            output[1] = 0;
             for (i = 0; i < functionArgs.length; i += 1) {
-                output += functionArgs[i] + "\n";
+                output[i * 1 + 2] = functionArgs[i];
+                output[i * 2 + 3] = 0;
             }
-            output += this.getCommentorBlockEnd();
-            return [output, 0];
+            output[i * 2 + 2] = this.getCommentorBlockEnd();
+            output[i * 2 + 3] = 0;
+            return output;
         };
         // [string message, ...]
         Language.prototype.CommentLine = function (functionArgs, isInline) {
