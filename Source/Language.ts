@@ -100,6 +100,7 @@ module GLS {
         // Exceptions
         private ExceptionCatch: string;
         private ExceptionClass: string;
+        private ExceptionErrorPrefix: string;
         private ExceptionFinally: string;
         private ExceptionThrow: string;
         private ExceptionTry: string;
@@ -565,6 +566,10 @@ module GLS {
 
         public getExceptionClass(): string {
             return this.ExceptionClass;
+        }
+
+        public getExceptionErrorPrefix(): string {
+            return this.ExceptionErrorPrefix;
         }
 
         public getExceptionFinally(): string {
@@ -1068,6 +1073,11 @@ module GLS {
 
         public setExceptionClass(value: string): Language {
             this.ExceptionClass = value;
+            return this;
+        }
+
+        public setExceptionErrorPrefix(value: string): Language {
+            this.ExceptionErrorPrefix = value;
             return this;
         }
 
@@ -1601,12 +1611,10 @@ module GLS {
 
         // [string name]
         public Catch(functionArgs: string[], isInline?: boolean): any[] {
-            var output: string = this.getConditionContinueLeft();
-
-            output += this.getExceptionCatch() + this.getExceptionClass();
+            var output: string = this.getExceptionCatch() + this.getExceptionClass();
 
             if (functionArgs.length > 0) {
-                output += " " + functionArgs[0];
+                output += this.getExceptionErrorPrefix() + functionArgs[0];
             }
 
             output += this.getConditionStartRight();
@@ -2344,8 +2352,7 @@ module GLS {
         }
 
         public Finally(functionArgs: string[], isInline?: boolean): any[] {
-            var output: string = this.getConditionContinueLeft();
-            output += this.getExceptionFinally();
+            var output: string = this.getExceptionFinally();
             output += this.getConditionContinueRight();
 
             return ["\0", -1, output, 1];

@@ -326,6 +326,9 @@ var GLS;
         Language.prototype.getExceptionClass = function () {
             return this.ExceptionClass;
         };
+        Language.prototype.getExceptionErrorPrefix = function () {
+            return this.ExceptionErrorPrefix;
+        };
         Language.prototype.getExceptionFinally = function () {
             return this.ExceptionFinally;
         };
@@ -716,6 +719,10 @@ var GLS;
         };
         Language.prototype.setExceptionClass = function (value) {
             this.ExceptionClass = value;
+            return this;
+        };
+        Language.prototype.setExceptionErrorPrefix = function (value) {
+            this.ExceptionErrorPrefix = value;
             return this;
         };
         Language.prototype.setExceptionFinally = function (value) {
@@ -1127,10 +1134,9 @@ var GLS;
         };
         // [string name]
         Language.prototype.Catch = function (functionArgs, isInline) {
-            var output = this.getConditionContinueLeft();
-            output += this.getExceptionCatch() + this.getExceptionClass();
+            var output = this.getExceptionCatch() + this.getExceptionClass();
             if (functionArgs.length > 0) {
-                output += " " + functionArgs[0];
+                output += this.getExceptionErrorPrefix() + functionArgs[0];
             }
             output += this.getConditionStartRight();
             return ["\0", -1, output, 1];
@@ -1659,8 +1665,7 @@ var GLS;
             return [left + functionArgs[0] + right, 1];
         };
         Language.prototype.Finally = function (functionArgs, isInline) {
-            var output = this.getConditionContinueLeft();
-            output += this.getExceptionFinally();
+            var output = this.getExceptionFinally();
             output += this.getConditionContinueRight();
             return ["\0", -1, output, 1];
         };
