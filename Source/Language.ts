@@ -98,6 +98,13 @@ module GLS {
         private DictionaryKeyRight: string;
         private DictionaryKeysNatural: boolean;
 
+        // Exceptions
+        private ExceptionCatch: string;
+        private ExceptionClass: string;
+        private ExceptionFinally: string;
+        private ExceptionThrow: string;
+        private ExceptionTryer: string;
+
         // Functions
         private FunctionDefine: string;
         private FunctionDefineRight: string;
@@ -164,6 +171,7 @@ module GLS {
                 "array initialize size": this.ArrayInitializeSized.bind(this),
                 "array get item": this.ArrayGetItem.bind(this),
                 "array get length": this.ArrayGetLength.bind(this),
+                "catch": this.Catch.bind(this),
                 "class constructor end": this.ClassConstructorEnd.bind(this),
                 "class constructor inherited call": this.ClassConstructorInheritedCall.bind(this),
                 "class constructor inherited start": this.ClassConstructorInheritedStart.bind(this),
@@ -203,6 +211,7 @@ module GLS {
                 "else start": this.ElseStart.bind(this),
                 "file end": this.FileEnd.bind(this),
                 "file start": this.FileStart.bind(this),
+                "finally": this.Finally.bind(this),
                 "for each keys start": this.ForEachKeysStart.bind(this),
                 "for each pairs start": this.ForEachPairsStart.bind(this),
                 "for end": this.ForEnd.bind(this),
@@ -227,6 +236,8 @@ module GLS {
                 "parenthesis": this.Parenthesis.bind(this),
                 "print line": this.PrintLine.bind(this),
                 "this": this.This.bind(this),
+                "throw": this.Throw.bind(this),
+                "try": this.Try.bind(this),
                 "type": this.Type.bind(this),
                 "value": this.Value.bind(this),
                 "variable declare": this.VariableDeclare.bind(this),
