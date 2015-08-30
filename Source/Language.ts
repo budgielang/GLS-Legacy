@@ -1729,9 +1729,8 @@ module GLS {
                 // In-function usage, like in Python, comes within the function
                 output = new Array(generalCall.length + 2);
                 output[output.length - 1] = 0;
-                output[generalCall.length - 1] = generalCall[generalCall.length - 1];
-
                 output[output.length - 2] = functionArgs[1];
+                output[generalCall.length - 1] = generalCall[generalCall.length - 1];
 
                 if (!isInline) {
                     output[output.length - 2] += this.getSemiColon();

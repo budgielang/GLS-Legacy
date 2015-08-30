@@ -1694,7 +1694,40 @@ file start : GLS
                 for numbers start : i number 2 lessthan { native call : array length functionArgs } }
                     operation : { array get item : callingArgs { operation : i minus 1 } } equals { array get item : functionArgs i }
                 for end
+
+                operation : { array get item : callingArgs 0 } equals { array get item : functionArgs 0 }
+            else start:
+                operation : callingArgs equals { array initialize : string { array get item : functionArgs 0 } }
             if end
+
+            operation : generalCall equals { class member function call : { this } ClassConstructorStart callingArgs isInline }
+
+            if start : { class member function call : { this } getClassConstructorInheritedShorthand }
+                comment line : "Shorthand" usage, like in C#, comes before FunctionDefineRight
+                operation : output equals { array initialize sized : string { native call : array length generalCall } }
+                operation : { array get item : output 0 } equals { native call : string substring { array get item : generalCall 0 } 0 { operation : { native call : string length { array get item : generalCall 0 } } minus { native call : string length { class member function call : { this } FunctionDefineRight } } } }
+                operation : { array get item : output 0 } increaseby { array get item : functionArgs 1 } plus { class member function call : { this } getFunctionDefineRight }
+
+                for numbers start : i number 1 lessthan { native call : array length generalCall }
+                    operation : { array get item : output i } equals { array get item : generalCall i }
+                for end
+            else start
+                comment line : In-function usage, like in Python, comes within the function
+                operation : output equals { array initialize sized : string { operation : { native call : array length generalCall } plus 2 } }
+                operation : { array get item : output { operation : { native call : array length output } minus 1 } } equals 0
+                operation : { array get item : output { operation : { native call : array length output } minus 2 } } equals { array get item : functionArgs 1 }
+                operation : { array get item : output { operation : { native call : array length generalCall } minus 1 } } equals { array get item : generalCall { operation : { native call : array length generalCall } minus 1 } }
+
+                if start : { not : isInline }
+                    operation : { array get item : output { operation : { native call : array length output } minus 2 } } increaseby { class member function call : this getSemiColon }
+                if end
+
+                for numbers start : i number 0 lessthan { operation : { native call : array length generalCall } minus 1 }
+                    operation : { array get item : output i } equals { array get item : generalCall i }
+                for end
+            if end
+
+            return : output
         class member function end
 
         class member function start : Language public Catch mixed[] functionArgs string[] isInline boolean

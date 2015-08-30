@@ -56,7 +56,6 @@ var GLS;
                 "function call partial start": this.FunctionCallPartialStart.bind(this),
                 "function end": this.FunctionEnd.bind(this),
                 "function start": this.FunctionStart.bind(this),
-                "function return": this.FunctionReturn.bind(this),
                 "if end": this.IfEnd.bind(this),
                 "if start": this.IfStart.bind(this),
                 "lambda declare inline": this.LambdaDeclareInline.bind(this),
@@ -70,6 +69,7 @@ var GLS;
                 "operation": this.Operation.bind(this),
                 "parenthesis": this.Parenthesis.bind(this),
                 "print line": this.PrintLine.bind(this),
+                "return": this.Return.bind(this),
                 "this": this.This.bind(this),
                 "throw": this.Throw.bind(this),
                 "try start": this.TryStart.bind(this),
@@ -1874,11 +1874,6 @@ var GLS;
             output += this.getFunctionDefineRight();
             return [output, 1];
         };
-        // string value
-        Language.prototype.FunctionReturn = function (functionArgs, isInline) {
-            this.requireArgumentsLength("FunctionReturn", functionArgs, 1);
-            return ["return " + functionArgs[0] + this.getSemiColon(), 0];
-        };
         Language.prototype.IfEnd = function (functionArgs, isInline) {
             return [this.getConditionEnd(), -1];
         };
@@ -2066,6 +2061,11 @@ var GLS;
                 output += this.getSemiColon();
             }
             return [output, 0];
+        };
+        // string value
+        Language.prototype.Return = function (functionArgs, isInline) {
+            this.requireArgumentsLength("FunctionReturn", functionArgs, 1);
+            return ["return " + functionArgs[0] + this.getSemiColon(), 0];
         };
         Language.prototype.This = function (functionArgs, isInline) {
             return [this.getClassThis(), 0];
