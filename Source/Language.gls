@@ -1509,5 +1509,18 @@ file start : GLS
 
             function return : { function call : { dictionary key get : { class member variable get : { this } Printers } functionName } functionArgs isInline }
         class member function end
+
+
+        comment block : Printers
+
+        
+        comment block : Utilities
+
+        class member function start : Language public void requireArgumentsLength functionName string functionArgs string[] amount number
+            if start : { operation  : { array get length : functionArgs } lessthan amount }
+                throw : { operation : ("Not enough arguments given to ") plus functionName plus (" (required: ") plus amount plus ")."  }
+            if end
+        class member function end
+
     class end
 file end

@@ -2866,13 +2866,19 @@ module GLS {
             return ["!" + functionArgs[0], 0];
         }
 
-        // string i, string operator, string difference
+        // string i[, string operator, string difference, ...]
         public Operation(functionArgs: string[], isInline?: boolean): any[] {
             this.requireArgumentsLength("Operation", functionArgs, 3);
 
-            var output: string = functionArgs[0] + " " + this.getOperationAlias(functionArgs[1]);
+            var output: string = functionArgs[0] + " ",
+                i: number;
 
-            output += " " + this.getValueAlias(functionArgs[2]);
+            for (i = 1; i < functionArgs.length; i += 2) {
+                output += this.getOperationAlias(functionArgs[i]) + " ";
+                output += this.getValueAlias(functionArgs[i + 1]) + " ";
+            }
+
+            output = output.substring(0, output.length - 1);
 
             if (!isInline) {
                 output += this.getSemiColon();

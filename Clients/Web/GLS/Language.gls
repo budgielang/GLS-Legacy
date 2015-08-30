@@ -1,5 +1,5 @@
 file start : GLS
-    lambda type declare : public Printer any[] functionArgs string[] isInline boolean
+    lambda type declare : public Printer mixed[] functionArgs string[] isInline boolean
     
     class start : Language
         class member variable declare : printers private { dictionary type : string Printer }
@@ -608,15 +608,15 @@ file start : GLS
             function return : { class member variable get : { this } LambdaTypeDeclarationRequired }
         class member function end
 
-        class member function start : Language public getLambdaTypeDeclarationEnd any[]
+        class member function start : Language public getLambdaTypeDeclarationEnd mixed[]
             function return : { class member variable get : { this } LambdaTypeDeclarationEnd }
         class member function end
 
-        class member function start : Language public getLambdaTypeDeclarationMiddle any[]
+        class member function start : Language public getLambdaTypeDeclarationMiddle mixed[]
             function return : { class member variable get : { this } LambdaTypeDeclarationMiddle }
         class member function end
 
-        class member function start : Language public getLambdaTypeDeclarationStart any[]
+        class member function start : Language public getLambdaTypeDeclarationStart mixed[]
             function return : { class member variable get : { this } LambdaTypeDeclarationStart }
         class member function end
 
@@ -1502,12 +1502,25 @@ file start : GLS
             for end
         class member function end
 
-        class member function start : Language public print any[] functionName string functionArgs string[] isInline boolean
+        class member function start : Language public print mixed[] functionName string functionArgs string[] isInline boolean
             if start : { not : { dictionary key check : { class member variable get : { this } Printers } durp } }
-                throw : { operation : ("Function not found: ") plus functionName }
+                throw : { concatenate : ("Function not found: ") functionName }
             if end
 
             function return : { function call : { dictionary key get : { class member variable get : { this } Printers } functionName } functionArgs isInline }
         class member function end
+
+
+        comment block : Printers
+
+        
+        comment block : Utilities
+
+        class member function start : Language public void requireArgumentsLength functionName string functionArgs string[] amount number
+            if start : { operation  : { array get length : functionArgs } lessthan amount }
+                throw : 
+            if end
+        class member function end
+
     class end
 file end

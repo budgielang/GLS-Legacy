@@ -2037,11 +2037,15 @@ var GLS;
             this.requireArgumentsLength("Operation", functionArgs, 1);
             return ["!" + functionArgs[0], 0];
         };
-        // string i, string operator, string difference
+        // string i[, string operator, string difference, ...]
         Language.prototype.Operation = function (functionArgs, isInline) {
             this.requireArgumentsLength("Operation", functionArgs, 3);
-            var output = functionArgs[0] + " " + this.getOperationAlias(functionArgs[1]);
-            output += " " + this.getValueAlias(functionArgs[2]);
+            var output = functionArgs[0] + " ", i;
+            for (i = 1; i < functionArgs.length; i += 2) {
+                output += this.getOperationAlias(functionArgs[i]) + " ";
+                output += this.getValueAlias(functionArgs[i + 1]) + " ";
+            }
+            output = output.substring(0, output.length - 1);
             if (!isInline) {
                 output += this.getSemiColon();
             }
