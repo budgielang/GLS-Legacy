@@ -1028,15 +1028,39 @@ var GLS;
             return this.getAliasOrDefault(this.ValueAliases, key);
         };
         Language.prototype.addTypeAlias = function (key, alias) {
-            this.TypeAliases[alias] = key;
+            this.TypeAliases[key] = alias;
+            return this;
+        };
+        Language.prototype.addTypeAliases = function (aliases) {
+            for (var i in aliases) {
+                if (aliases.hasOwnProperty(i)) {
+                    this.addTypeAlias(i, aliases[i]);
+                }
+            }
             return this;
         };
         Language.prototype.addOperationAlias = function (key, alias) {
-            this.OperationAliases[alias] = key;
+            this.OperationAliases[key] = alias;
+            return this;
+        };
+        Language.prototype.addOperationAliases = function (aliases) {
+            for (var i in aliases) {
+                if (aliases.hasOwnProperty(i)) {
+                    this.addOperationAlias(i, aliases[i]);
+                }
+            }
             return this;
         };
         Language.prototype.addValueAlias = function (key, alias) {
-            this.ValueAliases[alias] = key;
+            this.ValueAliases[key] = alias;
+            return this;
+        };
+        Language.prototype.addValueAliases = function (aliases) {
+            for (var i in aliases) {
+                if (aliases.hasOwnProperty(i)) {
+                    this.addValueAlias(i, aliases[i]);
+                }
+            }
             return this;
         };
         Language.prototype.getNativeFunctionAlias = function (className, memberName) {

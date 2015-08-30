@@ -1459,14 +1459,32 @@ file start : GLS
             function return : { this }
         class member function end
 
+        class member function start : Language public addTypeAliases Language aliases { dictionary type : string string }
+            for each pairs start : pair key string alias string aliases
+                class member function call : { this } addTypeAlias i { dictionary key get : aliases i }
+            for end
+        class member function end
+
         class member function start : Language public addOperationAlias Language key string alias string
             dictionary key set : { class member variable get : { this } OperationAliases } alias key
             function return : { this }
         class member function end
 
+        class member function start : Language public addOperationAliases Language aliases { dictionary type : string string }
+            for each pairs start : pair key string alias string aliases
+                class member function call : { this } addOperationAlias i { dictionary key get : aliases i }
+            for end
+        class member function end
+
         class member function start : Language public addValueAlias Language key string alias string
             dictionary key set : { class member variable get : { this } ValueAliases } alias key
             function return : { this }
+        class member function end
+
+        class member function start : Language public addValueAliases Language aliases { dictionary type : string string }
+            for each pairs start : pair key string alias string aliases
+                class member function call : { this } addValueAlias i { dictionary key get : aliases i }
+            for end
         class member function end
 
         class member function start : Language public getNativeFunctionAlias { dictionary type : string string } className string memberName string
