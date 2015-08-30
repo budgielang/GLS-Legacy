@@ -1482,7 +1482,6 @@ module GLS {
         public addTypeAliases(aliases: any): Language {
             for (var i in aliases) {
                 if (aliases.hasOwnProperty(i)) {
-                    console.log("adding", i, aliases[i]);
                     this.addTypeAlias(i, aliases[i]);
                 }
             }

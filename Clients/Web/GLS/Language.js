@@ -1034,7 +1034,6 @@ var GLS;
         Language.prototype.addTypeAliases = function (aliases) {
             for (var i in aliases) {
                 if (aliases.hasOwnProperty(i)) {
-                    console.log("adding", i, aliases[i]);
                     this.addTypeAlias(i, aliases[i]);
                 }
             }
