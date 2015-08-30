@@ -173,7 +173,6 @@ file start : GLS
                 dictionary initialize key : ("array initialize") { class member function get : { this } ArrayInitialize } ,
                 dictionary initialize key : ("array initialize size") { class member function get : { this } ArrayInitializeSized } ,
                 dictionary initialize key : ("array get item") { class member function get : { this } ArrayGetItem } ,
-                dictionary initialize key : ("array get length") { class member function get : { this } ArrayGetLength } ,
                 dictionary initialize key : ("class constructor end") { class member function get : { this } ClassConstructorEnd } ,
                 dictionary initialize key : ("class constructor inherited call") { class member function get : { this } ClassConstructorInheritedCall } ,
                 dictionary initialize key : ("class constructor inherited start") { class member function get : { this } ClassConstructorInheritedStart } ,
@@ -1468,9 +1467,11 @@ file start : GLS
         class member function end
 
         class member function start : Language public addTypeAliases Language aliases { dictionary type : string string }
-            for each pairs start : pair key string alias string aliases
+            for each pairs start : { variable declare partial : pair string } key string alias string aliases
                 class member function call : { this } addTypeAlias i { dictionary key get : aliases i }
             for end
+
+            function return : { this }
         class member function end
 
         class member function start : Language public addOperationAlias Language key string alias string
@@ -1479,9 +1480,11 @@ file start : GLS
         class member function end
 
         class member function start : Language public addOperationAliases Language aliases { dictionary type : string string }
-            for each pairs start : pair key string alias string aliases
+            for each pairs start : { variable declare partial : pair string } key string alias string aliases
                 class member function call : { this } addOperationAlias i { dictionary key get : aliases i }
             for end
+
+            function return : { this }
         class member function end
 
         class member function start : Language public addValueAlias Language key string alias string
@@ -1490,9 +1493,11 @@ file start : GLS
         class member function end
 
         class member function start : Language public addValueAliases Language aliases { dictionary type : string string }
-            for each pairs start : pair key string alias string aliases
+            for each pairs start : { variable declare partial : pair string } key string alias string aliases
                 class member function call : { this } addValueAlias i { dictionary key get : aliases i }
             for end
+
+            function return : { this }
         class member function end
 
         class member function start : Language public getNativeFunctionAlias { dictionary type : string string } className string memberName string
@@ -1838,8 +1843,8 @@ file start : GLS
         
         comment block : Utilities
 
-        class member function start : Language public void requireArgumentsLength functionName string functionArgs string[] amount number
-            if start : { operation  : { array get length : functionArgs } lessthan amount }
+        class member function start : Language public requireArgumentsLength void functionName string functionArgs string[] amount number
+            if start : { operation  : { native call : array length functionArgs } lessthan amount }
                 throw : { operation : ("Not enough arguments given to ") plus functionName plus (". Required: ") plus amount plus "."  }
             if end
         class member function end

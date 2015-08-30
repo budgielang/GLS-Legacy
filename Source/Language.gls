@@ -210,6 +210,8 @@ file start : GLS
                 dictionary initialize key : ("dictionary type") { class member function get : { this } DictionaryType } ,
                 dictionary initialize key : ("file end") { class member function get : { this } FileEnd } ,
                 dictionary initialize key : ("file start") { class member function get : { this } FileStart } ,
+                dictionary initialize key : ("for each keys start") { class member function get : { this } ForEachKeysStart } ,
+                dictionary initialize key : ("for each pairs start") { class member function get : { this } ForEachPairsStart } ,
                 dictionary initialize key : ("for end") { class member function get : { this } ForEnd } ,
                 dictionary initialize key : ("for numbers start") { class member function get : { this } ForNumbersStart } ,
                 dictionary initialize key : ("function call") { class member function get : { this } FunctionCall } ,
@@ -1467,9 +1469,13 @@ file start : GLS
         class member function end
 
         class member function start : Language public addTypeAliases Language aliases { dictionary type : string string }
+            variable declare : key string
+            variable declare : alias string
             for each pairs start : pair key string alias string aliases
-                class member function call : { this } addTypeAlias i { dictionary key get : aliases i }
+                class member function call : { this } addTypeAlias key { dictionary key get : aliases key }
             for end
+
+            function return : { this }
         class member function end
 
         class member function start : Language public addOperationAlias Language key string alias string
@@ -1478,9 +1484,13 @@ file start : GLS
         class member function end
 
         class member function start : Language public addOperationAliases Language aliases { dictionary type : string string }
+            variable declare : key string
+            variable declare : alias string
             for each pairs start : pair key string alias string aliases
-                class member function call : { this } addOperationAlias i { dictionary key get : aliases i }
+                class member function call : { this } addOperationAlias key { dictionary key get : aliases key }
             for end
+
+            function return : { this }
         class member function end
 
         class member function start : Language public addValueAlias Language key string alias string
@@ -1489,9 +1499,13 @@ file start : GLS
         class member function end
 
         class member function start : Language public addValueAliases Language aliases { dictionary type : string string }
+            variable declare : key string
+            variable declare : alias string
             for each pairs start : pair key string alias string aliases
-                class member function call : { this } addValueAlias i { dictionary key get : aliases i }
+                class member function call : { this } addValueAlias key { dictionary key get : aliases key }
             for end
+
+            function return : { this }
         class member function end
 
         class member function start : Language public getNativeFunctionAlias { dictionary type : string string } className string memberName string
@@ -1499,18 +1513,22 @@ file start : GLS
         class member function end
 
         class member function start : Language public addNativeFunctionAlias Language className string memberName string aliasInfo { dictionary type : string string }
-             class member variable set : { this } { dictionary key get : { dictionary key get : NativeFunctionAliases className } memberName } aliasInfo
+            class member variable set : { this } { dictionary key get : { dictionary key get : NativeFunctionAliases className } memberName } aliasInfo
             function return : { this }
         class member function end
 
         class member function start : Language public addNativeFunctionAliases Language className string aliasInfos { dictionary type : string { dictionary type : string string } }
-            for each pairs start : pair i string aliasInfo { dictionary type : string string } aliasInfos
-                class member function call : { this } addNativeFunctionAlias className i aliasInfo
+            variable declare : key string
+            variable declare : aliasInfo { dictionary type : string string }
+            for each pairs start : pair key string aliasInfo { dictionary type : string string } aliasInfos
+                class member function call : { this } addNativeFunctionAlias className key aliasInfo
             for end
+
+            function return : { this }
         class member function end
 
         class member function start : Language public print mixed[] functionName string functionArgs string[] isInline boolean
-            if start : { not : { dictionary key check : { class member variable get : { this } Printers } durp } }
+            if start : { not : { dictionary key check : { class member variable get : { this } Printers } functionName } }
                 throw : { operation : ("Function not found: ") plus functionName }
             if end
 
@@ -1571,12 +1589,12 @@ file start : GLS
             if end
 
             if start : { class member function call : { this } getArrayInitializationAsNewTyped }
-                operation : output plusequals arrayType plus "[" plus arraySize plus "]"
+                operation : output increaseby  arrayType plus "[" plus arraySize plus "]"
             else start
                 if start : { not : { class member function call : { this } getArrayInitializatioNAsNewStatic } }
-                    operation : output plusequals { class member function call : { this } getArrayClass }
+                    operation : output increaseby  { class member function call : { this } getArrayClass }
                 if end
-                operation : output plusequals "(" plus arraySize plus ")"
+                operation : output increaseby  "(" plus arraySize plus ")"
             if end
         class member function end
 
@@ -1589,7 +1607,7 @@ file start : GLS
             variable declare : index string { array get item : functionArgs 1 }
 
             if start : { operation : { operation : { array get item : index 0 } notequalto "-" } or { class member function call : { this } getArrayNegativeIndices }
-                operation : output plusequals index
+                operation : output increaseby  index
             else start
                 operation : index equals { native call : string substring index 1 }
                 operation : output increaseby { array get item : { class member function call : { this } Operation { array initialize : string { array get item : { class member function call : { this } NativeCall { array initialize : string "array" "length" name } true } 0 } "minus" "1" } true } 0 }
