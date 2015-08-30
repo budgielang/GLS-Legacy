@@ -1588,7 +1588,8 @@ module GLS {
                 output: string;
 
             if (this.getArrayInitializationAsNewMultiplied()) {
-                return this.Operation(["[" + this.getUndefined() + "]", "times", arraySize], isInline);
+                output = "[" + this.getUndefined() + "]";
+                return this.Operation([output, "times", arraySize], isInline);
             }
 
             if (this.getArrayInitializationAsNewStatic()) {

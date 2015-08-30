@@ -1528,6 +1528,35 @@ file start : GLS
             if end
         class member function end
 
+        comment line : string type, string size
+        class member function start : Language public ArrayInitializeSized mixed[] functionArgs string[] isInline boolean
+            class member function call : { this } requireArgumentsLength "ArrayInitialize" functionArgs 2
+
+            variable declare : arrayType string { class member function call : { this } parseType { array get item : functionArgs 0 } }
+            variable declare : arraySize string { array get item : functionArgs 1 }
+            variable declare : output string
+
+            if start : { class member function call : { this } getArrayInitializationAsNewMultiplied }
+                operation : output equals "[" plus { class member function call : { this } getUndefined } plus "]"
+                function return : { class member function call : { this } Operation { array initialize : string output "times" arraySize } isInline }
+            if end
+
+            if start : { class member function call : { this } getArrayInitializationAsNewStatic }
+                operation : output equals { class member function call : { this } getArrayClass } plus ".new"
+            else start
+                operation : output equals ("new ")
+            if end
+
+            if start : { class member function call : { this } getArrayInitializationAsNewTyped }
+                operation : output plusequals arrayType plus "[" plus arraySize plus "]"
+            else start
+                if start : { not : { class member function call : { this } getArrayInitializatioNAsNewStatic } }
+                    operation : output plusequals { class member function call : { this } getArrayClass }
+                if end
+                operation : output plusequals "(" plus arraySize plus ")"
+            if end
+        class member function end
+
         
         comment block : Utilities
 
