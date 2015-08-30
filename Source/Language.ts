@@ -168,7 +168,7 @@ module GLS {
         constructor() {
             this.Printers = {
                 "array initialize": this.ArrayInitialize.bind(this),
-                "array initialize size": this.ArrayInitializeSized.bind(this),
+                "array initialize sized": this.ArrayInitializeSized.bind(this),
                 "array get item": this.ArrayGetItem.bind(this),
                 "catch": this.Catch.bind(this),
                 "class constructor end": this.ClassConstructorEnd.bind(this),
@@ -1583,7 +1583,7 @@ module GLS {
 
         // string type, string size
         public ArrayInitializeSized(functionArgs: string[], isInline?: boolean): any[] {
-            this.requireArgumentsLength("ArrayInitialize", functionArgs, 2);
+            this.requireArgumentsLength("ArrayInitializeSized", functionArgs, 2);
 
             var arrayType: string = this.parseType(functionArgs[0]),
                 arraySize: string = functionArgs[1],

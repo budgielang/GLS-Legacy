@@ -4,7 +4,7 @@ var GLS;
         function Language() {
             this.Printers = {
                 "array initialize": this.ArrayInitialize.bind(this),
-                "array initialize size": this.ArrayInitializeSized.bind(this),
+                "array initialize sized": this.ArrayInitializeSized.bind(this),
                 "array get item": this.ArrayGetItem.bind(this),
                 "catch": this.Catch.bind(this),
                 "class constructor end": this.ClassConstructorEnd.bind(this),
@@ -1112,7 +1112,7 @@ var GLS;
         };
         // string type, string size
         Language.prototype.ArrayInitializeSized = function (functionArgs, isInline) {
-            this.requireArgumentsLength("ArrayInitialize", functionArgs, 2);
+            this.requireArgumentsLength("ArrayInitializeSized", functionArgs, 2);
             var arrayType = this.parseType(functionArgs[0]), arraySize = functionArgs[1], output;
             if (this.getArrayInitializationAsNewMultiplied()) {
                 output = "[" + this.getUndefined() + "]";

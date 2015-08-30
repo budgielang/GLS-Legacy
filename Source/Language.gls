@@ -171,7 +171,7 @@ file start : GLS
         class constructor start : Language
             class member variable set incomplete : { this } Printers { dictionary initialize start : string XXX }
                 dictionary initialize key : ("array initialize") { class member function get : { this } ArrayInitialize } ,
-                dictionary initialize key : ("array initialize size") { class member function get : { this } ArrayInitializeSized } ,
+                dictionary initialize key : ("array initialize sized") { class member function get : { this } ArrayInitializeSized } ,
                 dictionary initialize key : ("array get item") { class member function get : { this } ArrayGetItem } ,
                 dictionary initialize key : ("class constructor end") { class member function get : { this } ClassConstructorEnd } ,
                 dictionary initialize key : ("class constructor inherited call") { class member function get : { this } ClassConstructorInheritedCall } ,
@@ -1630,12 +1630,48 @@ file start : GLS
             function return : { array initialize : mixed "\0" -1 output 1 }
         class member function end
 
-        class member function start : Language public Catch mixed[] functionArgs string[] isInline boolean
+        class member function start : Language public ClassConstructorEnd mixed[] functionArgs string[] isInline boolean
             function return : { array initialize : mixed { class member function call : { this } getFunctionDefineEnd } -1 }
         class member function end
 
-        class member function start : Language public Catch mixed[] functionArgs string[] isInline boolean
+        comment line : string super, [string argumentName, string argumentType, ...]
+        class member function start : Language public ClassConstructorInheritedCall mixed[] functionArgs string[] isInline boolean
+            class member function call : { this } requireArgumentsLength "ClassConstructorInheritedCall" functionArgs 1
 
+            variable declare : parentName string { class member function call : { this } getClassParentName }
+            variable declare : callingArgsLength number { native call : array length functionArgs }
+            variable declare : loopStart number 0
+            variable declare : callingArgs string[]
+            variable declare : callingResult any[]
+            variable declare : i number
+
+            comment line : Blank parentName indicates the super's class name should be used
+            if start : { operation : { native call : string length parentName } equalto 0 }
+                operation : parentName equals { class member function call : { this } parseType { array get item : functionArgs 0 } }
+            if end
+
+            comment line : Taking a reference to `this` as a paremeter increases the number of parameters
+            if start : { class member function call : this getClassFunctionsTakeThis }
+                operation : callingArgsLength increaseby 1
+                operation : loopStart increaseby 1
+            if end
+
+            operation : callingArgs equals { array initialize sized : string callingArgsLength }
+            operation : { array get item : callingArgs 0 } equals parentName
+
+            if start : { class member function call : { this } getClassExtendsAsFunction }
+                operation : { array get item : callingArgs 0 } increaseby "." plus { class member function call : { this } getClassConstructorName }
+            if end
+
+            if start : { class member function call : { this } getClassFunctionsTakeThis }
+                operation : { array get item : callingArgs 1 } equals { class member function call : { this } getClassThis }
+            if end
+
+            for numbers start : i number loopStart lessthan { native call : array length functionArgs }
+                operation : { array get item : callingArgs (i + 1) } equals { array get item : functionArgs i }
+            for end
+
+            function return : { class member function call : { this } FunctionCall callingArgs isInline }
         class member function end
 
         class member function start : Language public Catch mixed[] functionArgs string[] isInline boolean
