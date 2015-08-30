@@ -91,7 +91,8 @@ module GLS.Languages {
         .addTypeAliases(
         {
             "number": "int",
-            "boolean": "bool"
+            "boolean": "bool",
+            "mixed": "Object"
         })
         .addNativeFunctionAliases("array",
         {

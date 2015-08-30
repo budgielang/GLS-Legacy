@@ -6,7 +6,8 @@ var GLS;
             "int": "number",
             "double": "number",
             "float": "number",
-            "bool": "boolean"
+            "bool": "boolean",
+            "mixed": "any"
         }).addNativeFunctionAliases("array", {
             "length": {
                 "alias": "length",
