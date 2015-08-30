@@ -1475,17 +1475,48 @@ module GLS {
         }
 
         public addTypeAlias(key: string, alias: string): Language {
-            this.TypeAliases[alias] = key;
+            this.TypeAliases[key] = alias;
+            return this;
+        }
+
+        public addTypeAliases(aliases: any): Language {
+            for (var i in aliases) {
+                if (aliases.hasOwnProperty(i)) {
+                    console.log("adding", i, aliases[i]);
+                    this.addTypeAlias(i, aliases[i]);
+                }
+            }
+
             return this;
         }
 
         public addOperationAlias(key: string, alias: string): Language {
-            this.OperationAliases[alias] = key;
+            this.OperationAliases[key] = alias;
+            return this;
+        }
+
+        public addOperationAliases(aliases: any): Language {
+            for (var i in aliases) {
+                if (aliases.hasOwnProperty(i)) {
+                    this.addOperationAlias(i, aliases[i]);
+                }
+            }
+
             return this;
         }
 
         public addValueAlias(key: string, alias: string): Language {
-            this.ValueAliases[alias] = key;
+            this.ValueAliases[key] = alias;
+            return this;
+        }
+
+        public addValueAliases(aliases: any): Language {
+            for (var i in aliases) {
+                if (aliases.hasOwnProperty(i)) {
+                    this.addValueAlias(i, aliases[i]);
+                }
+            }
+
             return this;
         }
 
