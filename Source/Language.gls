@@ -1526,6 +1526,22 @@ file start : GLS
             else start
                 operation : output equals "["
             if end
+            
+            if start : { operation : { native call : array length functionArgs } greaterthan 1 }
+                for numbers start : i number 1 lessthan { operation : { native call : array length functionArgs } minus 1 }
+                    operation : output increaseby { array get item : functionArgs i } plus (", ")
+                for end
+
+                operation : output increaseby { array get item : functionArgs i }
+            if end
+
+            if start : { class member function call : { this } getArrayInitializationAsNewTyped }
+                operation : output increaseby (" }")
+            else start
+                operation : output increaseby "]"
+            if end
+
+            function return : { array initialize : mixed output 0 }
         class member function end
 
         comment line : string type, string size
@@ -1554,6 +1570,22 @@ file start : GLS
                     operation : output plusequals { class member function call : { this } getArrayClass }
                 if end
                 operation : output plusequals "(" plus arraySize plus ")"
+            if end
+        class member function end
+
+        comment line : string name, string index
+        class member function start : Language public ArrayGetItem mixed[] functionArgs string[] isInline boolean
+            class member function call : { this } requireArgumentsLength "ArrayGetItem" functionArgs 1
+
+            variable declare : name string { array get item : functionArgs 0 }
+            variable declare : output string { operation : name plus "[" }
+            variable declare : index string { array get item : functionArgs 1 }
+
+            if start : { operation : { operation : { array get item : index 0 } notequalto "-" } or { class member function call : { this } getArrayNegativeIndices }
+                operation : output plusequals index
+            else start
+                operation : index equals { native call : string substring index 1 }
+                operation : output plusequals { class member function call : { this } Operation { array initialize : { class member function call : { this } ArrayGetLength } } }
             if end
         class member function end
 

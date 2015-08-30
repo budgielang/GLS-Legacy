@@ -99,6 +99,7 @@ var GLS;
                 "lessthanequal": "<=",
                 "greaterthanequal": ">=",
                 "equalto": "==",
+                "notequalto": "!=",
                 "and": "&&",
                 "or": "||",
                 "mod": "%"
@@ -1096,10 +1097,12 @@ var GLS;
             else {
                 output = "[";
             }
-            for (i = 1; i < functionArgs.length - 1; i += 1) {
-                output += functionArgs[i] + ", ";
+            if (functionArgs.length > 1) {
+                for (i = 1; i < functionArgs.length - 1; i += 1) {
+                    output += functionArgs[i] + ", ";
+                }
+                output += functionArgs[i];
             }
-            output += functionArgs[i];
             if (this.getArrayInitializationAsNewTyped()) {
                 output += " }";
             }
@@ -1113,7 +1116,8 @@ var GLS;
             this.requireArgumentsLength("ArrayInitialize", functionArgs, 2);
             var arrayType = this.parseType(functionArgs[0]), arraySize = functionArgs[1], output;
             if (this.getArrayInitializationAsNewMultiplied()) {
-                return this.Operation(["[" + this.getUndefined() + "]", "times", arraySize], isInline);
+                output = "[" + this.getUndefined() + "]";
+                return this.Operation([output, "times", arraySize], isInline);
             }
             if (this.getArrayInitializationAsNewStatic()) {
                 output = this.getArrayClass() + ".new";
@@ -1804,19 +1808,19 @@ var GLS;
         };
         // string i, string type, string initial, string comparison, string boundary
         // e.x. i int 0 lessthan 7
+        // e.x. { variable declare partial : i } int 0 lessthan 7
         Language.prototype.ForNumbersStart = function (functionArgs, isInline) {
-            this.requireArgumentsLength("ClassStart", functionArgs, 7);
+            this.requireArgumentsLength("ForNumbersStart", functionArgs, 4);
             var output = "for" + this.getConditionStartLeft(), generalArgs, i = functionArgs[0], typeName = this.parseType(functionArgs[1]), initial = functionArgs[2], comparison = functionArgs[3], boundary = functionArgs[4], direction = "increaseby", change = "1";
             if (this.getRangedForLoops()) {
-                generalArgs = [i, typeName];
-                output += this.VariableDeclare(generalArgs, false)[0];
+                output += i;
                 output += this.getRangedForLoopsStart();
                 output += initial + this.getRangedForLoopsMiddle() + boundary;
                 output += this.getRangedForLoopsEnd();
             }
             else {
-                generalArgs = [i, typeName, initial];
-                output += this.VariableDeclare(generalArgs, true)[0] + this.getSemiColon();
+                generalArgs = [i, "equals", initial];
+                output += this.Operation(generalArgs, true)[0] + this.getSemiColon();
                 generalArgs = [i, comparison, boundary];
                 output += " " + this.Comparison(generalArgs, true)[0] + this.getSemiColon();
                 generalArgs = [i, direction, change];
