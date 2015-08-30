@@ -170,7 +170,6 @@ module GLS {
                 "array initialize": this.ArrayInitialize.bind(this),
                 "array initialize size": this.ArrayInitializeSized.bind(this),
                 "array get item": this.ArrayGetItem.bind(this),
-                "array get length": this.ArrayGetLength.bind(this),
                 "catch": this.Catch.bind(this),
                 "class constructor end": this.ClassConstructorEnd.bind(this),
                 "class constructor inherited call": this.ClassConstructorInheritedCall.bind(this),
@@ -1625,22 +1624,11 @@ module GLS {
                 output += index;
             } else {
                 index = index.substring(1);
-                output += this.Operation([this.ArrayGetLength([name], true)[0], "minus", "1"], true)[0];
+                output += this.Operation([this.NativeCall(["array", "length", name], true)[0], "minus", "1"], true)[0];
             }
 
             output += "]";
             return [output, 0];
-        }
-
-        // string name
-        public ArrayGetLength(functionArgs: string[], isInline?: boolean): any[] {
-            this.requireArgumentsLength("ArrayGetLength", functionArgs, 1);
-
-            if (this.getArrayLengthAsFunction()) {
-                return [this.getArrayLength() + "(" + functionArgs[0] + ")", 0];
-            } else {
-                return [functionArgs[0] + this.getArrayLength(), 0];
-            }
         }
 
         // [string name]

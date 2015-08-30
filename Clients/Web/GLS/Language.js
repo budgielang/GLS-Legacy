@@ -6,7 +6,6 @@ var GLS;
                 "array initialize": this.ArrayInitialize.bind(this),
                 "array initialize size": this.ArrayInitializeSized.bind(this),
                 "array get item": this.ArrayGetItem.bind(this),
-                "array get length": this.ArrayGetLength.bind(this),
                 "catch": this.Catch.bind(this),
                 "class constructor end": this.ClassConstructorEnd.bind(this),
                 "class constructor inherited call": this.ClassConstructorInheritedCall.bind(this),
@@ -1145,20 +1144,10 @@ var GLS;
             }
             else {
                 index = index.substring(1);
-                output += this.Operation([this.ArrayGetLength([name], true)[0], "minus", "1"], true)[0];
+                output += this.Operation([this.NativeCall(["array", "length", name], true)[0], "minus", "1"], true)[0];
             }
             output += "]";
             return [output, 0];
-        };
-        // string name
-        Language.prototype.ArrayGetLength = function (functionArgs, isInline) {
-            this.requireArgumentsLength("ArrayGetLength", functionArgs, 1);
-            if (this.getArrayLengthAsFunction()) {
-                return [this.getArrayLength() + "(" + functionArgs[0] + ")", 0];
-            }
-            else {
-                return [functionArgs[0] + this.getArrayLength(), 0];
-            }
         };
         // [string name]
         Language.prototype.Catch = function (functionArgs, isInline) {
@@ -1810,7 +1799,7 @@ var GLS;
         // e.x. i int 0 lessthan 7
         // e.x. { variable declare partial : i } int 0 lessthan 7
         Language.prototype.ForNumbersStart = function (functionArgs, isInline) {
-            this.requireArgumentsLength("ForNumbersStart", functionArgs, 4);
+            this.requireArgumentsLength("ForNumbersStart", functionArgs, 5);
             var output = "for" + this.getConditionStartLeft(), generalArgs, i = functionArgs[0], typeName = this.parseType(functionArgs[1]), initial = functionArgs[2], comparison = functionArgs[3], boundary = functionArgs[4], direction = "increaseby", change = "1";
             if (this.getRangedForLoops()) {
                 output += i;
