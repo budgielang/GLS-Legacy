@@ -1513,12 +1513,27 @@ file start : GLS
 
         comment block : Printers
 
+        comment line : string type[, string key, ...]
+        class member function start : Language public ArrayInitialize mixed[] functionArgs string[] isInline boolean
+            class member function call : { this } requireArgumentsLength "ArrayInitialize" functionArgs 1
+
+            variable declare : arrayType string { class member function call : { this } parseType { array get item : functionArgs 0 } }
+            variable declare : output string
+            variable declare : i number
+
+            if start : { class member function call : { this } getArrayInitializationAsNewTyped }
+                operation : output = ("new ") plus arrayType plus ("[] { ")
+            else start
+                operation : output equals "["
+            if end
+        class member function end
+
         
         comment block : Utilities
 
         class member function start : Language public void requireArgumentsLength functionName string functionArgs string[] amount number
             if start : { operation  : { array get length : functionArgs } lessthan amount }
-                throw : { operation : ("Not enough arguments given to ") plus functionName plus (" (required: ") plus amount plus ")."  }
+                throw : { operation : ("Not enough arguments given to ") plus functionName plus (". Required: ") plus amount plus "."  }
             if end
         class member function end
 

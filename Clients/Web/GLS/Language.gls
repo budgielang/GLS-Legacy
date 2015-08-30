@@ -1504,7 +1504,7 @@ file start : GLS
 
         class member function start : Language public print mixed[] functionName string functionArgs string[] isInline boolean
             if start : { not : { dictionary key check : { class member variable get : { this } Printers } durp } }
-                throw : { concatenate : ("Function not found: ") functionName }
+                throw : { operation : ("Function not found: ") plus functionName }
             if end
 
             function return : { function call : { dictionary key get : { class member variable get : { this } Printers } functionName } functionArgs isInline }
@@ -1518,7 +1518,7 @@ file start : GLS
 
         class member function start : Language public void requireArgumentsLength functionName string functionArgs string[] amount number
             if start : { operation  : { array get length : functionArgs } lessthan amount }
-                throw : 
+                throw : { operation : ("Not enough arguments given to ") plus functionName plus (". Required: ") plus amount plus "."  }
             if end
         class member function end
 
