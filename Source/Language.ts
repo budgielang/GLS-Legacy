@@ -220,7 +220,6 @@ module GLS {
                 "function call partial start": this.FunctionCallPartialStart.bind(this),
                 "function end": this.FunctionEnd.bind(this),
                 "function start": this.FunctionStart.bind(this),
-                "function return": this.FunctionReturn.bind(this),
                 "if end": this.IfEnd.bind(this),
                 "if start": this.IfStart.bind(this),
                 "lambda declare inline": this.LambdaDeclareInline.bind(this),
@@ -234,6 +233,7 @@ module GLS {
                 "operation": this.Operation.bind(this),
                 "parenthesis": this.Parenthesis.bind(this),
                 "print line": this.PrintLine.bind(this),
+                "return": this.Return.bind(this),
                 "this": this.This.bind(this),
                 "throw": this.Throw.bind(this),
                 "try start": this.TryStart.bind(this),
@@ -2636,13 +2636,6 @@ module GLS {
             return [output, 1];
         }
 
-        // string value
-        public FunctionReturn(functionArgs: string[], isInline?: boolean): any[] {
-            this.requireArgumentsLength("FunctionReturn", functionArgs, 1);
-
-            return ["return " + functionArgs[0] + this.getSemiColon(), 0];
-        }
-
         public IfEnd(functionArgs: string[], isInline?: boolean): any[] {
             return [this.getConditionEnd(), -1];
         }
@@ -2911,6 +2904,13 @@ module GLS {
             }
 
             return [output, 0];
+        }
+
+        // string value
+        public Return(functionArgs: string[], isInline?: boolean): any[] {
+            this.requireArgumentsLength("FunctionReturn", functionArgs, 1);
+
+            return ["return " + functionArgs[0] + this.getSemiColon(), 0];
         }
 
         public This(functionArgs: string[], isInline?: boolean): any[] {
