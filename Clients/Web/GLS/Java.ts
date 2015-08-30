@@ -90,8 +90,12 @@ module GLS.Languages {
         .setVariableDeclareStart("")
         .setVariableTypesExplicit(true)
         .setVariableTypesAfterName(false)
-        .addTypeAlias("int", "number")
-        .addTypeAlias("String", "string")
+        .addTypeAliases(
+        {
+            "number": "int",
+            "string": "String",
+            "mixed": "Object"
+        })
         .addNativeFunctionAliases("array",
         {
             "length": {

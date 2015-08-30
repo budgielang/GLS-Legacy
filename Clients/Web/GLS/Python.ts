@@ -86,10 +86,11 @@ module GLS.Languages {
         .setFunctionReturnsExplicit(false)
         .setVariableTypesExplicit(false)
         .setVariableDeclareStart("")
-        .addOperationAlias("and", "and")
-        .addOperationAlias("or", "or")
-        .addValueAlias("False", "false")
-        .addValueAlias("True", "true")
+        .addValueAliases(
+        {
+            "false": "False",
+            "true": "True"
+        })
         .addNativeFunctionAliases("array",
         {
             "length": {

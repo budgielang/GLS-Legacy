@@ -1,5 +1,5 @@
 file start : GLS
-    lambda type declare : public Printer any[] functionArgs string[] isInline boolean
+    lambda type declare : public Printer mixed[] functionArgs string[] isInline boolean
     
     class start : Language
         class member variable declare : printers private { dictionary type : string Printer }
@@ -499,6 +499,26 @@ file start : GLS
         class member function start : Language public getDictionaryClass string
             function return : { class member variable get : { this } DictionaryClass }
         class member function end
+        
+        class member function start : Language public getDictionaryInitializationAsNew boolean
+            function return : { class member variable get : { this } DictionaryInitializationAsNew }
+        class member function end
+
+        class member function start : Language public getDictionaryInitializeStarter string
+            function return : { class member variable get : { this } DictionaryInitializeStarter }
+        class member function end
+
+        class member function start : Language public getDictionaryInitializeEnder string
+            function return : { class member variable get : { this } DictionaryInitializeEnder }
+        class member function end
+
+        class member function start : Language public getDictionaryInitializeKeyComma string
+            function return : { class member variable get : { this } DictionaryInitializeKeyComma }
+        class member function end
+
+        class member function start : Language public getDictionaryInitializeKeyWithSemicolon boolean
+            function return : { class member variable get : { this } DictionaryInitializeKeyWithSemicolon }
+        class member function end
 
         class member function start : Language public getDictionaryKeyCheckAsFunction boolean
             function return : { class member variable get : { this } DictionaryKeyCheckAsFunction }
@@ -520,24 +540,28 @@ file start : GLS
             function return : { class member variable get : { this } DictionaryKeyRight }
         class member function end
 
-        class member function start : Language public getDictionaryInitializationAsNew boolean
-            function return : { class member variable get : { this } DictionaryInitializationAsNew }
+        class member function start : Language public getExceptionCatch string
+            function return : { class member variable get : { this } ExceptionCatch }
         class member function end
 
-        class member function start : Language public getDictionaryInitializeStarter string
-            function return : { class member variable get : { this } DictionaryInitializeStarter }
+        class member function start : Language public getExceptionClass string
+            function return : { class member variable get : { this } ExceptionClass }
         class member function end
 
-        class member function start : Language public getDictionaryInitializeEnder string
-            function return : { class member variable get : { this } DictionaryInitializeEnder }
+        class member function start : Language public getExceptionErrorPrefix string
+            function return : { class member variable get : { this } ExceptionErrorPrefix }
         class member function end
 
-        class member function start : Language public getDictionaryInitializeKeyComma string
-            function return : { class member variable get : { this } DictionaryInitializeKeyComma }
+        class member function start : Language public getExceptionFinally string
+            function return : { class member variable get : { this } ExceptionFinally }
         class member function end
 
-        class member function start : Language public getDictionaryInitializeKeyWithSemicolon boolean
-            function return : { class member variable get : { this } DictionaryInitializeKeyWithSemicolon }
+        class member function start : Language public getExceptionThrow string
+            function return : { class member variable get : { this } ExceptionThrow }
+        class member function end
+
+        class member function start : Language public getExceptionTry string
+            function return : { class member variable get : { this } ExceptionTry }
         class member function end
 
         class member function start : Language public getFunctionDefine string
@@ -584,15 +608,15 @@ file start : GLS
             function return : { class member variable get : { this } LambdaTypeDeclarationRequired }
         class member function end
 
-        class member function start : Language public getLambdaTypeDeclarationEnd any[]
+        class member function start : Language public getLambdaTypeDeclarationEnd mixed[]
             function return : { class member variable get : { this } LambdaTypeDeclarationEnd }
         class member function end
 
-        class member function start : Language public getLambdaTypeDeclarationMiddle any[]
+        class member function start : Language public getLambdaTypeDeclarationMiddle mixed[]
             function return : { class member variable get : { this } LambdaTypeDeclarationMiddle }
         class member function end
 
-        class member function start : Language public getLambdaTypeDeclarationStart any[]
+        class member function start : Language public getLambdaTypeDeclarationStart mixed[]
             function return : { class member variable get : { this } LambdaTypeDeclarationStart }
         class member function end
 
@@ -1021,6 +1045,36 @@ file start : GLS
             function return : { this }
         class member function end
 
+        class member function start : Language public setExceptionCatch Language value string
+            class member variable set : { this } ExceptionCatch value
+            function return : { this }
+        class member function end
+
+        class member function start : Language public setExceptionClass Language value string
+            class member variable set : { this } ExceptionClass value
+            function return : { this }
+        class member function end
+
+        class member function start : Language public setExceptionErrorPrefix Language value string
+            class member variable set : { this } ExceptionErrorPrefix value
+            function return : { this }
+        class member function end
+
+        class member function start : Language public setExceptionFinally Language value string
+            class member variable set : { this } ExceptionFinally value
+            function return : { this }
+        class member function end
+
+        class member function start : Language public setExceptionThrow Language value string
+            class member variable set : { this } ExceptionThrow value
+            function return : { this }
+        class member function end
+
+        class member function start : Language public setExceptionTry Language value string
+            class member variable set : { this } ExceptionTry value
+            function return : { this }
+        class member function end
+
         class member function start : Language public setFunctionDefine Language value string
             class member variable set : { this } FunctionDefine value
             function return : { this }
@@ -1345,7 +1399,7 @@ file start : GLS
         class member function start : Language public parseTypeWithTemplate string text string
             variable declare : ltIndex number { native call : string find text "<" }
             variable declare : output string { native call : string substring text 0 ltIndex }
-            variable declare : i number { operation : ltIndex + 1 }
+            variable declare : i number { operation : ltIndex plus 1 }
             variable declare : templateType string
             variable declare : spaceNext number
 
@@ -1353,26 +1407,26 @@ file start : GLS
                 function return : output
             if end
 
-            operation : output += "<"
+            operation : output increaseby "<"
 
             while condition start : i < text.length
-                operation : spaceNext = { native call : string find text (" ") i }
+                operation : spaceNext equals { native call : string find text (" ") i }
                 if start : { operation : spaceNext equalto -1 }
                     loop break
                 if end
 
-                operation : templateType = { native call : string substring text i spaceNext }
+                operation : templateType equals { native call : string substring text i spaceNext }
 
                 comment line : These may have commas already (such as from DictionaryType)
-                if start : { operation : { array get item : templateType { operation : { native call : array length templateType } - 1 } } equalto "," }
-                    operation : templateType = { native call : string substring templateType 0 { operation : { native call : array length templateType } - 1 } }
+                if start : { operation : { array get item : templateType { operation : { native call : array length templateType } minus 1 } } equalto "," }
+                    operation : templateType equals { native call : string substring templateType 0 { operation : { native call : array length templateType } minus 1 } }
                 if end
 
-                operation : output += { operation : { class member function call : { this } parseType templateType } + { class member function call : { this } getClassTemplatesBetween } }
-                operation : i = { operation : spaceNext + 1 }
+                operation : output increaseby { operation : { class member function call : { this } parseType templateType } plus { class member function call : { this } getClassTemplatesBetween } }
+                operation : i equals { operation : spaceNext plus 1 }
             while end
 
-            operation : output += { class member function call : { this } parseType { native call : string substring text i { operation : { native call : string length text } - 1 } } }
+            operation : output increaseby { class member function call : { this } parseType { native call : string substring text i { operation : { native call : string length text } minus 1 } } }
 
             function return : output
         class member function end
@@ -1405,14 +1459,32 @@ file start : GLS
             function return : { this }
         class member function end
 
+        class member function start : Language public addTypeAliases Language aliases { dictionary type : string string }
+            for each pairs start : pair key string alias string aliases
+                class member function call : { this } addTypeAlias i { dictionary key get : aliases i }
+            for end
+        class member function end
+
         class member function start : Language public addOperationAlias Language key string alias string
             dictionary key set : { class member variable get : { this } OperationAliases } alias key
             function return : { this }
         class member function end
 
+        class member function start : Language public addOperationAliases Language aliases { dictionary type : string string }
+            for each pairs start : pair key string alias string aliases
+                class member function call : { this } addOperationAlias i { dictionary key get : aliases i }
+            for end
+        class member function end
+
         class member function start : Language public addValueAlias Language key string alias string
             dictionary key set : { class member variable get : { this } ValueAliases } alias key
             function return : { this }
+        class member function end
+
+        class member function start : Language public addValueAliases Language aliases { dictionary type : string string }
+            for each pairs start : pair key string alias string aliases
+                class member function call : { this } addValueAlias i { dictionary key get : aliases i }
+            for end
         class member function end
 
         class member function start : Language public getNativeFunctionAlias { dictionary type : string string } className string memberName string
@@ -1430,9 +1502,9 @@ file start : GLS
             for end
         class member function end
 
-        class member function start : Language public print any[] functionName string functionArgs string[] isInline boolean
+        class member function start : Language public print mixed[] functionName string functionArgs string[] isInline boolean
             if start : { not : { dictionary key check : { class member variable get : { this } Printers } durp } }
-                comment line : throw new Error("Function not found: " + functionName);
+                throw : { operation : ("Function not found: ") plus functionName }
             if end
 
             function return : { function call : { dictionary key get : { class member variable get : { this } Printers } functionName } functionArgs isInline }

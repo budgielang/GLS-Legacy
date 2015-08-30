@@ -85,11 +85,14 @@ module GLS.Languages {
         .setVariableTypesAfterName(true)
         .setVariableTypeMarker(": ")
         .setVariableDeclareStart("var ")
-        .addTypeAlias("number", "int")
-        .addTypeAlias("number", "double")
-        .addTypeAlias("number", "float")
-        .addTypeAlias("boolean", "bool")
-        .addTypeAlias("Array", "array")
+        .addTypeAliases(
+        {
+            "int": "number",
+            "double": "number",
+            "float": "number",
+            "bool": "boolean",
+            "mixed": "any"
+        })
         .addNativeFunctionAliases("array",
         {
             "length": {

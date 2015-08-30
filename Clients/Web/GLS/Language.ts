@@ -1475,17 +1475,47 @@ module GLS {
         }
 
         public addTypeAlias(key: string, alias: string): Language {
-            this.TypeAliases[alias] = key;
+            this.TypeAliases[key] = alias;
+            return this;
+        }
+
+        public addTypeAliases(aliases: any): Language {
+            for (var i in aliases) {
+                if (aliases.hasOwnProperty(i)) {
+                    this.addTypeAlias(i, aliases[i]);
+                }
+            }
+
             return this;
         }
 
         public addOperationAlias(key: string, alias: string): Language {
-            this.OperationAliases[alias] = key;
+            this.OperationAliases[key] = alias;
+            return this;
+        }
+
+        public addOperationAliases(aliases: any): Language {
+            for (var i in aliases) {
+                if (aliases.hasOwnProperty(i)) {
+                    this.addOperationAlias(i, aliases[i]);
+                }
+            }
+
             return this;
         }
 
         public addValueAlias(key: string, alias: string): Language {
-            this.ValueAliases[alias] = key;
+            this.ValueAliases[key] = alias;
+            return this;
+        }
+
+        public addValueAliases(aliases: any): Language {
+            for (var i in aliases) {
+                if (aliases.hasOwnProperty(i)) {
+                    this.addValueAlias(i, aliases[i]);
+                }
+            }
+
             return this;
         }
 
@@ -2135,18 +2165,21 @@ module GLS {
 
         // [string message, ...]
         public CommentBlock(functionArgs: string[], isInline?: boolean): any[] {
-            this.requireArgumentsLength("ClassStart", functionArgs, 1);
-
-            var output: string = this.getCommentorBlockStart() + "\n",
+            var output: any[] = new Array((functionArgs.length + 2) * 2),
                 i: number;
 
+            output[0] = this.getCommentorBlockStart();
+            output[1] = 0;
+
             for (i = 0; i < functionArgs.length; i += 1) {
-                output += functionArgs[i] + "\n";
+                output[i * 1 + 2] = functionArgs[i];
+                output[i * 2 + 3] = 0;
             }
 
-            output += this.getCommentorBlockEnd();
+            output[i * 2 + 2] = this.getCommentorBlockEnd();
+            output[i * 2 + 3] = 0;
 
-            return [output, 0];
+            return output;
         }
 
         // [string message, ...]
@@ -2888,13 +2921,13 @@ module GLS {
         
         // [string message]
         public Throw(functionArgs: string[], isInline?: boolean): any[] {
-            var output: string = this.getExceptionThrow() + "(";
+            var output: string = this.getExceptionThrow() + " ";
 
             if (functionArgs.length > 0) {
-                output += functionArgs[0];
+                output += this.ClassNew([this.getExceptionClass(), functionArgs[0]], true)[0];
+            } else {
+                output += this.ClassNew([this.getExceptionClass()], true)[0];
             }
-
-            output += ")";
 
             if (!isInline) {
                 output += this.getSemiColon();

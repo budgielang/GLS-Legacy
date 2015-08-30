@@ -1028,15 +1028,39 @@ var GLS;
             return this.getAliasOrDefault(this.ValueAliases, key);
         };
         Language.prototype.addTypeAlias = function (key, alias) {
-            this.TypeAliases[alias] = key;
+            this.TypeAliases[key] = alias;
+            return this;
+        };
+        Language.prototype.addTypeAliases = function (aliases) {
+            for (var i in aliases) {
+                if (aliases.hasOwnProperty(i)) {
+                    this.addTypeAlias(i, aliases[i]);
+                }
+            }
             return this;
         };
         Language.prototype.addOperationAlias = function (key, alias) {
-            this.OperationAliases[alias] = key;
+            this.OperationAliases[key] = alias;
+            return this;
+        };
+        Language.prototype.addOperationAliases = function (aliases) {
+            for (var i in aliases) {
+                if (aliases.hasOwnProperty(i)) {
+                    this.addOperationAlias(i, aliases[i]);
+                }
+            }
             return this;
         };
         Language.prototype.addValueAlias = function (key, alias) {
-            this.ValueAliases[alias] = key;
+            this.ValueAliases[key] = alias;
+            return this;
+        };
+        Language.prototype.addValueAliases = function (aliases) {
+            for (var i in aliases) {
+                if (aliases.hasOwnProperty(i)) {
+                    this.addValueAlias(i, aliases[i]);
+                }
+            }
             return this;
         };
         Language.prototype.getNativeFunctionAlias = function (className, memberName) {
@@ -1506,13 +1530,16 @@ var GLS;
         };
         // [string message, ...]
         Language.prototype.CommentBlock = function (functionArgs, isInline) {
-            this.requireArgumentsLength("ClassStart", functionArgs, 1);
-            var output = this.getCommentorBlockStart() + "\n", i;
+            var output = new Array((functionArgs.length + 2) * 2), i;
+            output[0] = this.getCommentorBlockStart();
+            output[1] = 0;
             for (i = 0; i < functionArgs.length; i += 1) {
-                output += functionArgs[i] + "\n";
+                output[i * 1 + 2] = functionArgs[i];
+                output[i * 2 + 3] = 0;
             }
-            output += this.getCommentorBlockEnd();
-            return [output, 0];
+            output[i * 2 + 2] = this.getCommentorBlockEnd();
+            output[i * 2 + 3] = 0;
+            return output;
         };
         // [string message, ...]
         Language.prototype.CommentLine = function (functionArgs, isInline) {
@@ -2048,11 +2075,13 @@ var GLS;
         };
         // [string message]
         Language.prototype.Throw = function (functionArgs, isInline) {
-            var output = this.getExceptionThrow() + "(";
+            var output = this.getExceptionThrow() + " ";
             if (functionArgs.length > 0) {
-                output += functionArgs[0];
+                output += this.ClassNew([this.getExceptionClass(), functionArgs[0]], true)[0];
             }
-            output += ")";
+            else {
+                output += this.ClassNew([this.getExceptionClass()], true)[0];
+            }
             if (!isInline) {
                 output += this.getSemiColon();
             }
