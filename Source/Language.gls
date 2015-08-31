@@ -1977,7 +1977,7 @@ file start : GLS
             class member function call : { this } requireArgumentsLength "ClassStaticFunctionStart" functionArgs 4
 
             variable declare : output string { class member function call : { this } getClassFunctionsStart }
-            variable declare : variableDeclarationArgs : string[] { array initialize : string [] }
+            variable declare : variableDeclarationArgs string[] { array initialize : string [] }
             variable declare : i number
 
             if start : { operation : { class member function call : { this } getFunctionReturnsExplicit } and { not : { class member function call : { this } getFunctionTypeAfterName } } }
@@ -2022,20 +2022,76 @@ file start : GLS
             if end
         class member function end
 
-        class member function start : Language public Catch mixed[] functionArgs string[] isInline boolean
+        comment line : string class, string visibility, string type[, string value]
+        class member function start : Language public ClassStaticVariableDeclare mixed[] functionArgs string[] isInline boolean
+            class member function call : { this } requireArgumentsLength "ClassStaticVariableDeclare" functionArgs 3
 
+            variable declare : variableType { class member function call : { this } parseType { array get item : functionArg 2 } }
+            variable declare : variableDeclarationArgs string[]
+            variable declare : variableDeclared mixed[]
+
+            if start : { operation : { native call : array length functionArgs } greaterthan 3 }
+                operation : variableDeclarationArgs equals { array initialize : string { array get item : functionArgs 0 } variableType { array get item : functionArgs 3 } }
+            elif start : { operation : { class member function call : { this } getClassMemberVariableDefault } notequalto "" }
+                operation : variableDeclarationArgs equals { array initialize : string { array get item : functionArgs 0 } variableType { class member function call : { this } getClassMemberVariableDefault } }
+            else start
+                operation : variableDeclarationArgs equals { array initialize : string { array get item : functionArgs 0 } variableType }
+            if end
+
+            operation : variableDeclared equals { class member function call : { this } VariableDeclarePartial variableDeclarationArgs isInline }
+            operation : { array get item : variableDeclared 0 } equals { class member function call : { this } getClassStaticLabel } plus { array get item : variableDeclared 0 }
+            operation : { array get item : variableDeclared 1 } equals 0
+
+            if start : { not : isInline }
+                operation : { array get item : variableDeclared 0 } equals { array get item : variableDeclared 0 } plus { class member function call : { this } variableDeclared }
+            if end
+
+            if start : { class member function call : { this } getClassMemberVariablePrivacy }
+                operation : { array get item : variableDeclared 0 } equals { array get item : functionArgs 1 } plus (" ") plus { array get item : variableDeclared 0 }
+            if end
+
+            operation : { array get item : variableDeclared 0 } equals { class member function call : { this } getClassMemberVariableStarter } plus { array get item : variableDeclared 0 }
+
+            return : variableDeclared
         class member function end
 
-        class member function start : Language public Catch mixed[] functionArgs string[] isInline boolean
+        comment line : string class, string name
+        class member function start : Language public ClassStaticVariableGet mixed[] functionArgs string[] isInline boolean
+            class member function call : { this } requireArgumentsLength "ClassStaticVariableGet" functionArgs 2
 
+            return : { array initialize : mixed { operation : { array get item : functionArgs 0 } plus "." plus { array get item : functionArgs 1 } } 0 }
         class member function end
 
-        class member function start : Language public Catch mixed[] functionArgs string[] isInline boolean
+        comment line : string class, string name, string value
+        class member function start : Language public ClassStaticVariableSet mixed[] functionArgs string[] isInline boolean
+            class member function call : { this } requireArgumentsLength "ClassStaticVariableSet" functionArgs 3
 
+            variable declare : output string { operation : { array get item : functionArgs 0 } plus "." plus { array get item : functionArgs 1 } plus (" ") }
+
+            operation : output increaseby { class member function call : { this } getOperationAlias "equals" } plus (" ") plus { array get item : functionArgs 2 }
+            operation : output increaseby { class member function call : { this } getSemiColon }
         class member function end
 
-        class member function start : Language public Catch mixed[] functionArgs string[] isInline boolean
+        comment line : string name[, string visibility[, string parentClass]]
+        class member function start : Language public ClassStart mixed[] functionArgs string[] isInline boolean
+            class member function call : { this } requireArgumentsLength "ClassStart" functionArgs 1
 
+            variable declare : output string { class member function call : { this } getClassStartLeft }
+            operation : output increaseby { class member function call : { this } parseType { array get item : functionArgs 0 } }
+
+            if start : { operation : { native call : array length functionArgs } greaterthan 2 }
+                if start : { class member function call : { this } getClassExtendsAsFunction }
+                    operation : output increaseby "(" plus { class member function call : { this } parseType { array get item : functionArgs 2 } } plus ")"
+                else start
+                    operation : output increaseby (" ") plus { class member function call : { this } getClassExtends } plus (" ") plus { class member function call : { this } parseType { array get item : functionArgs 2 } } plus (" ")
+                if end
+            if end
+
+            operation : output increaseby { class member function call : { this } getClassStartRight }
+
+            if start : { operation : { class member function call : { this } getClassStartRight } and { operation : { native call : array length functionArgs } greaterthan 1 } }
+                operation : output increaseby { array get item : functionArgs 1 } plus (" ") plus output
+            if end
         class member function end
 
         class member function start : Language public Catch mixed[] functionArgs string[] isInline boolean
