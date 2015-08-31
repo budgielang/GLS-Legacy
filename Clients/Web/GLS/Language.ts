@@ -1729,9 +1729,8 @@ module GLS {
                 // In-function usage, like in Python, comes within the function
                 output = new Array(generalCall.length + 2);
                 output[output.length - 1] = 0;
-                output[generalCall.length - 1] = generalCall[generalCall.length - 1];
-
                 output[output.length - 2] = functionArgs[1];
+                output[generalCall.length - 1] = generalCall[generalCall.length - 1];
 
                 if (!isInline) {
                     output[output.length - 2] += this.getSemiColon();
@@ -2517,7 +2516,7 @@ module GLS {
             return [this.getConditionEnd(), -1];
         }
 
-        // string i, string type, string initial, string comparison, string boundary
+        // string i, string type, string initial, string comparison, string boundary[, string change]
         // e.x. i int 0 lessthan 7
         // e.x. { variable declare partial : i } int 0 lessthan 7
         public ForNumbersStart(functionArgs: string[], isInline?: boolean): any[] {
@@ -2531,13 +2530,24 @@ module GLS {
                 comparison: string = functionArgs[3],
                 boundary: string = functionArgs[4],
                 direction: string = "increaseby",
-                change: string = "1"
+                change: string;
+
+            if (functionArgs.length > 5) {
+                change = functionArgs[5];
+            } else {
+                change = "1";
+            }
 
             if (this.getRangedForLoops()) {
                 output += i;
 
                 output += this.getRangedForLoopsStart();
                 output += initial + this.getRangedForLoopsMiddle() + boundary;
+
+                if (change !== "1") {
+                    output += this.getRangedForLoopsMiddle() + change;
+                }
+
                 output += this.getRangedForLoopsEnd();
             } else {
                 generalArgs = [i, "equals", initial];

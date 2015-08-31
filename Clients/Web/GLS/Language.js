@@ -1219,8 +1219,8 @@ var GLS;
                 // In-function usage, like in Python, comes within the function
                 output = new Array(generalCall.length + 2);
                 output[output.length - 1] = 0;
-                output[generalCall.length - 1] = generalCall[generalCall.length - 1];
                 output[output.length - 2] = functionArgs[1];
+                output[generalCall.length - 1] = generalCall[generalCall.length - 1];
                 if (!isInline) {
                     output[output.length - 2] += this.getSemiColon();
                 }
@@ -1795,16 +1795,25 @@ var GLS;
         Language.prototype.ForEnd = function (functionArgs, isInline) {
             return [this.getConditionEnd(), -1];
         };
-        // string i, string type, string initial, string comparison, string boundary
+        // string i, string type, string initial, string comparison, string boundary[, string change]
         // e.x. i int 0 lessthan 7
         // e.x. { variable declare partial : i } int 0 lessthan 7
         Language.prototype.ForNumbersStart = function (functionArgs, isInline) {
             this.requireArgumentsLength("ForNumbersStart", functionArgs, 5);
-            var output = "for" + this.getConditionStartLeft(), generalArgs, i = functionArgs[0], typeName = this.parseType(functionArgs[1]), initial = functionArgs[2], comparison = functionArgs[3], boundary = functionArgs[4], direction = "increaseby", change = "1";
+            var output = "for" + this.getConditionStartLeft(), generalArgs, i = functionArgs[0], typeName = this.parseType(functionArgs[1]), initial = functionArgs[2], comparison = functionArgs[3], boundary = functionArgs[4], direction = "increaseby", change;
+            if (functionArgs.length > 5) {
+                change = functionArgs[5];
+            }
+            else {
+                change = "1";
+            }
             if (this.getRangedForLoops()) {
                 output += i;
                 output += this.getRangedForLoopsStart();
                 output += initial + this.getRangedForLoopsMiddle() + boundary;
+                if (change !== "1") {
+                    output += this.getRangedForLoopsMiddle() + change;
+                }
                 output += this.getRangedForLoopsEnd();
             }
             else {

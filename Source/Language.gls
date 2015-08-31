@@ -1591,7 +1591,7 @@ file start : GLS
             if start : { class member function call : { this } getArrayInitializationAsNewTyped }
                 operation : output increaseby  arrayType plus "[" plus arraySize plus "]"
             else start
-                if start : { not : { class member function call : { this } getArrayInitializatioNAsNewStatic } }
+                if start : { not : { class member function call : { this } getArrayInitializationAsNewStatic } }
                     operation : output increaseby  { class member function call : { this } getArrayClass }
                 if end
                 operation : output increaseby  "(" plus arraySize plus ")"
@@ -1691,7 +1691,7 @@ file start : GLS
             if start : { operation : { native call : array length functionArgs } greaterthan 2 }
                 operation : callingArgs equals { array initialize sized : string { operation : { native call : array length functionArgs } minus 1 }
 
-                for numbers start : i number 2 lessthan { native call : array length functionArgs } }
+                for numbers start : i number 2 lessthan { native call : array length functionArgs }
                     operation : { array get item : callingArgs { operation : i minus 1 } } equals { array get item : functionArgs i }
                 for end
 
@@ -1730,8 +1730,43 @@ file start : GLS
             return : output
         class member function end
 
-        class member function start : Language public Catch mixed[] functionArgs string[] isInline boolean
+        comment line : string name[, string argumentName, string argumentType, ...]
+        class member function start : Language public ClassConstructorStart mixed[] functionArgs string[] isInline boolean
+            class member function call : { this } requireArgumentsLength "ClassConstructorStart" functionArgs 1
 
+            variable declare : output string { class member function call : { this } getClassConstructorName }
+            variable declare : variableDeclarationArgs string[] { array initialize : string }
+            variable declare : i number
+
+            if start : { class member function call : { this } getClassConstructorLoose }
+                operation : output equals { class member function call : { this } getClassFunctionsStart } plus output
+            if end
+
+            if start : { operation : { native call : string length output } equalto 0 }
+                operation : output equals { array get item : functionArgs 0 }
+            if end
+
+            operation : output increaseby "("
+
+            comment line : Languages like Python take a "self" or "this" equivalent first
+            if start : { class member function call : { this } getClassFunctionsTakeThis }
+                if start : { class member function call : { this } getClassFunctionsTakeThis }
+                    operation : output increaseby (", ")
+                if end
+
+                for numbers start : i number 1 lessthan { native call : array length functionArgs } 2
+                    operation : { array get item : variableDeclarationArgs 0 } equals { array get item : functionArgs i }
+                    operation : { array get item : variableDeclarationArgs 1 } equals { array get item : functionArgs i + 1 }
+
+                    operation : output increaseby { array get item : { class member function call : { this } VariableDeclarePartial variableDeclarationArgs true } 0 } plus (", ")
+                for end
+
+                comment line : The last argument does not have the last ", " at the end
+                operation : output equals { native call : string substring output 0 { operation : { native call : array length output } - 2 } }
+            if end
+
+            operation : output increaseby ")" plus { class member function call : { this } getFunctionDefineRight }
+            return : { array initialize : mixed output 1}
         class member function end
 
         class member function start : Language public Catch mixed[] functionArgs string[] isInline boolean
