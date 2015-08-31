@@ -168,9 +168,8 @@ module GLS {
         constructor() {
             this.Printers = {
                 "array initialize": this.ArrayInitialize.bind(this),
-                "array initialize size": this.ArrayInitializeSized.bind(this),
+                "array initialize sized": this.ArrayInitializeSized.bind(this),
                 "array get item": this.ArrayGetItem.bind(this),
-                "array get length": this.ArrayGetLength.bind(this),
                 "catch": this.Catch.bind(this),
                 "class constructor end": this.ClassConstructorEnd.bind(this),
                 "class constructor inherited call": this.ClassConstructorInheritedCall.bind(this),
@@ -221,7 +220,6 @@ module GLS {
                 "function call partial start": this.FunctionCallPartialStart.bind(this),
                 "function end": this.FunctionEnd.bind(this),
                 "function start": this.FunctionStart.bind(this),
-                "function return": this.FunctionReturn.bind(this),
                 "if end": this.IfEnd.bind(this),
                 "if start": this.IfStart.bind(this),
                 "lambda declare inline": this.LambdaDeclareInline.bind(this),
@@ -235,6 +233,7 @@ module GLS {
                 "operation": this.Operation.bind(this),
                 "parenthesis": this.Parenthesis.bind(this),
                 "print line": this.PrintLine.bind(this),
+                "return": this.Return.bind(this),
                 "this": this.This.bind(this),
                 "throw": this.Throw.bind(this),
                 "try start": this.TryStart.bind(this),
@@ -264,6 +263,7 @@ module GLS {
                 "lessthanequal": "<=",
                 "greaterthanequal": ">=",
                 "equalto": "==",
+                "notequalto": "!=",
                 "and": "&&",
                 "or": "||",
                 "mod": "%"
@@ -1564,11 +1564,13 @@ module GLS {
                 output = "[";
             }
 
-            for (i = 1; i < functionArgs.length - 1; i += 1) {
-                output += functionArgs[i] + ", ";
-            }
+            if (functionArgs.length > 1) {
+                for (i = 1; i < functionArgs.length - 1; i += 1) {
+                    output += functionArgs[i] + ", ";
+                }
 
-            output += functionArgs[i];
+                output += functionArgs[i];
+            }
 
             if (this.getArrayInitializationAsNewTyped()) {
                 output += " }";
@@ -1581,14 +1583,15 @@ module GLS {
 
         // string type, string size
         public ArrayInitializeSized(functionArgs: string[], isInline?: boolean): any[] {
-            this.requireArgumentsLength("ArrayInitialize", functionArgs, 2);
+            this.requireArgumentsLength("ArrayInitializeSized", functionArgs, 2);
 
             var arrayType: string = this.parseType(functionArgs[0]),
                 arraySize: string = functionArgs[1],
                 output: string;
 
             if (this.getArrayInitializationAsNewMultiplied()) {
-                return this.Operation(["[" + this.getUndefined() + "]", "times", arraySize], isInline);
+                output = "[" + this.getUndefined() + "]";
+                return this.Operation([output, "times", arraySize], isInline);
             }
 
             if (this.getArrayInitializationAsNewStatic()) {
@@ -1621,22 +1624,11 @@ module GLS {
                 output += index;
             } else {
                 index = index.substring(1);
-                output += this.Operation([this.ArrayGetLength([name], true)[0], "minus", "1"], true)[0];
+                output += this.Operation([this.NativeCall(["array", "length", name], true)[0], "minus", "1"], true)[0];
             }
 
             output += "]";
             return [output, 0];
-        }
-
-        // string name
-        public ArrayGetLength(functionArgs: string[], isInline?: boolean): any[] {
-            this.requireArgumentsLength("ArrayGetLength", functionArgs, 1);
-
-            if (this.getArrayLengthAsFunction()) {
-                return [this.getArrayLength() + "(" + functionArgs[0] + ")", 0];
-            } else {
-                return [functionArgs[0] + this.getArrayLength(), 0];
-            }
         }
 
         // [string name]
@@ -1737,9 +1729,8 @@ module GLS {
                 // In-function usage, like in Python, comes within the function
                 output = new Array(generalCall.length + 2);
                 output[output.length - 1] = 0;
-                output[generalCall.length - 1] = generalCall[generalCall.length - 1];
-
                 output[output.length - 2] = functionArgs[1];
+                output[generalCall.length - 1] = generalCall[generalCall.length - 1];
 
                 if (!isInline) {
                     output[output.length - 2] += this.getSemiColon();
@@ -2525,10 +2516,11 @@ module GLS {
             return [this.getConditionEnd(), -1];
         }
 
-        // string i, string type, string initial, string comparison, string boundary
+        // string i, string type, string initial, string comparison, string boundary[, string change]
         // e.x. i int 0 lessthan 7
+        // e.x. { variable declare partial : i } int 0 lessthan 7
         public ForNumbersStart(functionArgs: string[], isInline?: boolean): any[] {
-            this.requireArgumentsLength("ClassStart", functionArgs, 7);
+            this.requireArgumentsLength("ForNumbersStart", functionArgs, 5);
 
             var output: string = "for" + this.getConditionStartLeft(),
                 generalArgs: any[],
@@ -2538,18 +2530,28 @@ module GLS {
                 comparison: string = functionArgs[3],
                 boundary: string = functionArgs[4],
                 direction: string = "increaseby",
-                change: string = "1"
+                change: string;
+
+            if (functionArgs.length > 5) {
+                change = functionArgs[5];
+            } else {
+                change = "1";
+            }
 
             if (this.getRangedForLoops()) {
-                generalArgs = [i, typeName];
-                output += this.VariableDeclare(generalArgs, false)[0];
+                output += i;
 
                 output += this.getRangedForLoopsStart();
                 output += initial + this.getRangedForLoopsMiddle() + boundary;
+
+                if (change !== "1") {
+                    output += this.getRangedForLoopsMiddle() + change;
+                }
+
                 output += this.getRangedForLoopsEnd();
             } else {
-                generalArgs = [i, typeName, initial];
-                output += this.VariableDeclare(generalArgs, true)[0] + this.getSemiColon();
+                generalArgs = [i, "equals", initial];
+                output += this.Operation(generalArgs, true)[0] + this.getSemiColon();
 
                 generalArgs = [i, comparison, boundary];
                 output += " " + this.Comparison(generalArgs, true)[0] + this.getSemiColon();
@@ -2642,13 +2644,6 @@ module GLS {
 
             output += this.getFunctionDefineRight();
             return [output, 1];
-        }
-
-        // string value
-        public FunctionReturn(functionArgs: string[], isInline?: boolean): any[] {
-            this.requireArgumentsLength("FunctionReturn", functionArgs, 1);
-
-            return ["return " + functionArgs[0] + this.getSemiColon(), 0];
         }
 
         public IfEnd(functionArgs: string[], isInline?: boolean): any[] {
@@ -2866,13 +2861,19 @@ module GLS {
             return ["!" + functionArgs[0], 0];
         }
 
-        // string i, string operator, string difference
+        // string i[, string operator, string difference, ...]
         public Operation(functionArgs: string[], isInline?: boolean): any[] {
             this.requireArgumentsLength("Operation", functionArgs, 3);
 
-            var output: string = functionArgs[0] + " " + this.getOperationAlias(functionArgs[1]);
+            var output: string = functionArgs[0] + " ",
+                i: number;
 
-            output += " " + this.getValueAlias(functionArgs[2]);
+            for (i = 1; i < functionArgs.length; i += 2) {
+                output += this.getOperationAlias(functionArgs[i]) + " ";
+                output += this.getValueAlias(functionArgs[i + 1]) + " ";
+            }
+
+            output = output.substring(0, output.length - 1);
 
             if (!isInline) {
                 output += this.getSemiColon();
@@ -2913,6 +2914,13 @@ module GLS {
             }
 
             return [output, 0];
+        }
+
+        // string value
+        public Return(functionArgs: string[], isInline?: boolean): any[] {
+            this.requireArgumentsLength("FunctionReturn", functionArgs, 1);
+
+            return ["return " + functionArgs[0] + this.getSemiColon(), 0];
         }
 
         public This(functionArgs: string[], isInline?: boolean): any[] {
