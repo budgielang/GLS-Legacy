@@ -2688,13 +2688,13 @@ module GLS {
 
             var start: string[] = this.getLambdaTypeDeclarationStart(),
                 middle: string[] = this.getLambdaTypeDeclarationMiddle(),
-                end: string[] = this.getLambdaTypeDeclarationEnd();
+                end: string[] = this.getLambdaTypeDeclarationEnd(),
+                line: string,
+                i: number;
 
             if (this.getLambdaTypeDeclarationAsInterface()) {
                 var variableDeclarationArguments = new Array(2),
-                    output = new Array(6),
-                    line: string,
-                    i: number;
+                    output = new Array(6);
 
                 // public interface TestInterface {
                 line = functionArgs[0];
@@ -2738,9 +2738,6 @@ module GLS {
 
                 return output;
             } else {
-                var line: string = "", // this.getLambdaTypeDeclareStart(),
-                    i: number;
-
                 line += start[0] + functionArgs[0] + " " + start[1];
                 line += " " + this.parseType(functionArgs[2]);
                 line += " " + functionArgs[1];
