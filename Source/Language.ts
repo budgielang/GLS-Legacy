@@ -2518,7 +2518,6 @@ module GLS {
 
         // string i, string type, string initial, string comparison, string boundary[, string change]
         // e.x. i int 0 lessthan 7
-        // e.x. { variable declare partial : i } int 0 lessthan 7
         public ForNumbersStart(functionArgs: string[], isInline?: boolean): any[] {
             this.requireArgumentsLength("ForNumbersStart", functionArgs, 5);
 
@@ -2529,7 +2528,6 @@ module GLS {
                 initial: string = functionArgs[2],
                 comparison: string = functionArgs[3],
                 boundary: string = functionArgs[4],
-                direction: string = "increaseby",
                 change: string;
 
             if (functionArgs.length > 5) {
@@ -2556,7 +2554,7 @@ module GLS {
                 generalArgs = [i, comparison, boundary];
                 output += " " + this.Comparison(generalArgs, true)[0] + this.getSemiColon();
 
-                generalArgs = [i, direction, change];
+                generalArgs = [i, "increaseby", change];
                 output += " " + this.Operation(generalArgs, true)[0];
             }
 

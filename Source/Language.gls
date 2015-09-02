@@ -2387,44 +2387,242 @@ file start : GLS
             return : { array initialize : mixed output 1 }
         class member function end
 
-        class member function start : Language public Catch mixed[] functionArgs string[] isInline boolean
+        comment line : Assume keyName and valueName exist, while pairName is created (some languages won't use pairName)
+        comment line : Ex. for each pairs start : pair name string count int names
+        comment line : string pairName, string keyName, string keyType, string valueName, string valueType, string container
+        class member function start : Language public ForEachPairsStart mixed[] functionArgs string[] isInline boolean
+            class member function call : { this } requireArgumentsLength "ForEachPairsStart" functionArgs 6
 
+            variable declare : pairName string { array get item : functionArgs 0 }
+            variable declare : keyName string { array get item : functionArgs 1 }
+            variable declare : keyType string { array get item : functionArgs 2 }
+            variable declare : valueName string { array get item : functionArgs 3 }
+            variable declare : valueType string { array get item : functionArgs 4 }
+            variable declare : container string { array get item : functionArgs 5 }
+            variable declare : variableDeclareArgs string[]
+            variable declare : line string
+            variable declare : output mixed[]
+
+            if start : { class member function call : { this } getForEachAsMethod }
+                comment line : container.each do |keyName, valueName|
+                operation : output equals { array initialize sized : string 4 }
+                operation : variableDeclareArgs equals { array initialize sized : string 2 }
+
+                comment line : container.each do |
+                operation : line equals container
+                operation : line increaseby { class member function call : { this } getForEachStarter }
+
+                comment line :                    keyName
+                operation : { array get item : variableDeclareArgs 0 } equals keyName
+                operation : { array get item : variableDeclareArgs 1 } equals keyType
+                operation : line increaseby { array get item : { class member function call : { this } VariableDeclarePartial variableDeclareArgs true } 0 }
+
+                comment line :                           , valueName|
+                operation : { array get item : variableDeclareArgs 0 } equals valueName
+                operation : { array get item : variableDeclareArgs 1 } equals valueType
+                operation : line increaseby (", ") plus { array get item : { class member function call : { this } VariableDeclarePartial variableDeclareArgs true } 0 }
+                operation : line increaseby { class member function call : { this } getForEachInner }
+
+                operation : output equals { array initialize : mixed line 1 }
+            elif start : { class member function call : { this } getForEachPairsAsPair }
+                comment line : foreach (KeyValuePair<string, int> pairName in container) {
+                comment line :     keyName = pairName.Key;
+                comment line :     valueName = pairName.Value;
+                operation : output equals { array initialize sized : string 6 }
+
+                comment line : forEach (KeyValuePair<string, int> pairName)
+                operation : line equals { class member function call : { this } getForEachStarter }
+                operation : variableDeclareArgs equals { array initialize sized : string 2 }
+                operation : { array get item : variableDeclareArgs 0 } equals pairName
+                operation : { array get item : variableDeclareArgs 1 } equals { class member function call : { this } getForEachPairsClass } plus "<" plus keyType plus (", ") plus valueType plus ">"
+                operation : line increaseby { array get item : { class member function call : { this } VariableDeclarePartial } 0 }
+
+                comment line :                                             in container) {
+                operation : line increaseby { class member function call : { this } getForEachInner }
+                operation : line increaseby container
+                operation : line increaseby { class member function call : { this } getConditionStartRight }
+
+                operation : { array get item : output 0 } equals line
+                operation : { array get item : output 1 } equals 1
+
+                comment line :     keyName = pairName.Key
+                operation : variableDeclareArgs equals { array initialize sized : string 3 }
+                operation : { array get item : variableDeclareArgs 0 } equals keyName
+                operation : { array get item : variableDeclareArgs 1 } equals "equals"
+                operation : { array get item : variableDeclareArgs 2 } equals pairName plus { class member function call : { this } getForEachPairsRetrieveKey }
+                operation : line equals { array get item : { class member function call : { this } Operation variableDeclareArgs false } 0 }
+                operation : { array get item : output 2 } equals line
+                operation : { array get item : output 3 } equals 0
+
+                comment line :     valueName = pairName.Value
+                operation : variableDeclareArgs equals { array initialize sized : string 3 }
+                operation : { array get item : variableDeclareArgs 0 } equals valueName
+                operation : { array get item : variableDeclareArgs 0 } equals "equals"
+                operation : { array get item : variableDeclareArgs 0 } equals pairName plus { class member function call : { this } getForEachPairsRetrieveValue }
+                operation : line equals { array get item : { class member function call : { this } Operation variableDeclareArgs false } 0 }
+                operation : { array get item : output 3 } equals line
+                operation : { array get item : output 4 } equals 0
+            else start
+                comment line : for (keyName in container) {
+                comment line :     valueName = container[keyName]
+                operation : output equals { array initialize sized : mixed 4 }
+
+                comment line : for (keyName in container) {
+                operation : line equals { class member function call : { this } getForEachStarter }
+                operation : line increaseby keyName
+                operation : line increaseby { class member function call : { this } getForEachInner }
+                operation : line increaseby container
+                operation : line increaseby { class member function call : { this } getConditionStartRight }
+                operation : { array get item : output 0 } equals line
+                operation : { array get item : output 1 } equals 1
+
+                comment line :     valueName = container[keyName]
+                operation : variableDeclareArgs equals { array initialize sized : mixed 3 }
+                operation : { array get item : variableDeclareArgs 0 } equals valueName
+                operation : { array get item : variableDeclareArgs 1 } equals "equals"
+                operation : { array get item : variableDeclareArgs 2 } equals container plus "[" plus keyName plus "]"
+                operation : line equals { array get item : { class member function call : { this } Operation variableDeclareArgs false } 0 }
+                operation : { array get item : output 2 } equals line
+                operation : { array get item : output 3 } equals 0
+            if end
+            
+            return : output
         class member function end
 
-        class member function start : Language public Catch mixed[] functionArgs string[] isInline boolean
-
+        class member function start : Language public ForEnd mixed[] functionArgs string[] isInline boolean
+            return : { array initialize : mixed { class member function call : { this } getConditionEnd } -1 }
         class member function end
 
-        class member function start : Language public Catch mixed[] functionArgs string[] isInline boolean
+        comment line : string i, string type, string initial, string comparison, string boundary[, string change]
+        comment line : e.x. i int 0 lessthan 7
+        class member function start : Language public ForNumbersStart mixed[] functionArgs string[] isInline boolean
+            class member function call : { this } requireArgumentsLength "ForNumbersStart" functionArgs 5
 
+            variable declare : output string { operation : "for" plus { class member function call : { this } getConditionStartLeft } }
+            variable declare : i string { array get item : functionArgs 0 }
+            variable declare : typeName string { class member function call : { this } parseType { array get item : functionArgs 1 } }
+            variable declare : initial { array get item : functionArgs 2 }
+            variable declare : comparison { array get item : functionArgs 3 }
+            variable declare : boundary { array get item : functionArgs 4 }
+            variable declare : direction string "increaseby"
+            variable declare : output mixed
+            variable declare : change string
+
+            if start : { operation : { native call : array length functionArgs } greaterthan 5 }
+                operation : change equals { array get item : functionArgs 5 }
+            else start
+                operation : change equals "1"
+            if end
+
+            if start : { class member function call : { this } getRangedForLoops }
+                operation : output increaseby i
+                operation : output increaseby { class member function call : { this } getRangedForLoopsStart }
+                operation : ouptut increaseby initial plus { class member function call : { this } getRangedForLoopsMiddle } plus change
+                
+                if start : { operation : change notequalto "1" }
+                    operation : output increaseby { class member function call : { this } getRangedForLoopsMiddle } plus change
+                if end
+
+                operation : output increaseby { class member function call : { this } getRangedForLoopsEnd }
+            else start
+                operation : generalArgs equals { array initialize : string i "equals" initial }
+                operation : ouptut increaseby { array get item : { class member function call : { this } Operation generalArgs true } 0 } plus { class member function call : { this } getSemiColon }
+
+                operation : generalArgs equals { array initialize : string i comparison initial }
+                operation : ouptut increaseby { array get item : { class member function call : { this } Comparison generalArgs true } 0 } plus { class member function call : { this } getSemiColon }
+
+                operation : generalArgs equals { array initialize : string i "increaseby" initial }
+                operation : ouptut increaseby { array get item : { class member function call : { this } Operation generalArgs true } 0 } plus { class member function call : { this } getSemiColon }
+            if end
+
+            operation : output increaseby { class member function call : { this } getConditionStartRight }
+
+            return : { array initialize : mixed output 1 }
         class member function end
 
-        class member function start : Language public Catch mixed[] functionArgs string[] isInline boolean
+        comment line : string name[, string parameter, ...]
+        class member function start : Language public FunctionCall mixed[] functionArgs string[] isInline boolean
+            class member function call : { this } requireArgumentsLength "FunctionCall" functionArgs 1 }
 
+            variable declare : output string { array get item : functionArgs 0 } plus "("
+            variable declare : i number
+
+            if start : { operation : { native call : array length functionArgs } greaterthan 1 }
+                for numbers start : i number 1 lessthan { operation : { native call : array length functionArgs } minus 1 }
+                    operation : output increaseby { array get item : functionArgs i } plus ", "
+                for end
+
+                operation : output increaseby { array get item : functionArgs i }
+            if end
         class member function end
 
-        class member function start : Language public Catch mixed[] functionArgs string[] isInline boolean
+        class member function start : Language public FunctionCallPartialEnd mixed[] functionArgs string[] isInline boolean
+            variable declare : output string ")"
 
+            if start : { not : isInline }
+                operation : output increaseby { class member function call : { this } getSemiColon }
+            if end
+
+            return : { array initialize : mixed output -1 }
         class member function end
 
-        class member function start : Language public Catch mixed[] functionArgs string[] isInline boolean
+        comment line : string name
+        class member function start : Language public FunctionCallPartialStart mixed[] functionArgs string[] isInline boolean
+            class member function call : { this } requireArgumentsLength "FunctionCallPartialStart" functionArgs 1 }
 
+            return : { array initialize : mixed { operation : { array get item : functionArgs 0 } plus "(" } 1 }
         class member function end
 
-        class member function start : Language public Catch mixed[] functionArgs string[] isInline boolean
-
+        class member function start : Language public FunctionEnd mixed[] functionArgs string[] isInline boolean
+            return : { array initialize : mixed { class member function call : { this } getFunctionDefineEnd } -1 }
         class member function end
 
+        comment line : string name, string return[, string argumentName, string argumentType, ...]
         class member function start : Language public Catch mixed[] functionArgs string[] isInline boolean
+            class member function call : { this } requireArgumentsLength "FunctionStart" functionArgs 2
 
+            variable declare : output string ""
+            variable declare : variableDeclarationArgs string[] { array initialize : string }
+            variable declare : i number
+
+            if start : { operation : { class member function call : { this } getFunctionReturnsExplicit } and { not : { class member function call : { this } getFunctionTypeAfterName } } }
+                operation : output increaseby { class member function call : { this } parseType { array get item : functionArgs 1 } } plus (" ")
+            if end
+
+            operation : output increaseby { class member function call : { this } getFunctionDefine } plus { array get item : functionArgs 0 } plus "("
+
+            comment line : All arguments are added using VariableDeclarePartial
+            if start : { operation : { native call : array length functionArgs } greaterthan 2 }
+                for numbers start : i number 2 lessthan { native call : array length functionArgs } 2
+                    operation : { array get item : variableDeclarationArgs 0 } equals { array get item : functionArgs i }
+                    operation : { array get item : variableDeclarationArgs 1 } equals { array get item : functionArgs { operation : i + 1 } }
+
+                    operation : output increaseby { array get item : { class member function call : { this } VariableDeclarePartial variableDeclarationArgs } 0 } plus ", "
+                for end
+
+                comment line : The last argument does not have the last ", " at the end
+                operation : output equals { native call : string substring output 0 { operation : { native call : string length output } minus 2 } }
+            if end
+
+            operation : output increaseby ")"
+
+            if start : { operation : { class member function call : { this } getFunctionReturnsExplicit } and { class member function call : { this } getFunctionTypeAfterName } }
+                operation : output increaseby { class member function call : { this } getFunctionTypeMarker } plus { class member function call : { this } parseType { array get item : functionArgs 1 } }
+            if end
+
+            operation : output increaseby { class member function call : { this } getFunctionDefineRight }
+            return : { array initialize : output 1 }
         class member function end
 
-        class member function start : Language public Catch mixed[] functionArgs string[] isInline boolean
-
+        class member function start : Language public IfEnd mixed[] functionArgs string[] isInline boolean
+            return : { array initialize : mixed { class member function call : { this } getConditionEnd } -1 }
         class member function end
 
-        class member function start : Language public Catch mixed[] functionArgs string[] isInline boolean
+        comment line : string value
+        class member function start : Language public IfStart mixed[] functionArgs string[] isInline boolean
+            class member function call : { this } requireArgumentsLength "IfStart" functionArgs 1
 
+            variable declare : output string { operation : { class member function call : { this } getIf } plus { class member function call : { this } getConditionStartLeft } }
         class member function end
 
         class member function start : Language public Catch mixed[] functionArgs string[] isInline boolean
