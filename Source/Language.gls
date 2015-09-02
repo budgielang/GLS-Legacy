@@ -2094,72 +2094,243 @@ file start : GLS
             if end
         class member function end
 
-        class member function start : Language public Catch mixed[] functionArgs string[] isInline boolean
+        comment line : string class[, string argumentName, string argumentType, ...]
+        class member function start : Language public ClassNew mixed[] functionArgs string[] isInline boolean
+            class member function call :  { this } requireArgumentsLength "ClassNew" functionArgs 1
 
+            variable declare : output string
+            variable declare : i number
+
+            if start : { class member function call : { this } getClassConstructorAsStatic }
+                operation : output equals { class member function call : { this } parseType { array get item : functionArgs 0 } } plus "." plus { class member function call : { this } getClassNewer } plus "("
+            else start
+                operation : output equals { class member function call : { this } getClassNewer } plus { class member function call : { this } parseType { array get item : functionArgs 0 } } plus "("
+            if end
+
+            if start : { operation : { native call : array length functionArgs } greaterthan 1 }
+                for numbers start : i number 1 lessthan { native call : array length functionArgs }
+                    operation : output increaseby { array get item : functionArgs i } plus (", ")
+                for end
+
+                comment line : The last argument does not have the last ", " at the end
+                operation : output increaseby { native call : string substring output 0 { operation : { native call : string length output } minus 2 }
+            if end
+
+            operation : output increaseby ")"
+
+            if start : { not : isInline }
+                operation : output increaseby { class member function call : { this } getSemiColon }
+            if end
+
+            return : { array initialize : mixed output 0 }
         class member function end
 
-        class member function start : Language public Catch mixed[] functionArgs string[] isInline boolean
+        comment line : [string message, ...]
+        class member function start : Language public CommentBlock mixed[] functionArgs string[] isInline boolean
+            variable declare : output mixed[] { array initialize sized : mixed { operation : { parenthesis : { operation : { native call : array length functionArgs } plus 2 } } times 2 } }
+            variable declare : i number
 
+            operation : { array get item : output 0 } equals { class member function call : { this } getCommentorBlockStart }
+            operation : { array get item : output 1 } equals 0
+
+            for numbers start : i number 0 lessthan { native call : array length functionArgs }
+                operation : { array get item : output { operation : i times 1 plus 2 } } equals { array get item : functionArgs i }
+                operation : { array get item : output { operation : i times 2 plus 3 } } equals 0
+            for end
+            
+            operation : { array get item : output { operation : i times 2 plus 2 } } equals { class member function call : { this } getCommentorBlockEnd }
+            operation : { array get item : output { operation : i times 2 plus 3 } } equals 0
         class member function end
 
-        class member function start : Language public Catch mixed[] functionArgs string[] isInline boolean
+        comment line : [string message, ...]
+        class member function start : Language public CommentLine mixed[] functionArgs string[] isInline boolean
+            variable declare : output string { operation : { class member function call : { this } getCommentorInline } plus (" ") }
+            variable declare : i number
 
+            for numbers start : i number 0 lessthan { operation : { native call : array length functionArgs } minus 1 }
+                operation : output increaseby { operation : { array get item : functionArgs i } plus (" ") }
+            for end
+            operation : output increaseby { array get item : functionArgs i }
+
+            return : { array initialize : mixed output 0 }
         class member function end
 
-        class member function start : Language public Catch mixed[] functionArgs string[] isInline boolean
+        comment line : [string message, ...]
+        class member function start : Language public CommentInline mixed[] functionArgs string[] isInline boolean
+            variable declare : result any[] { class member function call : { this } CommentLine functionArgs isInline }
 
+            operation : { array get item : result 1 } equals { class static variable get : Language INT_MIN }
         class member function end
 
-        class member function start : Language public Catch mixed[] functionArgs string[] isInline boolean
+        comment line : string left, string comparison, string right
+        class member function start : Language public Comparison mixed[] functionArgs string[] isInline boolean
+            class member function call : { this } requireArgumentsLength "Comparison" functionArgs 3
 
+            return : { array initialize : mixed { operation : { array get item : functionArgs 0 } plus (" ") plus { class member function call : { this } getOperationAlias { array get item : functionArgs 1 } } plus (" ") plus { array get item : functionArgs 2 } } 0 }
         class member function end
 
-        class member function start : Language public Catch mixed[] functionArgs string[] isInline boolean
+        comment line : string left, string right
+        class member function start : Language public Concatenate mixed[] functionArgs string[] isInline boolean
+            class member function call : { this } requireArgumentsLength "Comparison" functionArgs 2
 
+            variable declare : output string
+
+            if start : { class member function call : { this } getToStringAsFunction }
+                operation : output equals { class member function call : { this } toString } plus "(" plus { array get item : functionArgs 0 } plus ")"
+                operation : output increaseby (" ") plus { class member function call : { this } getOperationAlias "plus" } plus (" ")
+                operation : output increaseby { class member function call : { this } getToString } plus "(" plus { array get item : functionArgs 1 } plus ")"
+            else start
+                operation : output equals { array get item : functionArgs 0 } plus { class member function call : { this } getToString }
+                operation : output increaseby (" ") plus { class member function call : { this } getOperationAlias "plus" } plus (" ")
+                operation : output increaseby { array get item : functionArgs 1 } plus { class member function call : { this } getToString }
+            if end
+
+            if start : { not : isInline }
+                operation : output increaseby { class member function call : { this } getSemiColon }
+            if end
+
+            return : { array initialize : mixed output 0 }
         class member function end
 
-        class member function start : Language public Catch mixed[] functionArgs string[] isInline boolean
+        comment line : string name, string key
+        class member function start : Language public DictionaryKeyCheck mixed[] functionArgs string[] isInline boolean
+            class member function call : { this } requireArgumentsLength "DictionaryKeyCheck" functionArgs 2
 
+            variable declare : output string
+
+            if start : { class member function call : { this } getDictionaryKeyCheckAsFunction }
+                operation : output equals { array get item : functionArgs 0 } plus "." plus { class member function call : { this } getDictionaryKeyChecker } plus "(" plus { array get item : functionArgs 1 } plus ")"
+            else start
+                operation : output equals { array get item : functionArgs 1 } plus { class member function call : { this } getDictionaryKeyChecker } plus { array get item : functionArgs 0 }
+            if end
+
+            return : { array initialize : mixed output 0 }
         class member function end
 
-        class member function start : Language public Catch mixed[] functionArgs string[] isInline boolean
+        comment line : string name, string key
+        class member function start : Language public DictionaryKeyGet mixed[] functionArgs string[] isInline boolean
+            class member function call : { this } requireArgumentsLength "DictionaryKeyGet" functionArgs 2 }
 
+            return : { array initialize : mixed { operation : { array get item : functionArgs 0 } plus "[" plus { array get item : functionArgs 1 } plus "]" } 0 }
         class member function end
 
-        class member function start : Language public Catch mixed[] functionArgs string[] isInline boolean
+        comment line : string name, string key, string value
+        class member function start : Language public DictionaryKeySet mixed[] functionArgs string[] isInline boolean
+            class member function call : { this } requireArgumentsLength "DictionaryKeySet" functionArgs 3
 
+            return : { array initialize : mixed { operation : { array get item : functionArgs 0 } plus "[" plus { array get item : functionArgs 1 } plus ("] = ") plus { array get item : functionArgs 2 } } 0 }
         class member function end
 
-        class member function start : Language public Catch mixed[] functionArgs string[] isInline boolean
+        comment line : string key, string value
+        class member function start : Language public DictionaryInitialize mixed[] functionArgs string[] isInline boolean
+            class member function call : { this } requireArgumentsLength "DictionaryInitialize" functionArgs 2
 
+            variable declare : dictionaryType string { array get item : { class member function call : { this } DictionaryType functionArgs true } 0 }
+            variable declare : output string
+
+            if start : { class member function call : { this } getDictionaryInitializationAsNew }
+                operation : output equals ("new ") plus dictionaryType plus "()"
+            else start
+                operation : output equals "{}"
+            if end
+
+            return : { array initialize : mixed output 0 }
         class member function end
 
-        class member function start : Language public Catch mixed[] functionArgs string[] isInline boolean
+        class member function start : Language public DictionaryInitializeEnd mixed[] functionArgs string[] isInline boolean
+            variable declare : output string { class member function call : { this } getDictionaryInitializeEnder }
 
+            if start : { not : isInline }
+                operation : output increaseby { class member function call : { this } getSemiColon }
+            if end
+
+            return : { array initialize : mixed output -1 }
         class member function end
 
-        class member function start : Language public Catch mixed[] functionArgs string[] isInline boolean
+        comment line : string key, string value[, string comma]
+        class member function start : Language public DictionaryInitializeKey mixed[] functionArgs string[] isInline boolean
+            class member function call : { this } requireArgumentsLength "DictionaryInitializeKey" functionArgs 2
 
+            variable declare : output string { class member function call : { this } getDictionaryKeyLeft }
+            operation : output increaseby { array get item : functionArgs 0 }
+            operation : output increaseby { class member function call : { this } getDictionaryKeyMiddle }
+            operation : output increaseby { array get item : functionArgs 1 }
+            operation : output increaseby { class member function call : { this } getDictionaryKeyRight }
+
+            if start : { operation : { operation : { native call : array length functionArgs } greaterthan 2 } or { class member function call : { this } getDictionaryInitializeKeyWithSemicolon } }
+                operation : output increaseby { class member function call : { this } getDictionaryInitializeKeyComma }
+            if end
+
+            return : { array initialize : mixed output 0 }
         class member function end
 
-        class member function start : Language public Catch mixed[] functionArgs string[] isInline boolean
+        comment line : string keyType, string valueType
+        class member function start : Language public DictionaryInitializeStart mixed[] functionArgs string[] isInline boolean
+            class member function call : { this } requireArgumentsLength "DictionaryInitializeStart" functionArgs 2
 
+            variable declare : dictionaryType string
+            variable declare : output string
+
+            if start : { class member function call : { this } getDictionaryInitializationAsNew }
+                operation : dictionaryType equals { array get item : { class member function call : { this } DictionaryType functionArgs true } 0 }
+            else start
+                operation : dictionaryType equals ""
+            if end
+
+            if start : { class member function call : { this } getDictionaryInitializationAsNew }
+                operation : output equals ("new ")
+            else start
+                operation : output equals ""
+            if end
+
+            operation : output increaseby dictionaryType
+            operation : output increaseby { class member function call : { this } getDictionaryInitializeStarter }
+
+            return : { array initialize : mixed output 0 }
         class member function end
 
-        class member function start : Language public Catch mixed[] functionArgs string[] isInline boolean
+        comment line : string keyType, string valueType
+        class member function start : Language public DictionaryType mixed[] functionArgs string[] isInline boolean
+            class member function call : { this } requireArgumentsLength "ClassStart" functionArgs 2
 
+            if start : { not : { class member function call : { this } getVariableTypesExplicit } }
+                return : { array initialize : mixed "" 0 }
+            if end
+
+            variable declare : output string { class member function call : { this } getDictionaryClass }
+
+            if start : { class member function call : { this } getDictionaryInitializationAsNew }
+                operation : output equals "<" plus { class member function call : { this } parseType { array get item : functionArgs 0 } }
+                operation : output increaseby { class member function call : { this } getClassTemplatesBetween }
+                operation : output increaseby { class member function call : { this } parseType { array get item : functionArgs 1 } } plus ">"
+            if end
+
+            return : { array initialize : mixed output 0 }
         class member function end
 
-        class member function start : Language public Catch mixed[] functionArgs string[] isInline boolean
+        comment line : string value
+        class member function start : Language public ElifStart mixed[] functionArgs string[] isInline boolean
+            class member function call : { this } requireArgumentsLength "ElifStart" functionArgs 1
 
+            variable declare : output string { operation : { class member function call : { this } getElif } plus { class member function call : { this } getConditionStartLeft }
+
+            variable declare : output string { operation : { array get item : functionArgs 0 } plus { class member function call : { this } getConditionStartRight }
+
+            return : { array initialize : mixed "\0" -1 output 1 }
         class member function end
 
-        class member function start : Language public Catch mixed[] functionArgs string[] isInline boolean
-
+        class member function start : Language public ElseStart mixed[] functionArgs string[] isInline boolean
+            return : { array initialize : mixed "\0" -1 { operation : { class member function call : { this } getElse } plus { class member function call : { this } getConditionContinueRight } } 1 }
         class member function end
 
-        class member function start : Language public Catch mixed[] functionArgs string[] isInline boolean
-
+        class member function start : Language public FileEnd mixed[] functionArgs string[] isInline boolean
+            variable declare : output string { class member function call : { this } getFileEndLine }
+            
+            if start : { operation : { native call : string length output } equalto 0 }
+                return : { array initialize : mixed output { class static variable get : Language INT_MIN } }
+            else start
+                return : { array initialize : mixed output -1 }
+            if end
         class member function end
 
         class member function start : Language public Catch mixed[] functionArgs string[] isInline boolean

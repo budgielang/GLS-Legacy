@@ -2181,8 +2181,8 @@ module GLS {
             for (i = 0; i < functionArgs.length - 1; i += 1) {
                 output += functionArgs[i] + " ";
             }
-
             output += functionArgs[i];
+
             return [output, 0];
         }
 
@@ -2882,8 +2882,10 @@ module GLS {
             return [output, 0];
         }
 
-        // [string anything, ...]
-        public Parenthesis(functionArgs: string[], isInline?: boolean): any[] {
+        // string anything[, ...]
+        public Parenthesis(functionArgs: string[], isInline?: boolean): any[]{
+            this.requireArgumentsLength("Parenthesis", functionArgs, 1);
+
             var output: string = "(",
                 i: number;
 
