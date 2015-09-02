@@ -2051,7 +2051,7 @@ module GLS {
         public ClassStaticVariableDeclare(functionArgs: string[], isInline?: boolean): any[] {
             this.requireArgumentsLength("ClassStaticVariableDeclare", functionArgs, 3);
 
-            var variableType = this.parseType(functionArgs[2]),
+            var variableType: string = this.parseType(functionArgs[2]),
                 variableDeclarationArgs: string[],
                 variableDeclared: any[];
 
