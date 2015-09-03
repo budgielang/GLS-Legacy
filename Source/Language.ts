@@ -2708,8 +2708,8 @@ module GLS {
                 //     (a: string, b: int): boolean;
                 line = middle[0] + "(";
 
-                // All arguments are added using VariableDeclarePartial
                 if (functionArgs.length > 3) {
+                    // All arguments are added using VariableDeclarePartial
                     for (i = 3; i < functionArgs.length; i += 2) {
                         variableDeclarationArguments[0] = functionArgs[i];
                         variableDeclarationArguments[1] = functionArgs[i + 1];

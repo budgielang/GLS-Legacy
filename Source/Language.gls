@@ -2627,7 +2627,7 @@ file start : GLS
 
         comment line : [, string param, ...], statement
         class member function start : Language public LambdaDeclareInline mixed[] functionArgs string[] isInline boolean
-            class member function call : { this } requireArgumentsLength "LambdaTypeDeclare" functionArgs 3
+            class member function call : { this } requireArgumentsLength "LambdaTypeDeclareInline" functionArgs 3
 
             variable declare : output string { class member function call : { this } getLambdaDeclareStarter }
             variable declare : i number
@@ -2672,26 +2672,135 @@ file start : GLS
                 comment line :     (a: string, b: int): boolean;
                 operation : line equals { array get item : middle 0 } plus "("
 
-                comment line : All arguments are added using VariableDeclarePartial
-            else start
+                if start : { operation : { native call : array length functionArgs } greaterthan 3 }
+                    comment line : All arguments are added using VariableDeclarePartial
+                    for numbers start : i number 3 lessthan { native call : array length functionArgs } 2
+                        operation : { array get item : variableDeclarartionArgs 0 } equals { array get item : functionArgs i }
+                        operation : { array get item : variableDeclarartionArgs 1 } equals { array get item : functionArgs { operation : i plus 1 } }
 
+                        operation : line increaseby { array get item : { class member function call : { this } VariableDeclarePartial variableDeclarationArgs true } 0 } plus (", ")
+                    for end
+
+                    comment line : The last argument does not have the last ", " at the end
+                    operation : line equals { native call : string substring line 0 { operation : { native call : string length line } minus 2 } }
+                if end
+
+                operation : line increaseby ")"
+
+                if start : { operation : { class member function call : { this } getFunctionReturnsExplicit } and { class member function call : { this } getFunctionTypeAfterName } }
+                    operation : line increaseby { class member function call : { this } getFunctionTypeMarker } plus { class member function call : { this } parseType { array get item : functionArgs 2 } }
+                if end
+
+                operation : line increaseby { array get item : middle 1 }
+                operation : { array get item : output 2 } equals line
+                operation : { array get item : output 3 } equals 0
+                
+                comment line : }
+                operation : { array get item : output 4 } equals { array get item : end 0 }
+                operation : { array get item : output 5 } equals -1
+
+                return : output
+            else start
+                operation : line increaseby { array get item : start 0 } plus { array get item : functionArgs 0 } plus (" ") plus (" ") plus { array get item : start 1 }
+                operation : line increaseby (" ") plus { class member function call : { this } parseType { array get item : functionArgs 2 } }
+                operation : line increaseby (" ") plus { array get item : functionArgs 1 }
+
+                if start : { operation : { native call : array length functionArgs } greaterthan 3 }
+                    operation : line increaseby { array get item : middle 0 }
+
+                    comment line : All arguments are added using VariableDeclarePartial
+                    for numbers start : i number 4 lessthan { native call : array length functionArgs } 2
+                        operation : line increaseby { class member function call : { this } parseType { array get item : functionArgs i } } plus (", ")
+                    for end
+
+                    comment line : The last argument does not have the last (", ") at the end
+                    operation : line equals { native call : string substring line 0 { operation : { native call : string length line } - 2 } }
+                    operation : line increaseby { array get item : middle 1 }
+                if end
+
+                operation : line equals { array get item : end 0 } plus line plus { array get item : end 1 }
+                return : { array initialize : mixed line 0 }
             if end
         class member function end
 
-        class member function start : Language public Catch mixed[] functionArgs string[] isInline boolean
-
+        class member function start : Language public LoopBreak mixed[] functionArgs string[] isInline boolean
+            return : { array initialize : mixed { operation : { class member function call : { this } getBreak } plus { class member function call : { this } getSemiColon } } 0 }
         class member function end
 
-        class member function start : Language public Catch mixed[] functionArgs string[] isInline boolean
-
+        class member function start : Language public LoopContinue mixed[] functionArgs string[] isInline boolean
+            return : { array initialize : mixed { operation : { class member function call : { this } getContinue } plus { class member function call : { this } getSemiColon } } 0 }
         class member function end
 
-        class member function start : Language public Catch mixed[] functionArgs string[] isInline boolean
+        class member function start : Language public MainStart mixed[] functionArgs string[] isInline boolean
+            variable declare : output string { class member function call : { this } getMainStartLine }
 
+            if start : { operation : { native call : string length output } equalto 0 }
+                return : { array initialize : mixed output 0 }
+            if end
+                return : { array initialize : mixed output 1 }
         class member function end
 
-        class member function start : Language public Catch mixed[] functionArgs string[] isInline boolean
+        comment line : string class, string function, string instance[, string parameter, ...]
+        class member function start : Language public NativeCall mixed[] functionArgs string[] isInline boolean
+            class member function call : { this } requireArgumentsLength "NativeFunction" functionArgs 3
 
+            variable declare : className string { class member function call : { this } getTypeAlias { array get item : functionArgs 0 } }
+            variable declare : aliasInfo { dictionary type : string string } { class member function call : { this } getNativeFunctionAlias { array get item : functionArgs 0 } { array get item : functionArgs 1 } }
+            variable declare : placement string { dictionary key get : aliasInfo "placement" }
+            variable declare : usage string { dictionary key get : aliasInfo "usage" }
+            variable declare : caller string
+            variable declare : numArgs number
+            variable declare : start number
+            variable declare : output string
+
+            if start : { operation : placement equalto "member" }
+                operation : caller equals { array get item : functionArgs 2 } plus "." plus { dictionary key get : aliasInfo "alias" }
+                operation : numArgs equals { operation : { native call : array length functionArgs } minus 3 }
+                operation : start equals 2
+            elif start : { operation : placement equalto "array" }
+                operation : caller equals { array get item : functionArgs 2 }
+                operation : numArgs equals { operation : { native call : array length functionArgs } minus 3 }
+                operation : start equals 2
+            elif start : { operation : placement equalto "static" }
+                operation : caller equals { dictionary key get : aliasInfo "alias" }
+                operation : numArgs equals { operation : { native call : array length functionArgs } minus 2 }
+                operation : start equals 1
+            if end
+
+            if start : { operation : usage equalto "function" }
+                variable declare : functionCallArgs mixed[] { array initialize sized : mixed numArgs }
+                variable declare : i number
+
+                operation : { array get item : functionCallArgs 0 } equals caller
+
+                for numbers start : i number 1 lessthan { operation : { native call : array length functionArgs } minus start }
+                    operation : { array get item : functionCallArgs i } equals { array get item : functionCallArgs { operation : i plus start } }
+                for end
+
+                operation : output equals { array get item : { class member function call : { this } FunctionCall functionCallArgs isInline } 0 }
+            elif start : { operation : usage equalto "variable" }
+                operation : output equals caller
+            elif start : { operation : usage equalto "array" }
+                operation : output equals caller plus "["
+
+                comment line : Default to just the separator if there are no arguments
+                if start : { operation : { native call : array length functionArgs } minus 1 equalto start }
+                    operation : output increaseby { dictionary key get : aliasInfo "separator" }
+                else start
+                    for numbers start : i number 1 lessthan { operation : { native call : array length functionArgs } minus start }
+                        operation : output increaseby { array get item : functionArgs { operation : i plus start } } plus { dictionary key get : aliasInfo "separator" }
+                    for end
+
+                    comment line : Remove the last separator if more than one argument is added
+                    if start : { operation : { native call : array length functionArgs } minus start greaterthan 2 }
+                        operation : output equals { native call : string substring output 0 { operation : { native call : string length output } minus { native call : string length { dictionary key get : aliasInfo "separator" } } } }
+                    if end
+                if end
+
+                operation : output increaseby "]"
+            if end
+
+            return : { array initialize : mixed output 0 }
         class member function end
 
         class member function start : Language public Catch mixed[] functionArgs string[] isInline boolean
