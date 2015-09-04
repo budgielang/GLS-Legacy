@@ -2071,28 +2071,28 @@ module GLS {
 
             if (functionArgs.length > 3) {
                 variableDeclarationArgs = [functionArgs[0], variableType, functionArgs[3]];
-                this.getClassMemberVariableDefault() != "") {
-                    variableDeclarationArgs = [functionArgs[0], variableType, this.getClassMemberVariableDefault()];
-                } else {
-                    variableDeclarationArgs = [functionArgs[0], variableType];
-                }
-
-                variableDeclared = this.VariableDeclarePartial(variableDeclarationArgs, isInline);
-                variableDeclared[0] = this.getClassStaticLabel() + variableDeclared[0];
-                variableDeclared[1] = 0;
-
-                if (!isInline) {
-                    variableDeclared[0] = variableDeclared[0] + this.getSemiColon();
-                }
-
-                if (this.getClassMemberVariablePrivacy()) {
-                    variableDeclared[0] = functionArgs[1] + " " + variableDeclared[0];
-                }
-
-                variableDeclared[0] = this.getClassMemberVariableStarter() + variableDeclared[0];
-
-                return variableDeclared;
+            } else if (this.getClassMemberVariableDefault() != "") {
+                variableDeclarationArgs = [functionArgs[0], variableType, this.getClassMemberVariableDefault()];
+            } else {
+                variableDeclarationArgs = [functionArgs[0], variableType];
             }
+
+            variableDeclared = this.VariableDeclarePartial(variableDeclarationArgs, isInline);
+            variableDeclared[0] = this.getClassStaticLabel() + variableDeclared[0];
+            variableDeclared[1] = 0;
+
+            if (!isInline) {
+                variableDeclared[0] = variableDeclared[0] + this.getSemiColon();
+            }
+
+            if (this.getClassMemberVariablePrivacy()) {
+                variableDeclared[0] = functionArgs[1] + " " + variableDeclared[0];
+            }
+
+            variableDeclared[0] = this.getClassMemberVariableStarter() + variableDeclared[0];
+
+            return variableDeclared;
+        }
         
         // string class, string name
         public ClassStaticVariableGet(functionArgs: string[], isInline: boolean): any[] {
@@ -2361,7 +2361,7 @@ module GLS {
 
             var output: string = this.getElif() + this.getConditionStartLeft();
 
-            var output: string = functionArgs[0] + this.getConditionStartRight();
+            output += functionArgs[0] + this.getConditionStartRight();
 
             return ["\0", -1, output, 1];
         }
@@ -2469,71 +2469,71 @@ module GLS {
                 line += this.getForEachInner();
 
                 output = [line, 1];
-                this.getForEachPairsAsPair()) {
-                    // foreach KeyValuePair<string, int> pairName in container 
-                    //     keyName = pairName.Key;
-                    //     valueName = pairName.Value;
-                    output = new Array(6);
+            } else if (this.getForEachPairsAsPair()) {
+                // foreach KeyValuePair<string, int> pairName in container 
+                //     keyName = pairName.Key;
+                //     valueName = pairName.Value;
+                output = new Array(6);
                 
-                    // forEach KeyValuePair<string, int> pairName
-                    line = this.getForEachStarter();
-                    variableDeclareArgs = new Array(2);
-                    variableDeclareArgs[0] = pairName;
-                    variableDeclareArgs[1] = this.getForEachPairsPairClass() + "<" + keyType + ", " + valueType + ">";
-                    line += this.VariableDeclarePartial(variableDeclareArgs, true)[0];
+                // forEach KeyValuePair<string, int> pairName
+                line = this.getForEachStarter();
+                variableDeclareArgs = new Array(2);
+                variableDeclareArgs[0] = pairName;
+                variableDeclareArgs[1] = this.getForEachPairsPairClass() + "<" + keyType + ", " + valueType + ">";
+                line += this.VariableDeclarePartial(variableDeclareArgs, true)[0];
                 
-                    // in container) 
-                    line += this.getForEachInner();
-                    line += container;
-                    line += this.getConditionStartRight();
+                // in container) 
+                line += this.getForEachInner();
+                line += container;
+                line += this.getConditionStartRight();
 
-                    output[0] = line;
-                    output[1] = 1;
+                output[0] = line;
+                output[1] = 1;
                 
-                    // keyName = pairName.Key
-                    variableDeclareArgs = new Array(3);
-                    variableDeclareArgs[0] = keyName;
-                    variableDeclareArgs[1] = "equals";
-                    variableDeclareArgs[2] = pairName + this.getForEachPairsRetrieveKey();
-                    line = this.Operation(variableDeclareArgs, false)[0];
-                    output[2] = line;
-                    output[3] = 0;
+                // keyName = pairName.Key
+                variableDeclareArgs = new Array(3);
+                variableDeclareArgs[0] = keyName;
+                variableDeclareArgs[1] = "equals";
+                variableDeclareArgs[2] = pairName + this.getForEachPairsRetrieveKey();
+                line = this.Operation(variableDeclareArgs, false)[0];
+                output[2] = line;
+                output[3] = 0;
                 
-                    // valueName = pairName.Value
-                    variableDeclareArgs = new Array(3);
-                    variableDeclareArgs[0] = valueName;
-                    variableDeclareArgs[0] = "equals";
-                    variableDeclareArgs[0] = pairName + this.getForEachPairsRetrieveValue();
-                    line = this.Operation(variableDeclareArgs, false)[0];
-                    output[3] = line;
-                    output[4] = 0;
-                } else {
-                    // for keyName in container 
-                    // valueName = container[keyName]
-                    output = new Array(4);
+                // valueName = pairName.Value
+                variableDeclareArgs = new Array(3);
+                variableDeclareArgs[0] = valueName;
+                variableDeclareArgs[0] = "equals";
+                variableDeclareArgs[0] = pairName + this.getForEachPairsRetrieveValue();
+                line = this.Operation(variableDeclareArgs, false)[0];
+                output[3] = line;
+                output[4] = 0;
+            } else {
+                // for keyName in container 
+                // valueName = container[keyName]
+                output = new Array(4);
                 
-                    // for keyName in container 
-                    line = this.getForEachStarter();
-                    line += keyName;
-                    line += this.getForEachInner();
-                    line += container;
-                    line += this.getConditionStartRight();
-                    output[0] = line;
-                    output[1] = 1;
+                // for keyName in container 
+                line = this.getForEachStarter();
+                line += keyName;
+                line += this.getForEachInner();
+                line += container;
+                line += this.getConditionStartRight();
+                output[0] = line;
+                output[1] = 1;
                 
-                    // valueName = container[keyName]
-                    variableDeclareArgs = new Array(3);
-                    variableDeclareArgs[0] = valueName;
-                    variableDeclareArgs[1] = "equals";
-                    variableDeclareArgs[2] = container + "[" + keyName + "]";
-                    line = this.Operation(variableDeclareArgs, false)[0];
-                    output[2] = line;
-                    output[3] = 0;
-                }
-
-                return output;
+                // valueName = container[keyName]
+                variableDeclareArgs = new Array(3);
+                variableDeclareArgs[0] = valueName;
+                variableDeclareArgs[1] = "equals";
+                variableDeclareArgs[2] = container + "[" + keyName + "]";
+                line = this.Operation(variableDeclareArgs, false)[0];
+                output[2] = line;
+                output[3] = 0;
             }
-        
+
+            return output;
+        }
+
         public ForEnd(functionArgs: string[], isInline: boolean): any[] {
             return [this.getConditionEnd(), -1];
         }
@@ -2825,51 +2825,51 @@ module GLS {
                 caller = functionArgs[2] + "." + aliasInfo["alias"];
                 numArgs = functionArgs.length - 3;
                 start = 2;
-                placement == "array") {
-                    caller = functionArgs[2];
-                    numArgs = functionArgs.length - 3;
-                    start = 2;
-                    placement == "static") {
-                        caller = aliasInfo["alias"];
-                        numArgs = functionArgs.length - 2;
-                        start = 1;
-                    }
+            } else if (placement == "array") {
+                caller = functionArgs[2];
+                numArgs = functionArgs.length - 3;
+                start = 2;
+            } else if (placement == "static") {
+                caller = aliasInfo["alias"];
+                numArgs = functionArgs.length - 2;
+                start = 1;
+            }
 
-                    if (usage == "function") {
-                        var functionCallArgs: any[] = new Array(numArgs);
-                        var i: number;
+            if (usage == "function") {
+                var functionCallArgs: any[] = new Array(numArgs);
+                var i: number;
 
-                        functionCallArgs[0] = caller;
+                functionCallArgs[0] = caller;
 
-                        for (i = 1; i < functionArgs.length - start; i += 1) {
-                            functionCallArgs[i] = functionArgs[i + start];
-                        }
+                for (i = 1; i < functionArgs.length - start; i += 1) {
+                    functionCallArgs[i] = functionArgs[i + start];
+                }
 
-                        output = this.FunctionCall(functionCallArgs, isInline)[0];
-                        usage == "variable") {
-                            output = caller;
-                            usage == "array") {
-                                output = caller + "[";
+                output = this.FunctionCall(functionCallArgs, isInline)[0];
+            } else if (usage == "variable") {
+                output = caller;
+            } else if (usage == "array") {
+                output = caller + "[";
                 
-                                // Default to just the separator if there are no arguments
-                                if (functionArgs.length - 1 == start) {
-                                    output += aliasInfo["separator"];
-                                } else {
-                                    for (i = 1; i < functionArgs.length - start; i += 1) {
-                                        output += functionArgs[i + start] + aliasInfo["separator"];
-                                    }
+                // Default to just the separator if there are no arguments
+                if (functionArgs.length - 1 == start) {
+                    output += aliasInfo["separator"];
+                } else {
+                    for (i = 1; i < functionArgs.length - start; i += 1) {
+                        output += functionArgs[i + start] + aliasInfo["separator"];
+                    }
                     
-                                    // Remove the last separator if more than one argument is added
-                                    if (functionArgs.length - start > 2) {
-                                        output = output.substring(0, output.length - aliasInfo["separator"].length);
-                                    }
-                                }
+                    // Remove the last separator if more than one argument is added
+                    if (functionArgs.length - start > 2) {
+                        output = output.substring(0, output.length - aliasInfo["separator"].length);
+                    }
+                }
 
-                                output += "]";
-                            }
+                output += "]";
+            }
 
-                            return [output, 0];
-                        }
+            return [output, 0];
+        }
         
         // string value
         public Not(functionArgs: string[], isInline: boolean): any[] {

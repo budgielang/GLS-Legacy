@@ -2361,7 +2361,7 @@ module GLS {
 
             var output: string = this.getElif() + this.getConditionStartLeft();
 
-            var output: string = functionArgs[0] + this.getConditionStartRight();
+            output += functionArgs[0] + this.getConditionStartRight();
 
             return ["\0", -1, output, 1];
         }
@@ -2539,7 +2539,7 @@ module GLS {
         }
         
         // string i, string initial, string comparison, string boundary[, string change]
-        // e.x. i 0 lessthan 7
+        // e.x. i int 0 lessthan 7
         public ForNumbersStart(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("ForNumbersStart", functionArgs, 4);
 

@@ -2345,7 +2345,7 @@ file start : GLS
 
             variable declare : output string { operation : { class member function call : { this } getElif } plus { class member function call : { this } getConditionStartLeft }
 
-            variable declare : output string { operation : { array get item : functionArgs 0 } plus { class member function call : { this } getConditionStartRight }
+            operation : output increaseby { array get item : functionArgs 0 } plus { class member function call : { this } getConditionStartRight }
 
             return : { array initialize : mixed "\0" -1 output 1 }
         class member function end
