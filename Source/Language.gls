@@ -1457,6 +1457,7 @@ file start : GLS
             while end
 
             operation : output increaseby { class member function call : { this } parseType { native call : string substring text i { operation : { native call : string length text } minus 1 } } }
+            operation : output increaseby ">"
 
             return : output
         class member function end
@@ -2331,7 +2332,7 @@ file start : GLS
             variable declare : output string { class member function call : { this } getDictionaryClass }
 
             if start : { class member function call : { this } getDictionaryInitializationAsNew }
-                operation : output equals "<" plus { class member function call : { this } parseType { array get item : functionArgs 0 } }
+                operation : output increaseby "<" plus { class member function call : { this } parseType { array get item : functionArgs 0 } }
                 operation : output increaseby { class member function call : { this } getClassTemplatesBetween }
                 operation : output increaseby { class member function call : { this } parseType { array get item : functionArgs 1 } } plus ">"
             if end

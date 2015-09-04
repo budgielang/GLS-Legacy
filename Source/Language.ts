@@ -1465,6 +1465,7 @@ module GLS {
             }
 
             output += this.parseType(text.substring(i, text.length - 1));
+            output += ">";
 
             return output;
         }
@@ -2347,7 +2348,7 @@ module GLS {
             var output: string = this.getDictionaryClass();
 
             if (this.getDictionaryInitializationAsNew()) {
-                output = "<" + this.parseType(functionArgs[0]);
+                output += "<" + this.parseType(functionArgs[0]);
                 output += this.getClassTemplatesBetween();
                 output += this.parseType(functionArgs[1]) + ">";
             }

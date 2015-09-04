@@ -1025,6 +1025,7 @@ var GLS;
                 i = spaceNext + 1;
             }
             output += this.parseType(text.substring(i, text.length - 1));
+            output += ">";
             return output;
         };
         /*
@@ -1703,7 +1704,7 @@ var GLS;
             }
             var output = this.getDictionaryClass();
             if (this.getDictionaryInitializationAsNew()) {
-                output = "<" + this.parseType(functionArgs[0]);
+                output += "<" + this.parseType(functionArgs[0]);
                 output += this.getClassTemplatesBetween();
                 output += this.parseType(functionArgs[1]) + ">";
             }
