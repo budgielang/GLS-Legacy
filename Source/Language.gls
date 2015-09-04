@@ -2694,9 +2694,9 @@ file start : GLS
                 variable declare : output mixed[] { array initialize sized: mixed 6 }
 
                 comment line : public interface TestInterface {
-                operation : line equals { array get item : functionArgs 0 }
+                operation : line equals { class member function call : { this } getClassPublicAlias }
                 operation : line increaseby { array get item : start 0 }
-                operation : line increaseby { array get item : functionArgs 1 }
+                operation : line increaseby { array get item : functionArgs 0 }
                 operation : line increaseby { array get item : start 1 }
 
                 operation : { array get item : output 0 } equals line
@@ -2705,9 +2705,9 @@ file start : GLS
                 comment line :     (a: string, b: int): boolean;
                 operation : line equals { array get item : middle 0 } plus "("
 
-                if start : { operation : { native call : array length functionArgs } greaterthan 3 }
+                if start : { operation : { native call : array length functionArgs } greaterthan 2 }
                     comment line : All arguments are added using VariableDeclarePartial
-                    for numbers start : i number 3 lessthan { native call : array length functionArgs } 2
+                    for numbers start : i number 2 lessthan { native call : array length functionArgs } 2
                         operation : { array get item : variableDeclarationArgs 0 } equals { array get item : functionArgs i }
                         operation : { array get item : variableDeclarationArgs 1 } equals { array get item : functionArgs { operation : i plus 1 } }
 
@@ -2734,15 +2734,15 @@ file start : GLS
 
                 return : output
             else start
-                operation : line increaseby { array get item : start 0 } plus { array get item : functionArgs 0 } plus (" ") plus (" ") plus { array get item : start 1 }
-                operation : line increaseby (" ") plus { class member function call : { this } parseType { array get item : functionArgs 2 } }
-                operation : line increaseby (" ") plus { array get item : functionArgs 1 }
+                operation : line increaseby { array get item : start 0 } plus { class member function call : { this } getClassPublicAlias } plus { array get item : start 1 }
+                operation : line increaseby (" ") plus { class member function call : { this } parseType { array get item : functionArgs 1 } }
+                operation : line increaseby (" ") plus { array get item : functionArgs 0 }
 
-                if start : { operation : { native call : array length functionArgs } greaterthan 3 }
+                if start : { operation : { native call : array length functionArgs } greaterthan 2 }
                     operation : line increaseby { array get item : middle 0 }
 
                     comment line : All arguments are added using VariableDeclarePartial
-                    for numbers start : i number 4 lessthan { native call : array length functionArgs } 2
+                    for numbers start : i number 2 lessthan { native call : array length functionArgs } 2
                         operation : line increaseby { class member function call : { this } parseType { array get item : functionArgs i } } plus (", ")
                     for end
 

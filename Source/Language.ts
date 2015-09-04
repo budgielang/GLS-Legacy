@@ -2691,7 +2691,7 @@ module GLS {
             return [0];
         }
         
-        // string visibility, string name, string return type[, string paramName, string paramType, ...]
+        // string name, string return type[, string paramName, string paramType, ...]
         public LambdaTypeDeclare(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("LambdaTypeDeclare", functionArgs, 3);
 
@@ -2710,9 +2710,9 @@ module GLS {
                 var output: any[] = new Array(6);
                 
                 // public interface TestInterface 
-                line = functionArgs[0];
+                line = this.getClassPublicAlias();
                 line += start[0];
-                line += functionArgs[1];
+                line += functionArgs[0];
                 line += start[1];
 
                 output[0] = line;
@@ -2721,9 +2721,9 @@ module GLS {
                 // a: string, b: int : boolean;
                 line = middle[0] + "(";
 
-                if (functionArgs.length > 3) {
+                if (functionArgs.length > 2) {
                     // All arguments are added using VariableDeclarePartial
-                    for (i = 3; i < functionArgs.length; i += 2) {
+                    for (i = 2; i < functionArgs.length; i += 2) {
                         variableDeclarationArgs[0] = functionArgs[i];
                         variableDeclarationArgs[1] = functionArgs[i + 1];
 
@@ -2750,7 +2750,7 @@ module GLS {
 
                 return output;
             } else {
-                line += start[0] + functionArgs[0] + " " + " " + start[1];
+                line += start[0] + this.getClassPublicAlias() + start[1];
                 line += " " + this.parseType(functionArgs[2]);
                 line += " " + functionArgs[1];
 
@@ -2758,7 +2758,7 @@ module GLS {
                     line += middle[0];
                     
                     // All arguments are added using VariableDeclarePartial
-                    for (i = 4; i < functionArgs.length; i += 2) {
+                    for (i = 3; i < functionArgs.length; i += 2) {
                         line += this.parseType(functionArgs[i]) + ", ";
                     }
                     
