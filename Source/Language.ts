@@ -1495,7 +1495,7 @@ module GLS {
         }
 
         public addTypeAlias(key: string, alias: string): Language {
-            this.TypeAliases[key] = alias;
+            this.TypeAliases[key] = alias
             return this;
         }
 
@@ -1511,7 +1511,7 @@ module GLS {
         }
 
         public addOperationAlias(key: string, alias: string): Language {
-            this.OperationAliases[key] = alias;
+            this.OperationAliases[key] = alias
             return this;
         }
 
@@ -1527,7 +1527,7 @@ module GLS {
         }
 
         public addValueAlias(key: string, alias: string): Language {
-            this.ValueAliases[key] = alias;
+            this.ValueAliases[key] = alias
             return this;
         }
 
@@ -2120,7 +2120,7 @@ module GLS {
             var output: string = this.getClassStartLeft();
             output += this.parseType(functionArgs[0]);
 
-            if (functionArgs.length > 2) {
+            if (functionArgs.length > 1) {
                 if (this.getClassExtendsAsFunction()) {
                     output += "(" + this.parseType(functionArgs[1]) + ")";
                 } else {
@@ -2131,7 +2131,7 @@ module GLS {
             output += this.getClassStartRight();
 
             if (this.getClassPrivacy()) {
-                output += this.getClassPublicAlias() + output;
+                output = this.getClassPublicAlias() + output;
             }
 
             return [output, 1];
@@ -2699,7 +2699,7 @@ module GLS {
             return [0];
         }
         
-        // string name, string return type[, string paramName, string paramType, ...]
+        // string visibility, string name, string return type[, string paramName, string paramType, ...]
         public LambdaTypeDeclare(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("LambdaTypeDeclare", functionArgs, 3);
 
@@ -2745,7 +2745,7 @@ module GLS {
                 line += ")";
 
                 if (this.getFunctionReturnsExplicit() && this.getFunctionTypeAfterName()) {
-                    line += this.getFunctionTypeMarker() + this.parseType(functionArgs[2]);
+                    line += this.getFunctionTypeMarker() + this.parseType(functionArgs[1]);
                 }
 
                 line += middle[1];
@@ -2759,8 +2759,8 @@ module GLS {
                 return output;
             } else {
                 line += start[0] + this.getClassPublicAlias() + start[1];
-                line += " " + this.parseType(functionArgs[2]);
-                line += " " + functionArgs[1];
+                line += " " + this.parseType(functionArgs[1]);
+                line += " " + functionArgs[0];
 
                 if (functionArgs.length > 2) {
                     line += middle[0];

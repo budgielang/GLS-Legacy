@@ -2104,7 +2104,7 @@ file start : GLS
             variable declare : output string { class member function call : { this } getClassStartLeft }
             operation : output increaseby { class member function call : { this } parseType { array get item : functionArgs 0 } }
 
-            if start : { operation : { native call : array length functionArgs } greaterthan 2 }
+            if start : { operation : { native call : array length functionArgs } greaterthan 1 }
                 if start : { class member function call : { this } getClassExtendsAsFunction }
                     operation : output increaseby "(" plus { class member function call : { this } parseType { array get item : functionArgs 1 } } plus ")"
                 else start
@@ -2115,7 +2115,7 @@ file start : GLS
             operation : output increaseby { class member function call : { this } getClassStartRight }
 
             if start : { class member function call : { this } getClassPrivacy }
-                operation : output increaseby { class member function call : { this } getClassPublicAlias } plus output
+                operation : output equals { class member function call : { this } getClassPublicAlias } plus output
             if end
             
             return : { array initialize : mixed output 1 }
@@ -2729,7 +2729,7 @@ file start : GLS
                 operation : line increaseby ")"
 
                 if start : { operation : { class member function call : { this } getFunctionReturnsExplicit } and { class member function call : { this } getFunctionTypeAfterName } }
-                    operation : line increaseby { class member function call : { this } getFunctionTypeMarker } plus { class member function call : { this } parseType { array get item : functionArgs 2 } }
+                    operation : line increaseby { class member function call : { this } getFunctionTypeMarker } plus { class member function call : { this } parseType { array get item : functionArgs 1 } }
                 if end
 
                 operation : line increaseby { array get item : middle 1 }
