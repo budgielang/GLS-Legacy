@@ -24,6 +24,7 @@ module GLS.Languages {
         .setClassStaticLabel("static ")
         .setClassStartLeft("class ")
         .setClassStartRight(" {")
+        .setClassPublicAlias("public ")
         .setClassTemplates(true)
         .setClassTemplatesBetween(", ")
         .setClassThis("this")

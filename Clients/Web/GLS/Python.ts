@@ -29,6 +29,7 @@ module GLS.Languages {
         .setClassNewer("")
         .setClassParentName("")
         .setClassPrivacy(false)
+        .setClassPublicAlias("")
         .setClassStaticFunctionDecorator("@staticmethod")
         .setClassStaticFunctionRequiresDecorator(true)
         .setClassStaticLabel("")
