@@ -1485,7 +1485,7 @@ file start : GLS
         class member function end
 
         class member function start : Language public addTypeAlias Language key string alias string
-            dictionary key set : { class member variable get : { this } TypeAliases } alias key
+            dictionary key set : { class member variable get : { this } TypeAliases } key alias
             return : { this }
         class member function end
 
@@ -1500,7 +1500,7 @@ file start : GLS
         class member function end
 
         class member function start : Language public addOperationAlias Language key string alias string
-            dictionary key set : { class member variable get : { this } OperationAliases } alias key
+            dictionary key set : { class member variable get : { this } OperationAliases } key alias
             return : { this }
         class member function end
 
@@ -1515,7 +1515,7 @@ file start : GLS
         class member function end
 
         class member function start : Language public addValueAlias Language key string alias string
-            dictionary key set : { class member variable get : { this } ValueAliases } alias key
+            dictionary key set : { class member variable get : { this } ValueAliases } key alias
             return : { this }
         class member function end
 

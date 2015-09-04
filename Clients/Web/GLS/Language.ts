@@ -1495,7 +1495,7 @@ module GLS {
         }
 
         public addTypeAlias(key: string, alias: string): Language {
-            this.TypeAliases[alias] = key
+            this.TypeAliases[key] = alias;
             return this;
         }
 
@@ -1511,7 +1511,7 @@ module GLS {
         }
 
         public addOperationAlias(key: string, alias: string): Language {
-            this.OperationAliases[alias] = key
+            this.OperationAliases[key] = alias;
             return this;
         }
 
@@ -1527,7 +1527,7 @@ module GLS {
         }
 
         public addValueAlias(key: string, alias: string): Language {
-            this.ValueAliases[alias] = key
+            this.ValueAliases[key] = alias;
             return this;
         }
 
