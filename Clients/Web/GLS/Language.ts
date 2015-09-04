@@ -2156,7 +2156,7 @@ module GLS {
                 }
                 
                 // The last argument does not have the last ", " at the end
-                output += output.substring(0, output.length - 2);
+                output = output.substring(0, output.length - 2);
             }
 
             output += ")";
@@ -2538,23 +2538,22 @@ module GLS {
             return [this.getConditionEnd(), -1];
         }
         
-        // string i, string type, string initial, string comparison, string boundary[, string change]
-        // e.x. i int 0 lessthan 7
+        // string i, string initial, string comparison, string boundary[, string change]
+        // e.x. i 0 lessthan 7
         public ForNumbersStart(functionArgs: string[], isInline: boolean): any[] {
-            this.requireArgumentsLength("ForNumbersStart", functionArgs, 5);
+            this.requireArgumentsLength("ForNumbersStart", functionArgs, 4);
 
             var output: string = "for" + this.getConditionStartLeft();
             var i: string = functionArgs[0];
-            var typeName: string = this.parseType(functionArgs[1]);
-            var initial: string = functionArgs[2];
-            var comparison: string = functionArgs[3];
-            var boundary: string = functionArgs[4];
+            var initial: string = functionArgs[1];
+            var comparison: string = functionArgs[2];
+            var boundary: string = functionArgs[3];
             var direction: string = "increaseby";
             var change: string;
             var generalArgs: any[];
 
-            if (functionArgs.length > 5) {
-                change = functionArgs[5];
+            if (functionArgs.length > 4) {
+                change = functionArgs[4];
             } else {
                 change = "1";
             }
@@ -2571,13 +2570,13 @@ module GLS {
                 output += this.getRangedForLoopsEnd();
             } else {
                 generalArgs = [i, "equals", initial];
-                output += this.Operation(generalArgs, true)[0] + this.getSemiColon();
+                output += this.Operation(generalArgs, true)[0] + this.getSemiColon() + " ";
 
-                generalArgs = [i, comparison, initial];
-                output += this.Comparison(generalArgs, true)[0] + this.getSemiColon();
+                generalArgs = [i, comparison, boundary];
+                output += this.Comparison(generalArgs, true)[0] + this.getSemiColon() + " ";
 
-                generalArgs = [i, "increaseby", initial];
-                output += this.Operation(generalArgs, true)[0] + this.getSemiColon();
+                generalArgs = [i, direction, change];
+                output += this.Operation(generalArgs, true)[0];
             }
 
             output += this.getConditionStartRight();
@@ -2676,6 +2675,8 @@ module GLS {
             this.requireArgumentsLength("IfStart", functionArgs, 1);
 
             var output: string = this.getIf() + this.getConditionStartLeft();
+
+            output += functionArgs[0] + this.getConditionStartRight();
 
             return [output, 1];
         }
