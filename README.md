@@ -17,9 +17,10 @@ No language is perfect. The following are some seemingly obvious omissions in GL
 
 | Feature             | C# | Java     | Python   | Ruby | TypeScript  |
 |---------------------|----|----------|----------|------|-------------|
-| Foreach over Values |    |          |          |      |  Missing!   |
+| Foreach Over Values |    |          |          |      |  Missing!   |
 | Multiline Lambdas   |    |          | Missing! |      |             |
 | Optional Parameters |    | Missing! |          |      |             |
 | String.Replace      |    |          |          |      |  Abnormal!  |
+| Switch Statements   |    |          | Missing! |      |             |
 
 This list will grow as features are requested.

@@ -243,9 +243,8 @@ module GLS {
                 "variable declare": this.VariableDeclare.bind(this),
                 "variable declare incomplete": this.VariableDeclareIncomplete.bind(this),
                 "variable declare partial": this.VariableDeclarePartial.bind(this),
-                "while condition start": this.WhileConditionStart.bind(this),
                 "while end": this.WhileEnd.bind(this),
-                "while variable start": this.WhileVariableStart.bind(this)
+                "while start": this.WhileStart.bind(this)
             };
 
             this.OperationAliases = {
@@ -2051,7 +2050,7 @@ module GLS {
         public ClassStaticVariableDeclare(functionArgs: string[], isInline?: boolean): any[] {
             this.requireArgumentsLength("ClassStaticVariableDeclare", functionArgs, 3);
 
-            var variableType = this.parseType(functionArgs[2]),
+            var variableType: string = this.parseType(functionArgs[2]),
                 variableDeclarationArgs: string[],
                 variableDeclared: any[];
 
@@ -2181,8 +2180,8 @@ module GLS {
             for (i = 0; i < functionArgs.length - 1; i += 1) {
                 output += functionArgs[i] + " ";
             }
-
             output += functionArgs[i];
+
             return [output, 0];
         }
 
@@ -2518,7 +2517,6 @@ module GLS {
 
         // string i, string type, string initial, string comparison, string boundary[, string change]
         // e.x. i int 0 lessthan 7
-        // e.x. { variable declare partial : i } int 0 lessthan 7
         public ForNumbersStart(functionArgs: string[], isInline?: boolean): any[] {
             this.requireArgumentsLength("ForNumbersStart", functionArgs, 5);
 
@@ -2529,7 +2527,6 @@ module GLS {
                 initial: string = functionArgs[2],
                 comparison: string = functionArgs[3],
                 boundary: string = functionArgs[4],
-                direction: string = "increaseby",
                 change: string;
 
             if (functionArgs.length > 5) {
@@ -2556,7 +2553,7 @@ module GLS {
                 generalArgs = [i, comparison, boundary];
                 output += " " + this.Comparison(generalArgs, true)[0] + this.getSemiColon();
 
-                generalArgs = [i, direction, change];
+                generalArgs = [i, "increaseby", change];
                 output += " " + this.Operation(generalArgs, true)[0];
             }
 
@@ -2690,13 +2687,13 @@ module GLS {
 
             var start: string[] = this.getLambdaTypeDeclarationStart(),
                 middle: string[] = this.getLambdaTypeDeclarationMiddle(),
-                end: string[] = this.getLambdaTypeDeclarationEnd();
+                end: string[] = this.getLambdaTypeDeclarationEnd(),
+                line: string,
+                i: number;
 
             if (this.getLambdaTypeDeclarationAsInterface()) {
                 var variableDeclarationArguments = new Array(2),
-                    output = new Array(6),
-                    line: string,
-                    i: number;
+                    output = new Array(6);
 
                 // public interface TestInterface {
                 line = functionArgs[0];
@@ -2710,8 +2707,8 @@ module GLS {
                 //     (a: string, b: int): boolean;
                 line = middle[0] + "(";
 
-                // All arguments are added using VariableDeclarePartial
                 if (functionArgs.length > 3) {
+                    // All arguments are added using VariableDeclarePartial
                     for (i = 3; i < functionArgs.length; i += 2) {
                         variableDeclarationArguments[0] = functionArgs[i];
                         variableDeclarationArguments[1] = functionArgs[i + 1];
@@ -2740,9 +2737,6 @@ module GLS {
 
                 return output;
             } else {
-                var line: string = "", // this.getLambdaTypeDeclareStart(),
-                    i: number;
-
                 line += start[0] + functionArgs[0] + " " + start[1];
                 line += " " + this.parseType(functionArgs[2]);
                 line += " " + functionArgs[1];
@@ -2882,8 +2876,10 @@ module GLS {
             return [output, 0];
         }
 
-        // [string anything, ...]
-        public Parenthesis(functionArgs: string[], isInline?: boolean): any[] {
+        // string anything[, ...]
+        public Parenthesis(functionArgs: string[], isInline?: boolean): any[]{
+            this.requireArgumentsLength("Parenthesis", functionArgs, 1);
+
             var output: string = "(",
                 i: number;
 
@@ -2965,6 +2961,8 @@ module GLS {
         }
 
         // string name, string type[, string value]
+        // Ex. var x: number;
+        // Ex. var x: number = 7;
         public VariableDeclare(functionArgs: string[], isInline?: boolean): any[] {
             this.requireArgumentsLength("VariableDeclare", functionArgs, 2);
 
@@ -2983,7 +2981,7 @@ module GLS {
         // E.x. var x: number
         // E.x. var x: number = 7
         public VariableDeclareIncomplete(functionArgs: string[], isInline?: boolean): any[] {
-            this.requireArgumentsLength("VariableDeclareStartLine", functionArgs, 2);
+            this.requireArgumentsLength("VariableDeclareIncomplete", functionArgs, 2);
 
             var variableType: string = this.parseType(functionArgs[1]),
                 variableDeclarationArguments: string[],
@@ -3028,24 +3026,12 @@ module GLS {
             return [output, 1];
         }
 
-        // string left, string operator, string right
-        public WhileConditionStart(functionArgs: string[], isInline?: boolean): any[] {
-            this.requireArgumentsLength("WhileConditionStart", functionArgs, 3);
-
-            var output: string = "while" + this.getConditionStartLeft() + functionArgs[0] + " ";
-
-            output += this.getOperationAlias(functionArgs[1]) + " ";
-            output += functionArgs[2] + this.getConditionStartRight();
-
-            return [output, 1];
-        }
-
         public WhileEnd(functionArgs: string[], isInline?: boolean): any[] {
             return [this.getConditionEnd(), -1];
         }
 
-        // string variable
-        public WhileVariableStart(functionArgs: string[], isInline?: boolean): any[] {
+        // string value
+        public WhileStart(functionArgs: string[], isInline?: boolean): any[] {
             this.requireArgumentsLength("WhileVariableStart", functionArgs, 1);
 
             var output: string = "while" + this.getConditionStartLeft();
