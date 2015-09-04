@@ -4,6 +4,7 @@ module GLS {
         private OperationAliases: any;
         private TypeAliases: any;
         private ValueAliases: any;
+        private PrivacyAliases: any;
         private NativeFunctionAliases: any;
         
         // General information
@@ -271,6 +272,12 @@ module GLS {
             this.TypeAliases = {};
 
             this.ValueAliases = {};
+
+            this.PrivacyAliases = {
+                "class": {},
+                "member": {},
+                "module": {}
+            };
 
             this.NativeFunctionAliases = {
                 "array": {},
@@ -1513,6 +1520,23 @@ module GLS {
                 if (aliases.hasOwnProperty(i)) {
                     this.addValueAlias(i, aliases[i]);
                 }
+            }
+
+            return this;
+        }
+
+        public getPrivacyAlias(section: string, key: string): string {
+            return this.PrivacyAliases[section][key];
+        }
+
+        public addPrivacyAlias(section: string, key: string, alias: string): Language {
+            this.PrivacyAliases[section][key] = alias;
+            return this;
+        }
+
+        public addPrivacyAliases(section: string, aliasInfos: any): Language {
+            for (var i in aliasInfos) {
+                this.addPrivacyAlias(section, i, aliasInfos[i]);
             }
 
             return this;
