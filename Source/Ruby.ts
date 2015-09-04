@@ -72,7 +72,7 @@ module GLS.Languages {
         .setLambdaTypeDeclarationEnd(["}"])
         .setLambdaTypeDeclarationMiddle(["", ";"])
         .setLambdaTypeDeclarationRequired(true)
-        .setLambdaTypeDeclarationStart([" interface ", " {"])
+        .setLambdaTypeDeclarationStart(["interface ", " {"])
         .setMainEndLine("end")
         .setMainStartLine("if __FILE__ == $PROGRAM_NAME")
         .setToString(".to_s")

@@ -80,7 +80,7 @@ module GLS.Languages {
         .setLambdaTypeDeclarationEnd(["}"])
         .setLambdaTypeDeclarationMiddle(["run", ";"])
         .setLambdaTypeDeclarationRequired(true)
-        .setLambdaTypeDeclarationStart([" interface ", " {"])
+        .setLambdaTypeDeclarationStart(["interface ", " {"])
         .setMainEndLine("}")
         .setMainStartLine("public void main() {")
         .setToString("String.valueOf")
