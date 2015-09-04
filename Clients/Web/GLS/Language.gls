@@ -44,7 +44,8 @@ file start : GLS
         class member variable declare : VariableTypeMarker private string
         class member variable declare : VariableDeclareStart private string
 
-        comment line : booleans
+        comment line : Booleans
+
         class member variable declare : BooleanClass private string
         class member variable declare : True private string
         class member variable declare : False private string
@@ -98,7 +99,6 @@ file start : GLS
         class member variable declare : DictionaryKeyLeft private string
         class member variable declare : DictionaryKeyMiddle private string
         class member variable declare : DictionaryKeyRight private string
-        class member variable declare : DictionaryKeysNatural private boolean
 
         comment line : Exceptions
         class member variable declare : ExceptionCatch private string
@@ -174,6 +174,7 @@ file start : GLS
                 dictionary initialize key : ("array initialize") { class member function get : { this } ArrayInitialize } ,
                 dictionary initialize key : ("array initialize sized") { class member function get : { this } ArrayInitializeSized } ,
                 dictionary initialize key : ("array get item") { class member function get : { this } ArrayGetItem } ,
+                dictionary initialize key : ("catch") { class member function get : { this } Catch } ,
                 dictionary initialize key : ("class constructor end") { class member function get : { this } ClassConstructorEnd } ,
                 dictionary initialize key : ("class constructor inherited call") { class member function get : { this } ClassConstructorInheritedCall } ,
                 dictionary initialize key : ("class constructor inherited start") { class member function get : { this } ClassConstructorInheritedStart } ,
@@ -209,8 +210,11 @@ file start : GLS
                 dictionary initialize key : ("dictionary initialize key") { class member function get : { this } DictionaryInitializeKey } ,
                 dictionary initialize key : ("dictionary initialize start") { class member function get : { this } DictionaryInitializeStart } ,
                 dictionary initialize key : ("dictionary type") { class member function get : { this } DictionaryType } ,
+                dictionary initialize key : ("elif start") { class member function get : { this } ElifStart } ,
+                dictionary initialize key : ("else start") { class member function get : { this } ElseStart } ,
                 dictionary initialize key : ("file end") { class member function get : { this } FileEnd } ,
                 dictionary initialize key : ("file start") { class member function get : { this } FileStart } ,
+                dictionary initialize key : ("finally") { class member function get : { this } Finally } ,
                 dictionary initialize key : ("for each keys start") { class member function get : { this } ForEachKeysStart } ,
                 dictionary initialize key : ("for each pairs start") { class member function get : { this } ForEachPairsStart } ,
                 dictionary initialize key : ("for end") { class member function get : { this } ForEnd } ,
@@ -224,6 +228,8 @@ file start : GLS
                 dictionary initialize key : ("if start") { class member function get : { this } IfStart } ,
                 dictionary initialize key : ("lambda declare inline") { class member function get : { this } LambdaDeclareInline } ,
                 dictionary initialize key : ("lambda type declare") { class member function get : { this } LambdaTypeDeclare } ,
+                dictionary initialize key : ("loop break") { class member function get : { this } LoopBreak } ,
+                dictionary initialize key : ("loop continue") { class member function get : { this } LoopContinue } ,
                 dictionary initialize key : ("main end") { class member function get : { this } MainEnd } ,
                 dictionary initialize key : ("main start") { class member function get : { this } MainStart } ,
                 dictionary initialize key : ("native call") { class member function get : { this } NativeCall } ,
@@ -232,13 +238,17 @@ file start : GLS
                 dictionary initialize key : ("parenthesis") { class member function get : { this } Parenthesis } ,
                 dictionary initialize key : ("print line") { class member function get : { this } PrintLine } ,
                 dictionary initialize key : ("return") { class member function get : { this } Return } ,
+                dictionary initialize key : ("this") { class member function get : { this } This } ,
+                dictionary initialize key : ("throw") { class member function get : { this } Throw } ,
+                dictionary initialize key : ("try end") { class member function get : { this } TryEnd} ,
+                dictionary initialize key : ("try start") { class member function get : { this } TryStart } ,
                 dictionary initialize key : ("type") { class member function get : { this } Type } ,
                 dictionary initialize key : ("value") { class member function get : { this } Value } ,
-                dictionary initialize key : ("variable set") { class member function get : { this } VariableDeclare } ,
-                dictionary initialize key : ("variable set incomplete") { class member function get : { this } VariableDeclareIncomplete } ,
-                dictionary initialize key : ("variable set partial") { class member function get : { this } VariableDeclarePartial } ,
+                dictionary initialize key : ("variable declare") { class member function get : { this } VariableDeclare } ,
+                dictionary initialize key : ("variable declare incomplete") { class member function get : { this } VariableDeclareIncomplete } ,
+                dictionary initialize key : ("variable declare partial") { class member function get : { this } VariableDeclarePartial } ,
                 dictionary initialize key : ("while end") { class member function get : { this } WhileEnd } ,
-                dictionary initialize key : ("while start") { class member function get : { this } WhileStart } ,
+                dictionary initialize key : ("while start") { class member function get : { this } WhileStart }
             dictionary initialize end
 
             class member variable set incomplete : { this } OperationAliases { dictionary initialize start : string string }
@@ -255,6 +265,8 @@ file start : GLS
                 dictionary initialize key : "greaterthan" ">" ,
                 dictionary initialize key : "lessthanequal" "<=" ,
                 dictionary initialize key : "greaterthanequal" ">=" ,
+                dictionary initialize key : "equalto" "==" ,
+                dictionary initialize key : "notequalto" "!=" ,
                 dictionary initialize key : "and" "&&" ,
                 dictionary initialize key : "or" "||" ,
                 dictionary initialize key : "mod" "%"
@@ -2674,7 +2686,7 @@ file start : GLS
             variable declare : start string[] { class member function call : { this } getLambdaTypeDeclarationStart }
             variable declare : middle string[] { class member function call : { this } getLambdaTypeDeclarationMiddle }
             variable declare : end string[] { class member function call : { this } getLambdaTypeDeclarationEnd }
-            variable declare : line string
+            variable declare : line string ""
             variable declare : i number
 
             if start : { class member function call : { this } getLambdaTypeDeclarationAsInterface }
@@ -2905,6 +2917,10 @@ file start : GLS
             return : { array initialize : mixed { operation : ("return ") plus { array get item : functionArgs 0 } plus { class member function call : { this } getSemiColon } } 0 }
         class member function end
 
+        class member function start : Language public This mixed[] functionArgs string[] isInline boolean
+            return : { array initialize : mixed { class member function call : { this } getClassThis } 0 }
+        class member function end
+
         comment line : [string message]
         class member function start : Language public Throw mixed[] functionArgs string[] isInline boolean
             variable declare : output string { operation : { class member function call : { this } getExceptionThrow } plus (" ") }
@@ -2975,6 +2991,10 @@ file start : GLS
                 operation : variableDeclarationArgs equals { array initialize : string { array get item : functionArgs 0 } variableType { array get item : functionArgs 2 } }
             if end
 
+            operation : variableDeclared equals { class member function call : { this } VariableDeclarePartial functionArgs isInline }
+            operation : { array get item : variableDeclared 0 } equals { class member function call : { this } getVariableDeclareStart } plus { array get item : variableDeclared 0 }
+            operation : { array get item : variableDeclared 1 } equals 1
+
             return : variableDeclared
         class member function end
         
@@ -3022,7 +3042,7 @@ file start : GLS
         
         comment block : Utilities
 
-        class member function start : Language public requireArgumentsLength void functionName string functionArgs string[] amount number
+        class member function start : Language private requireArgumentsLength void functionName string functionArgs string[] amount number
             if start : { operation  : { native call : array length functionArgs } lessthan amount }
                 throw : { operation : ("Not enough arguments given to ") plus functionName plus (". Required: ") plus amount plus "."  }
             if end

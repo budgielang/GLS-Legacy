@@ -1,4 +1,8 @@
 module GLS {
+    export interface Printer {
+        (functionArgs: string[], isInline: boolean): any[];
+    }
+
     export class Language {
         private Printers: any;
         private OperationAliases: any;
@@ -11,12 +15,12 @@ module GLS {
         private Extension: string;
         private PrintFunction: string;
         private SemiColon: string;
-
+        
         // Comments
         private CommentorBlockStart: string;
         private CommentorBlockEnd: string;
         private CommentorInline: string;
-
+        
         // Conditionals
         private ConditionStartLeft: string;
         private ConditionStartRight: string;
@@ -26,7 +30,7 @@ module GLS {
         private Elif: string;
         private Else: string;
         private If: string;
-
+        
         // Operators
         private And: string;
         private GreaterThan: string;
@@ -34,28 +38,29 @@ module GLS {
         private LessThan: string;
         private LessThanOrEqual: string;
         private Or: string;
-
+        
         // Variables
         private Undefined: string;
         private VariableTypesExplicit: boolean;
         private VariableTypesAfterName: boolean;
         private VariableTypeMarker: string;
         private VariableDeclareStart: string;
-
+        
         // Booleans
+        
         private BooleanClass: string;
         private True: string;
         private False: string;
-
+        
         // Numbers
         private NumberClass: string;
-
+        
         // Strings
         private StringClass: string;
         private StringLength: string;
         private ToString: string;
         private ToStringAsFunction: boolean;
-
+        
         // Loops
         private Break: string;
         private Continue: string;
@@ -73,7 +78,7 @@ module GLS {
         private RangedForLoopsStart: string;
         private RangedForLoopsMiddle: string;
         private RangedForLoopsEnd: string;
-
+        
         // Arrays
         private ArrayClass: string;
         private ArrayInitializationAsNew: boolean;
@@ -83,7 +88,7 @@ module GLS {
         private ArrayLength: string;
         private ArrayLengthAsFunction: boolean;
         private ArrayNegativeIndices: boolean;
-
+        
         // Dictionaries
         private DictionaryClass: string;
         private DictionaryInitializationAsNew: boolean;
@@ -96,7 +101,7 @@ module GLS {
         private DictionaryKeyLeft: string;
         private DictionaryKeyMiddle: string;
         private DictionaryKeyRight: string;
-
+        
         // Exceptions
         private ExceptionCatch: string;
         private ExceptionClass: string;
@@ -104,7 +109,7 @@ module GLS {
         private ExceptionFinally: string;
         private ExceptionThrow: string;
         private ExceptionTry: string;
-
+        
         // Functions
         private FunctionDefine: string;
         private FunctionDefineRight: string;
@@ -112,7 +117,7 @@ module GLS {
         private FunctionReturnsExplicit: boolean;
         private FunctionTypeAfterName: boolean;
         private FunctionTypeMarker: string;
-
+        
         // Lambdas
         private LambdaDeclareEnder: string;
         private LambdaDeclareMiddle: string;
@@ -122,7 +127,7 @@ module GLS {
         private LambdaTypeDeclarationEnd: string[];
         private LambdaTypeDeclarationMiddle: string[];
         private LambdaTypeDeclarationStart: string[];
-
+        
         // Classes
         private ClassConstructorAsStatic: boolean;
         private ClassConstructorInheritedShorthand: boolean;
@@ -153,16 +158,16 @@ module GLS {
         private ClassTemplatesBetween: string;
         private ClassThis: string;
         private ClassThisAccess: string;
-
+        
         // File
         private FileEndLine: string;
         private FileStartLeft: string;
         private FileStartRight: string;
-
+        
         // Main
         private MainEndLine: string;
         private MainStartLine: string;
-
+        
         // Extra
         public static INT_MIN: number = 9001;
 
@@ -237,8 +242,8 @@ module GLS {
                 "return": this.Return.bind(this),
                 "this": this.This.bind(this),
                 "throw": this.Throw.bind(this),
-                "try start": this.TryStart.bind(this),
                 "try end": this.TryEnd.bind(this),
+                "try start": this.TryStart.bind(this),
                 "type": this.Type.bind(this),
                 "value": this.Value.bind(this),
                 "variable declare": this.VariableDeclare.bind(this),
@@ -279,9 +284,9 @@ module GLS {
                 "string": {}
             };
         }
-
-
-        /* Gets
+        
+        /*
+        Gets
         */
 
         public getName(): string {
@@ -628,15 +633,15 @@ module GLS {
             return this.LambdaTypeDeclarationRequired;
         }
 
-        public getLambdaTypeDeclarationEnd(): any[] {
+        public getLambdaTypeDeclarationEnd(): string[] {
             return this.LambdaTypeDeclarationEnd;
         }
 
-        public getLambdaTypeDeclarationMiddle(): any[] {
+        public getLambdaTypeDeclarationMiddle(): string[] {
             return this.LambdaTypeDeclarationMiddle;
         }
 
-        public getLambdaTypeDeclarationStart(): any[] {
+        public getLambdaTypeDeclarationStart(): string[] {
             return this.LambdaTypeDeclarationStart;
         }
 
@@ -775,9 +780,10 @@ module GLS {
         public getMainStartLine(): string {
             return this.MainStartLine;
         }
-
-
-        /* Sets
+        
+        
+        /*
+        Sets
         */
 
         public setName(value: string): Language {
@@ -1394,9 +1400,10 @@ module GLS {
             this.MainStartLine = value;
             return this;
         }
-
-
-        /* Array & Template parsing
+        
+        
+        /*
+        Array & Template parsing
         */
 
         public parseType(text: string): string {
@@ -1412,27 +1419,27 @@ module GLS {
         }
 
         public typeContainsArray(text: string): boolean {
-            return text.indexOf("[") !== -1;
+            return text.indexOf("[") != -1;
         }
 
         public typeContainsTemplate(text: string): boolean {
-            return text.indexOf("<") !== -1;
+            return text.indexOf("<") != -1;
         }
 
         public parseTypeWithArray(text: string): string {
-            var bracketIndex: number = text.indexOf("["),
-                name: string = text.substring(0, bracketIndex),
-                remainder: string = text.substring(bracketIndex);
+            var bracketIndex: number = text.indexOf("[");
+            var name: string = text.substring(0, bracketIndex);
+            var remainder: string = text.substring(bracketIndex);
 
             return this.parseType(name) + remainder;
         }
 
         public parseTypeWithTemplate(text: string): string {
-            var ltIndex: number = text.indexOf("<"),
-                output: string = text.substring(0, ltIndex),
-                i: number = ltIndex + 1,
-                templateType: string,
-                spaceNext: number;
+            var ltIndex: number = text.indexOf("<");
+            var output: string = text.substring(0, ltIndex);
+            var i: number = ltIndex + 1;
+            var templateType: string;
+            var spaceNext: number;
 
             if (!this.getClassTemplates()) {
                 return output;
@@ -1442,14 +1449,14 @@ module GLS {
 
             while (i < text.length) {
                 spaceNext = text.indexOf(" ", i);
-                if (spaceNext === -1) {
+                if (spaceNext == -1) {
                     break;
                 }
 
                 templateType = text.substring(i, spaceNext);
-
-                // These may have commas already (such as from DictionaryType)
-                if (templateType[templateType.length - 1] === ",") {
+                
+                // These may have commas already such as from DictionaryType
+                if (templateType[templateType.length - 1] == ",") {
                     templateType = templateType.substring(0, templateType.length - 1);
                 }
 
@@ -1458,17 +1465,21 @@ module GLS {
             }
 
             output += this.parseType(text.substring(i, text.length - 1));
-            output += ">";
 
             return output;
         }
         
         
-        /* Miscellaneous
+        /*
+        Miscellaneous
         */
 
         public getAliasOrDefault(aliases: any, key: string): string {
-            return aliases.hasOwnProperty(key) ? aliases[key] : key;
+            if (aliases.hasOwnProperty(key)) {
+                return aliases[key];
+            } else {
+                return key;
+            }
         }
 
         public getTypeAlias(key: string): string {
@@ -1484,45 +1495,48 @@ module GLS {
         }
 
         public addTypeAlias(key: string, alias: string): Language {
-            this.TypeAliases[key] = alias;
+            this.TypeAliases[alias] = key
             return this;
         }
 
         public addTypeAliases(aliases: any): Language {
-            for (var i in aliases) {
-                if (aliases.hasOwnProperty(i)) {
-                    this.addTypeAlias(i, aliases[i]);
-                }
+            var key: string;
+            var alias: string;
+            for (key in aliases) {
+                alias = aliases[key];
+                this.addTypeAlias(key, aliases[key]);
             }
 
             return this;
         }
 
         public addOperationAlias(key: string, alias: string): Language {
-            this.OperationAliases[key] = alias;
+            this.OperationAliases[alias] = key
             return this;
         }
 
         public addOperationAliases(aliases: any): Language {
-            for (var i in aliases) {
-                if (aliases.hasOwnProperty(i)) {
-                    this.addOperationAlias(i, aliases[i]);
-                }
+            var key: string;
+            var alias: string;
+            for (key in aliases) {
+                alias = aliases[key];
+                this.addOperationAlias(key, aliases[key]);
             }
 
             return this;
         }
 
         public addValueAlias(key: string, alias: string): Language {
-            this.ValueAliases[key] = alias;
+            this.ValueAliases[alias] = key
             return this;
         }
 
         public addValueAliases(aliases: any): Language {
-            for (var i in aliases) {
-                if (aliases.hasOwnProperty(i)) {
-                    this.addValueAlias(i, aliases[i]);
-                }
+            var key: string;
+            var alias: string;
+            for (key in aliases) {
+                alias = aliases[key];
+                this.addValueAlias(key, aliases[key]);
             }
 
             return this;
@@ -1538,34 +1552,36 @@ module GLS {
         }
 
         public addNativeFunctionAliases(className: string, aliasInfos: any): Language {
-            for (var i in aliasInfos) {
-                if (aliasInfos.hasOwnProperty(i)) {
-                    this.addNativeFunctionAlias(className, i, aliasInfos[i]);
-                }
+            var key: string;
+            var aliasInfo: any;
+            for (key in aliasInfos) {
+                aliasInfo = aliasInfos[key];
+                this.addNativeFunctionAlias(className, key, aliasInfo);
             }
 
             return this;
         }
 
-        public print(functionName: string, functionArgs: string[], isInline?: boolean): any[] {
+        public print(functionName: string, functionArgs: string[], isInline: boolean): any[] {
             if (!this.Printers.hasOwnProperty(functionName)) {
                 throw new Error("Function not found: " + functionName);
             }
 
             return this.Printers[functionName](functionArgs, isInline);
         }
-
-
-        /* Printers
+        
+        
+        /*
+        Printers
         */
-
+        
         // string type[, string key, ...]
-        public ArrayInitialize(functionArgs: string[], isInline?: boolean): any[] {
+        public ArrayInitialize(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("ArrayInitialize", functionArgs, 1);
 
-            var arrayType: string = this.parseType(functionArgs[0]),
-                output: string,
-                i: number;
+            var arrayType: string = this.parseType(functionArgs[0]);
+            var output: string;
+            var i: number;
 
             if (this.getArrayInitializationAsNewTyped()) {
                 output = "new " + arrayType + "[] { ";
@@ -1589,14 +1605,14 @@ module GLS {
 
             return [output, 0];
         }
-
+        
         // string type, string size
-        public ArrayInitializeSized(functionArgs: string[], isInline?: boolean): any[] {
-            this.requireArgumentsLength("ArrayInitializeSized", functionArgs, 2);
+        public ArrayInitializeSized(functionArgs: string[], isInline: boolean): any[] {
+            this.requireArgumentsLength("ArrayInitialize", functionArgs, 2);
 
-            var arrayType: string = this.parseType(functionArgs[0]),
-                arraySize: string = functionArgs[1],
-                output: string;
+            var arrayType: string = this.parseType(functionArgs[0]);
+            var arraySize: string = functionArgs[1];
+            var output: string;
 
             if (this.getArrayInitializationAsNewMultiplied()) {
                 output = "[" + this.getUndefined() + "]";
@@ -1617,19 +1633,17 @@ module GLS {
                 }
                 output += "(" + arraySize + ")";
             }
-
-            return [output, 0];
         }
-
+        
         // string name, string index
-        public ArrayGetItem(functionArgs: string[], isInline?: boolean): any[] {
+        public ArrayGetItem(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("ArrayGetItem", functionArgs, 1);
 
-            var name: string = functionArgs[0],
-                output: string = name + "[",
-                index: string = functionArgs[1];
+            var name: string = functionArgs[0];
+            var output: string = name + "[";
+            var index: string = functionArgs[1];
 
-            if (index[0] !== "-" || this.getArrayNegativeIndices()) {
+            if (index[0] != "-" || this.getArrayNegativeIndices()) {
                 output += index;
             } else {
                 index = index.substring(1);
@@ -1639,9 +1653,9 @@ module GLS {
             output += "]";
             return [output, 0];
         }
-
+        
         // [string name]
-        public Catch(functionArgs: string[], isInline?: boolean): any[] {
+        public Catch(functionArgs: string[], isInline: boolean): any[] {
             var output: string = this.getExceptionCatch() + this.getExceptionClass();
 
             if (functionArgs.length > 0) {
@@ -1653,33 +1667,33 @@ module GLS {
             return ["\0", -1, output, 1];
         }
 
-        public ClassConstructorEnd(functionArgs: string[], isInline?: boolean): any[] {
+        public ClassConstructorEnd(functionArgs: string[], isInline: boolean): any[] {
             return [this.getFunctionDefineEnd(), -1];
         }
-
+        
         // string super, [string argumentName, string argumentType, ...]
-        public ClassConstructorInheritedCall(functionArgs: string[], isInline?: boolean): any[] {
+        public ClassConstructorInheritedCall(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("ClassConstructorInheritedCall", functionArgs, 1);
 
-            var parentName: string = this.getClassParentName(),
-                callingArgsLength: number = functionArgs.length,
-                loopStart: number = 0,
-                callingArgs: string[],
-                callingResult: any[],
-                i: number;
-
+            var parentName: string = this.getClassParentName();
+            var callingArgsLength: number = functionArgs.length;
+            var loopStart: number = 0;
+            var callingArgs: string[];
+            var callingResult: any[];
+            var i: number;
+            
             // Blank parentName indicates the super's class name should be used
-            if (parentName.length === 0) {
+            if (parentName.length == 0) {
                 parentName = this.parseType(functionArgs[0]);
             }
-
-            // Taking a reference to this as a parameter increased the number of them
+            
+            // Taking a reference to `this` as a paremeter increases the number of parameters
             if (this.getClassFunctionsTakeThis()) {
                 callingArgsLength += 1;
                 loopStart += 1;
             }
 
-            callingArgs = new Array<string>(callingArgsLength);
+            callingArgs = new Array(callingArgsLength);
             callingArgs[0] = parentName;
 
             if (this.getClassExtendsAsFunction()) {
@@ -1696,23 +1710,23 @@ module GLS {
 
             return this.FunctionCall(callingArgs, isInline);
         }
-
+        
         // string name[, string superCall[, string argumentName, string argumentType, ...]]
-        public ClassConstructorInheritedStart(functionArgs: string[], isInline?: boolean): any[] {
+        public ClassConstructorInheritedStart(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("ClassConstructorInheritedStart", functionArgs, 1);
 
-            if (functionArgs.length === 1) {
+            if (functionArgs.length == 1) {
                 return this.ClassConstructorStart(functionArgs, isInline);
             }
 
-            var generalCall: any[],
-                callingArgs: string[],
-                output: any[],
-                i: number;
-
+            var generalCall: any[];
+            var callingArgs: string[];
+            var output: any[];
+            var i: number;
+            
             // Populate the arguments that will be passed to the actual method
             if (functionArgs.length > 2) {
-                callingArgs = new Array<string>(functionArgs.length - 1);
+                callingArgs = new Array(functionArgs.length - 1);
 
                 for (i = 2; i < functionArgs.length; i += 1) {
                     callingArgs[i - 1] = functionArgs[i];
@@ -1729,7 +1743,7 @@ module GLS {
                 // "Shorthand" usage, like in C#, comes before FunctionDefineRight
                 output = new Array(generalCall.length);
                 output[0] = generalCall[0].substring(0, generalCall[0].length - this.getFunctionDefineRight().length);
-                output[0] += " : " + functionArgs[1] + this.getFunctionDefineRight();
+                output[0] += functionArgs[1] + this.getFunctionDefineRight();
 
                 for (i = 1; i < generalCall.length; i += 1) {
                     output[i] = generalCall[i];
@@ -1752,66 +1766,56 @@ module GLS {
 
             return output;
         }
-
+        
         // string name[, string argumentName, string argumentType, ...]
-        public ClassConstructorStart(functionArgs: string[], isInline?: boolean): any[] {
+        public ClassConstructorStart(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("ClassConstructorStart", functionArgs, 1);
 
-            var output: string = this.getClassConstructorName(),
-                variableDeclarationArguments: string[] = [],
-                i: number;
+            var output: string = this.getClassConstructorName();
+            var variableDeclarationArgs: string[] = [];
+            var i: number;
 
             if (this.getClassConstructorLoose()) {
                 output = this.getClassFunctionsStart() + output;
             }
 
-            if (output.length === 0) {
+            if (output.length == 0) {
                 output = functionArgs[0];
             }
 
             output += "(";
-
+            
             // Languages like Python take a "self" or "this" equivalent first
             if (this.getClassFunctionsTakeThis()) {
-                variableDeclarationArguments[0] = this.getClassFunctionsThis();
-                variableDeclarationArguments[1] = functionArgs[0];
-
-                output += this.VariableDeclarePartial(variableDeclarationArguments, true)[0];
-            }
-
-            // All arguments are added using VariableDeclarePartial
-            if (functionArgs.length > 1) {
                 if (this.getClassFunctionsTakeThis()) {
                     output += ", ";
                 }
 
                 for (i = 1; i < functionArgs.length; i += 2) {
-                    variableDeclarationArguments[0] = functionArgs[i];
-                    variableDeclarationArguments[1] = functionArgs[i + 1];
+                    variableDeclarationArgs[0] = functionArgs[i];
+                    variableDeclarationArgs[1] = functionArgs[i];
 
-                    output += this.VariableDeclarePartial(variableDeclarationArguments, true)[0] + ", ";
+                    output += this.VariableDeclarePartial(variableDeclarationArgs, true)[0] + ", ";
                 }
-
+                
                 // The last argument does not have the last ", " at the end
-                output = output.substr(0, output.length - 2);
+                output = output.substring(0, output.length - 2);
             }
 
             output += ")" + this.getFunctionDefineRight();
             return [output, 1];
         }
 
-        public ClassEnd(functionArgs: string[], isInline?: boolean): any[] {
-            var output: string = this.getClassEnder();
-
+        public ClassEnd(functionArgs: string[], isInline: boolean): any[] {
             return [this.getClassEnder(), -1];
         }
-
-        // string variable, string function, [string argumentName, ...]
-        public ClassMemberFunctionCall(functionArgs: string[], isInline?: boolean): any[] {
+        
+        // string variable, string function[, string argumentName, ...]
+        public ClassMemberFunctionCall(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("ClassMemberFunctionCall", functionArgs, 2);
 
-            var output: string = functionArgs[0] + "." + functionArgs[1] + "(",
-                i: number;
+            var output: string = functionArgs[0] + "." + functionArgs[1] + "(";
+            var i: number;
 
             if (functionArgs.length > 2) {
                 for (i = 2; i < functionArgs.length - 1; i += 1) {
@@ -1829,12 +1833,12 @@ module GLS {
             return [output, 0];
         }
 
-        public ClassMemberFunctionEnd(functionArgs: string[], isInline?: boolean): any[] {
+        public ClassMemberFunctionEnd(functionArgs: string[], isInline: boolean): any[] {
             return [this.getFunctionDefineEnd(), -1];
         }
-
+        
         // string variable, string function
-        public ClassMemberFunctionGet(functionArgs: string[], isInline?: boolean): any[] {
+        public ClassMemberFunctionGet(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("ClassMemberFunctionStart", functionArgs, 2);
 
             var output: string = "";
@@ -1848,17 +1852,17 @@ module GLS {
 
             return [output, 0];
         }
-
-        // string class, string visibility, string name, string return, [, string argumentName, string argumentType...]
-        public ClassMemberFunctionStart(functionArgs: string[], isInline?: boolean): any[] {
+        
+        // string class, string visibility, string name, string return[, string argumentName, string argumentType, ...]
+        public ClassMemberFunctionStart(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("ClassMemberFunctionStart", functionArgs, 4);
 
-            var output: string = this.getClassFunctionsStart(),
-                variableDeclarationArguments: string[] = [],
-                i: number;
+            var output: string = this.getClassFunctionsStart();
+            var variableDeclarationArgs: string[] = [];
+            var i: number;
 
             if (this.getFunctionReturnsExplicit() && !this.getFunctionTypeAfterName()) {
-                output = this.parseType(functionArgs[3]) + " ";
+                output += this.parseType(functionArgs[3]) + " ";
             }
 
             if (this.getClassPrivacy()) {
@@ -1868,12 +1872,12 @@ module GLS {
             output += functionArgs[2] + "(";
 
             if (this.getClassFunctionsTakeThis()) {
-                variableDeclarationArguments[0] = this.getClassFunctionsThis();
-                variableDeclarationArguments[1] = functionArgs[0];
+                variableDeclarationArgs[0] = this.getClassFunctionsThis();
+                variableDeclarationArgs[1] = functionArgs[0];
 
-                output += this.VariableDeclarePartial(variableDeclarationArguments, true)[0];
+                output += this.VariableDeclarePartial(variableDeclarationArgs, true)[0];
             }
-
+            
             // All arguments are added using VariableDeclarePartial
             if (functionArgs.length > 4) {
                 if (this.getClassFunctionsTakeThis()) {
@@ -1881,14 +1885,14 @@ module GLS {
                 }
 
                 for (i = 4; i < functionArgs.length; i += 2) {
-                    variableDeclarationArguments[0] = functionArgs[i];
-                    variableDeclarationArguments[1] = functionArgs[i + 1];
+                    variableDeclarationArgs[0] = functionArgs[i];
+                    variableDeclarationArgs[1] = functionArgs[i + 1];
 
-                    output += this.VariableDeclarePartial(variableDeclarationArguments, true)[0] + ", ";
+                    output += this.VariableDeclarePartial(variableDeclarationArgs, true)[0] + ", ";
                 }
-
+                
                 // The last argument does not have the last ", " at the end
-                output = output.substr(0, output.length - 2);
+                output = output.substring(0, output.length - 2);
             }
 
             output += ")";
@@ -1900,16 +1904,16 @@ module GLS {
             output += this.getFunctionDefineRight();
             return [output, 1];
         }
-
+        
         // string name, string visibility, string type
-        public ClassMemberVariableDeclare(functionArgs: string[], isInline?: boolean): any[] {
+        public ClassMemberVariableDeclare(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("ClassMemberVariableDeclare", functionArgs, 3);
 
-            var variableType = this.parseType(functionArgs[2]),
-                variableDeclarationArgs: string[],
-                variableDeclared: any[];
+            var variableType: string = this.parseType(functionArgs[2]);
+            var variableDeclarationArgs: string[];
+            var variableDeclared: any[];
 
-            if (this.getClassMemberVariableDefault() !== "") {
+            if (this.getClassMemberVariableDefault() != "") {
                 variableDeclarationArgs = [functionArgs[0], variableType, this.getClassMemberVariableDefault()];
             } else {
                 variableDeclarationArgs = [functionArgs[0], variableType];
@@ -1930,28 +1934,28 @@ module GLS {
 
             return variableDeclared;
         }
-
+        
         // string name, string variable
-        public ClassMemberVariableGet(functionArgs: string[], isInline?: boolean): any[] {
+        public ClassMemberVariableGet(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("ClassMemberVariableGet", functionArgs, 2);
 
             return [functionArgs[0] + this.getClassThisAccess() + functionArgs[1], 0];
         }
-
+        
         // string variable, string name, string value
-        public ClassMemberVariableSet(functionArgs: string[], isInline?: boolean): any[] {
+        public ClassMemberVariableSet(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("ClassMemberVariableSet", functionArgs, 3);
 
-            var output: any = this.ClassMemberVariableSetIncomplete(functionArgs, isInline);
+            var output: any[] = this.ClassMemberVariableSetIncomplete(functionArgs, isInline);
 
             output[0] += this.getSemiColon();
             output[1] = 0;
 
             return output;
         }
-
+        
         // string name, string variable, string value
-        public ClassMemberVariableSetIncomplete(functionArgs: string[], isInline?: boolean): any[] {
+        public ClassMemberVariableSetIncomplete(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("ClassMemberVariableSetIncomplete", functionArgs, 3);
 
             var output: string = functionArgs[0] + this.getClassThisAccess();
@@ -1960,18 +1964,19 @@ module GLS {
 
             return [output, 1];
         }
-
-        // string class, string function, [string argumentName, ...]
-        public ClassStaticFunctionCall(functionArgs: string[], isInline?: boolean): any[] {
+        
+        // string class, string function[, string argumentName, ...]
+        public ClassStaticFunctionCall(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("ClassStaticFunctionCall", functionArgs, 2);
 
-            var output: string = functionArgs[0] + "." + functionArgs[1] + "(",
-                i: number;
+            var output: string = functionArgs[0] + "." + functionArgs[1] + "(";
+            var i: number;
 
             if (functionArgs.length > 2) {
                 for (i = 2; i < functionArgs.length - 1; i += 1) {
                     output += functionArgs[i] + ", ";
                 }
+
                 output += functionArgs[i];
             }
 
@@ -1984,12 +1989,12 @@ module GLS {
             return [output, 0];
         }
 
-        public ClassStaticFunctionEnd(functionArgs: string[], isInline?: boolean): any[] {
+        public ClassStaticFunctionEnd(functionArgs: string[], isInline: boolean): any[] {
             return [this.getFunctionDefineEnd(), -1];
         }
-
+        
         // string class, string function
-        public ClassStaticFunctionGet(functionArgs: string[], isInline?: boolean): any[] {
+        public ClassStaticFunctionGet(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("ClassStaticFunctionGet", functionArgs, 2);
 
             var output: string = "";
@@ -2003,17 +2008,17 @@ module GLS {
 
             return [output, 0];
         }
-
-        // string class, string visibility, string name, string return, [, string argumentName, string argumentType...]
-        public ClassStaticFunctionStart(functionArgs: string[], isInline?: boolean): any[] {
+        
+        // string class, string visibility, string name, string return[, string argumentName, string argumentType, ...]
+        public ClassStaticFunctionStart(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("ClassStaticFunctionStart", functionArgs, 4);
 
-            var output: string = this.getClassFunctionsStart(),
-                variableDeclarationArguments: string[] = [],
-                i: number;
+            var output: string = this.getClassFunctionsStart();
+            var variableDeclarationArgs: string[] = [];
+            var i: number;
 
             if (this.getFunctionReturnsExplicit() && !this.getFunctionTypeAfterName()) {
-                output = this.parseType(functionArgs[3]) + " ";
+                output += this.parseType(functionArgs[3]) + " ";
             }
 
             output = this.getClassStaticLabel() + output;
@@ -2023,7 +2028,7 @@ module GLS {
             }
 
             output += functionArgs[2] + "(";
-
+            
             // All arguments are added using VariableDeclarePartial
             if (functionArgs.length > 4) {
                 if (this.getClassFunctionsTakeThis()) {
@@ -2031,14 +2036,14 @@ module GLS {
                 }
 
                 for (i = 4; i < functionArgs.length; i += 2) {
-                    variableDeclarationArguments[0] = functionArgs[i];
-                    variableDeclarationArguments[1] = functionArgs[i + 1];
+                    variableDeclarationArgs[0] = functionArgs[i];
+                    variableDeclarationArgs[1] = functionArgs[i + 1];
 
-                    output += this.VariableDeclarePartial(variableDeclarationArguments, true)[0] + ", ";
+                    output += this.VariableDeclarePartial(variableDeclarationArgs, true)[0] + ", ";
                 }
-
+                
                 // The last argument does not have the last ", " at the end
-                output = output.substr(0, output.length - 2);
+                output = output.substring(0, output.length - 2);
             }
 
             output += ")";
@@ -2047,26 +2052,24 @@ module GLS {
                 output += this.getFunctionTypeMarker() + this.parseType(functionArgs[3]);
             }
 
-            output += this.getFunctionDefineRight();
-
             if (this.getClassStaticFunctionRequiresDecorator()) {
                 return [this.getClassStaticFunctionDecorator(), 0, output, 1];
             } else {
                 return [output, 1];
             }
         }
-
+        
         // string class, string visibility, string type[, string value]
-        public ClassStaticVariableDeclare(functionArgs: string[], isInline?: boolean): any[] {
+        public ClassStaticVariableDeclare(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("ClassStaticVariableDeclare", functionArgs, 3);
 
-            var variableType: string = this.parseType(functionArgs[2]),
-                variableDeclarationArgs: string[],
-                variableDeclared: any[];
+            var variableType: string = this.parseType(functionArgs[2]);
+            var variableDeclarationArgs: string[];
+            var variableDeclared: any[];
 
             if (functionArgs.length > 3) {
                 variableDeclarationArgs = [functionArgs[0], variableType, functionArgs[3]];
-            } else if (this.getClassMemberVariableDefault() !== "") {
+            } else if (this.getClassMemberVariableDefault() != "") {
                 variableDeclarationArgs = [functionArgs[0], variableType, this.getClassMemberVariableDefault()];
             } else {
                 variableDeclarationArgs = [functionArgs[0], variableType];
@@ -2088,16 +2091,16 @@ module GLS {
 
             return variableDeclared;
         }
-
+        
         // string class, string name
-        public ClassStaticVariableGet(functionArgs: string[], isInline?: boolean): any[] {
+        public ClassStaticVariableGet(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("ClassStaticVariableGet", functionArgs, 2);
 
             return [functionArgs[0] + "." + functionArgs[1], 0];
         }
-
+        
         // string class, string name, string value
-        public ClassStaticVariableSet(functionArgs: string[], isInline?: boolean): any[] {
+        public ClassStaticVariableSet(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("ClassStaticVariableSet", functionArgs, 3);
 
             var output: string = functionArgs[0] + "." + functionArgs[1] + " ";
@@ -2107,15 +2110,15 @@ module GLS {
 
             return [output, 0];
         }
-
+        
         // string name[, string parentClass]
-        public ClassStart(functionArgs: string[], isInline?: boolean): any[] {
+        public ClassStart(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("ClassStart", functionArgs, 1);
 
             var output: string = this.getClassStartLeft();
             output += this.parseType(functionArgs[0]);
 
-            if (functionArgs.length > 1) {
+            if (functionArgs.length > 2) {
                 if (this.getClassExtendsAsFunction()) {
                     output += "(" + this.parseType(functionArgs[1]) + ")";
                 } else {
@@ -2126,18 +2129,18 @@ module GLS {
             output += this.getClassStartRight();
 
             if (this.getClassPrivacy()) {
-                output = this.getClassPublicAlias() + output;
+                output += this.getClassPublicAlias() + output;
             }
 
             return [output, 1];
         }
-
+        
         // string class[, string argumentName, string argumentType, ...]
-        public ClassNew(functionArgs: string[], isInline?: boolean): any[] {
+        public ClassNew(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("ClassNew", functionArgs, 1);
 
-            var output: string,
-                i: number;
+            var output: string;
+            var i: number;
 
             if (this.getClassConstructorAsStatic()) {
                 output = this.parseType(functionArgs[0]) + "." + this.getClassNewer() + "(";
@@ -2149,9 +2152,9 @@ module GLS {
                 for (i = 1; i < functionArgs.length; i += 1) {
                     output += functionArgs[i] + ", ";
                 }
-
+                
                 // The last argument does not have the last ", " at the end
-                output = output.substr(0, output.length - 2);
+                output += output.substring(0, output.length - 2);
             }
 
             output += ")";
@@ -2162,11 +2165,11 @@ module GLS {
 
             return [output, 0];
         }
-
+        
         // [string message, ...]
-        public CommentBlock(functionArgs: string[], isInline?: boolean): any[] {
-            var output: any[] = new Array((functionArgs.length + 2) * 2),
-                i: number;
+        public CommentBlock(functionArgs: string[], isInline: boolean): any[] {
+            var output: any[] = new Array((functionArgs.length + 2) * 2);
+            var i: number;
 
             output[0] = this.getCommentorBlockStart();
             output[1] = 0;
@@ -2181,11 +2184,11 @@ module GLS {
 
             return output;
         }
-
+        
         // [string message, ...]
-        public CommentLine(functionArgs: string[], isInline?: boolean): any[] {
-            var output: string = this.getCommentorInline() + " ",
-                i: number;
+        public CommentLine(functionArgs: string[], isInline: boolean): any[] {
+            var output: string = this.getCommentorInline() + " ";
+            var i: number;
 
             for (i = 0; i < functionArgs.length - 1; i += 1) {
                 output += functionArgs[i] + " ";
@@ -2194,31 +2197,31 @@ module GLS {
 
             return [output, 0];
         }
-
+        
         // [string message, ...]
-        public CommentInline(functionArgs: string[], isInline?: boolean): any[] {
+        public CommentInline(functionArgs: string[], isInline: boolean): any[] {
             var result: any[] = this.CommentLine(functionArgs, isInline);
 
             result[1] = Language.INT_MIN;
 
             return result;
         }
-
+        
         // string left, string comparison, string right
-        public Comparison(functionArgs: string[], isInline?: boolean): any[] {
+        public Comparison(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("Comparison", functionArgs, 3);
 
             return [functionArgs[0] + " " + this.getOperationAlias(functionArgs[1]) + " " + functionArgs[2], 0];
         }
-
+        
         // string left, string right
-        public Concatenate(functionArgs: string[], isInline?: boolean): any[] {
+        public Concatenate(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("Comparison", functionArgs, 2);
 
             var output: string;
 
             if (this.getToStringAsFunction()) {
-                output = this.getToString() + "(" + functionArgs[0] + ")";
+                output = this.toString() + "(" + functionArgs[0] + ")";
                 output += " " + this.getOperationAlias("plus") + " ";
                 output += this.getToString() + "(" + functionArgs[1] + ")";
             } else {
@@ -2233,9 +2236,9 @@ module GLS {
 
             return [output, 0];
         }
-
+        
         // string name, string key
-        public DictionaryKeyCheck(functionArgs: string[], isInline?: boolean): any[] {
+        public DictionaryKeyCheck(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("DictionaryKeyCheck", functionArgs, 2);
 
             var output: string;
@@ -2248,27 +2251,27 @@ module GLS {
 
             return [output, 0];
         }
-
+        
         // string name, string key
-        public DictionaryKeyGet(functionArgs: string[], isInline?: boolean): any[] {
+        public DictionaryKeyGet(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("DictionaryKeyGet", functionArgs, 2);
 
             return [functionArgs[0] + "[" + functionArgs[1] + "]", 0];
         }
-
+        
         // string name, string key, string value
-        public DictionaryKeySet(functionArgs: string[], isInline?: boolean): any[] {
+        public DictionaryKeySet(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("DictionaryKeySet", functionArgs, 3);
 
             return [functionArgs[0] + "[" + functionArgs[1] + "] = " + functionArgs[2], 0];
         }
-
+        
         // string key, string value
-        public DictionaryInitialize(functionArgs: string[], isInline?: boolean): any[] {
+        public DictionaryInitialize(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("DictionaryInitialize", functionArgs, 2);
 
-            var dictionaryType: string = this.DictionaryType(functionArgs, true)[0],
-                output: string;
+            var dictionaryType: string = this.DictionaryType(functionArgs, true)[0];
+            var output: string;
 
             if (this.getDictionaryInitializationAsNew()) {
                 output = "new " + dictionaryType + "()";
@@ -2279,7 +2282,7 @@ module GLS {
             return [output, 0];
         }
 
-        public DictionaryInitializeEnd(functionArgs: string[], isInline?: boolean): any[] {
+        public DictionaryInitializeEnd(functionArgs: string[], isInline: boolean): any[] {
             var output: string = this.getDictionaryInitializeEnder();
 
             if (!isInline) {
@@ -2288,9 +2291,9 @@ module GLS {
 
             return [output, -1];
         }
-
+        
         // string key, string value[, string comma]
-        public DictionaryInitializeKey(functionArgs: string[], isInline?: boolean): any[] {
+        public DictionaryInitializeKey(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("DictionaryInitializeKey", functionArgs, 2);
 
             var output: string = this.getDictionaryKeyLeft();
@@ -2305,13 +2308,13 @@ module GLS {
 
             return [output, 0];
         }
-
+        
         // string keyType, string valueType
-        public DictionaryInitializeStart(functionArgs: string[], isInline?: boolean): any[] {
+        public DictionaryInitializeStart(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("DictionaryInitializeStart", functionArgs, 2);
 
-            var dictionaryType: string,
-                output: string;
+            var dictionaryType: string;
+            var output: string;
 
             if (this.getDictionaryInitializationAsNew()) {
                 dictionaryType = this.DictionaryType(functionArgs, true)[0];
@@ -2328,11 +2331,11 @@ module GLS {
             output += dictionaryType;
             output += this.getDictionaryInitializeStarter();
 
-            return [output, 1];
+            return [output, 0];
         }
-
+        
         // string keyType, string valueType
-        public DictionaryType(functionArgs: string[], isInline?: boolean): any[] {
+        public DictionaryType(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("ClassStart", functionArgs, 2);
 
             if (!this.getVariableTypesExplicit()) {
@@ -2342,62 +2345,68 @@ module GLS {
             var output: string = this.getDictionaryClass();
 
             if (this.getDictionaryInitializationAsNew()) {
-                output += "<" + this.parseType(functionArgs[0]);
+                output = "<" + this.parseType(functionArgs[0]);
                 output += this.getClassTemplatesBetween();
                 output += this.parseType(functionArgs[1]) + ">";
             }
 
             return [output, 0];
         }
-
+        
         // string value
-        public ElifStart(functionArgs: string[], isInline?: boolean): any[] {
+        public ElifStart(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("ElifStart", functionArgs, 1);
 
             var output: string = this.getElif() + this.getConditionStartLeft();
 
-            output += functionArgs[0] + this.getConditionStartRight();
+            var output: string = functionArgs[0] + this.getConditionStartRight();
 
             return ["\0", -1, output, 1];
         }
 
-        public ElseStart(functionArgs: string[], isInline?: boolean): any[] {
+        public ElseStart(functionArgs: string[], isInline: boolean): any[] {
             return ["\0", -1, this.getElse() + this.getConditionContinueRight(), 1];
         }
 
-        public FileEnd(functionArgs: string[], isInline?: boolean): any[] {
+        public FileEnd(functionArgs: string[], isInline: boolean): any[] {
             var output: string = this.getFileEndLine();
-            return [output, output.length === 0 ? Language.INT_MIN : -1];
-        }
 
-        // string name
-        public FileStart(functionArgs: string[], isInline?: boolean): any[] {
+            if (output.length == 0) {
+                return [output, Language.INT_MIN];
+            }
+
+            return [output, -1];
+        }
+        
+        // name
+        public FileStart(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("FileStart", functionArgs, 1);
 
-            var left: string = this.getFileStartLeft(),
-                right: string = this.getFileStartRight();
+            var left: string = this.getFileStartLeft();
+            var right: string = this.getFileStartRight();
 
-            if (left.length === 0 && right.length === 0) {
+            if (left.length == 0 && right.length == 0) {
                 return ["", Language.INT_MIN];
             }
 
             return [left + functionArgs[0] + right, 1];
         }
 
-        public Finally(functionArgs: string[], isInline?: boolean): any[] {
+        public Finally(functionArgs: string[], isInline: boolean): any[] {
             var output: string = this.getExceptionFinally();
+
             output += this.getConditionContinueRight();
 
             return ["\0", -1, output, 1];
         }
-
+        
         // string keyName, string keyType, string container
-        // Ex. for each keys start : i string names
-        public ForEachKeysStart(functionArgs: string[], isInline?: boolean): any[] {
+        // E.x. for each keys start : i string names
+        public ForEachKeysStart(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("ForEachKeysStart", functionArgs, 3);
 
-            var variableDeclareArgs: any[] = [functionArgs[0], functionArgs[1]],
-                output: string;
+            var variableDeclareArgs: any[] = [functionArgs[0], functionArgs[1]];
+            var output: string;
 
             if (this.getForEachAsMethod()) {
                 output = functionArgs[2];
@@ -2420,67 +2429,67 @@ module GLS {
 
             return [output, 1];
         }
-
-        // Must assume keyName and valueName exist; pairName is created (some languages won't use pairName)
+        
+        // Assume keyName and valueName exist, while pairName is created some languages won't use pairName
         // Ex. for each pairs start : pair name string count int names
         // string pairName, string keyName, string keyType, string valueName, string valueType, string container
-        public ForEachPairsStart(functionArgs: string[], isInline?: boolean): any[] {
+        public ForEachPairsStart(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("ForEachPairsStart", functionArgs, 6);
 
-            var pairName: string = functionArgs[0],
-                keyName: string = functionArgs[1],
-                keyType: string = functionArgs[2],
-                valueName: string = functionArgs[3],
-                valueType: string = functionArgs[4],
-                container: string = functionArgs[5],
-                variableDeclareArgs: string[],
-                line: string,
-                output: any[];
+            var pairName: string = functionArgs[0];
+            var keyName: string = functionArgs[1];
+            var keyType: string = functionArgs[2];
+            var valueName: string = functionArgs[3];
+            var valueType: string = functionArgs[4];
+            var container: string = functionArgs[5];
+            var variableDeclareArgs: string[];
+            var line: string;
+            var output: any[];
 
             if (this.getForEachAsMethod()) {
                 // container.each do |keyName, valueName|
-                output = new Array<string>(4);
-                variableDeclareArgs = new Array<string>(2);
-
+                output = new Array(4);
+                variableDeclareArgs = new Array(2);
+                
                 // container.each do |
                 line = container;
                 line += this.getForEachStarter();
-
-                //                    keyName
+                
+                //                     keyName
                 variableDeclareArgs[0] = keyName;
                 variableDeclareArgs[1] = keyType;
                 line += this.VariableDeclarePartial(variableDeclareArgs, true)[0];
-
-                //                           , valueName
+                
+                //                           , valueName|
                 variableDeclareArgs[0] = valueName;
                 variableDeclareArgs[1] = valueType;
                 line += ", " + this.VariableDeclarePartial(variableDeclareArgs, true)[0];
-
-                //                                      |
                 line += this.getForEachInner();
 
                 output = [line, 1];
             } else if (this.getForEachPairsAsPair()) {
-                // foreach (KeyValuePair<string, int> pairName in container) {
-                output = new Array<string>(6);
-
-                // foreach (KeyValuePair<string, int> pairName
+                // foreach KeyValuePair<string, int> pairName in container 
+                //     keyName = pairName.Key;
+                //     valueName = pairName.Value;
+                output = new Array(6);
+                
+                // forEach KeyValuePair<string, int> pairName
                 line = this.getForEachStarter();
-                variableDeclareArgs = new Array<string>(2);
+                variableDeclareArgs = new Array(2);
                 variableDeclareArgs[0] = pairName;
                 variableDeclareArgs[1] = this.getForEachPairsPairClass() + "<" + keyType + ", " + valueType + ">";
                 line += this.VariableDeclarePartial(variableDeclareArgs, true)[0];
-
-                //                                             in container) {
+                
+                // in container) 
                 line += this.getForEachInner();
                 line += container;
                 line += this.getConditionStartRight();
 
                 output[0] = line;
                 output[1] = 1;
-
-                // keyName = pairName.Key;
-                variableDeclareArgs = new Array<string>(3);
+                
+                // keyName = pairName.Key
+                variableDeclareArgs = new Array(3);
                 variableDeclareArgs[0] = keyName;
                 variableDeclareArgs[1] = "equals";
                 variableDeclareArgs[2] = pairName + this.getForEachPairsRetrieveKey();
@@ -2488,18 +2497,20 @@ module GLS {
                 output[2] = line;
                 output[3] = 0;
                 
-                // valueName = pairName.Value;
-                variableDeclareArgs = new Array<string>(3);
+                // valueName = pairName.Value
+                variableDeclareArgs = new Array(3);
                 variableDeclareArgs[0] = valueName;
-                variableDeclareArgs[1] = "equals";
-                variableDeclareArgs[2] = pairName + this.getForEachPairsRetrieveValue();
+                variableDeclareArgs[0] = "equals";
+                variableDeclareArgs[0] = pairName + this.getForEachPairsRetrieveValue();
                 line = this.Operation(variableDeclareArgs, false)[0];
-                output[4] = line;
-                output[5] = 0;
+                output[3] = line;
+                output[4] = 0;
             } else {
+                // for keyName in container 
+                // valueName = container[keyName]
                 output = new Array(4);
-
-                // for (keyName in container) {
+                
+                // for keyName in container 
                 line = this.getForEachStarter();
                 line += keyName;
                 line += this.getForEachInner();
@@ -2507,8 +2518,8 @@ module GLS {
                 line += this.getConditionStartRight();
                 output[0] = line;
                 output[1] = 1;
-
-                // valueName = container[keyName];
+                
+                // valueName = container[keyName]
                 variableDeclareArgs = new Array(3);
                 variableDeclareArgs[0] = valueName;
                 variableDeclareArgs[1] = "equals";
@@ -2521,23 +2532,24 @@ module GLS {
             return output;
         }
 
-        public ForEnd(functionArgs: string[], isInline?: boolean): any[] {
+        public ForEnd(functionArgs: string[], isInline: boolean): any[] {
             return [this.getConditionEnd(), -1];
         }
-
+        
         // string i, string type, string initial, string comparison, string boundary[, string change]
         // e.x. i int 0 lessthan 7
-        public ForNumbersStart(functionArgs: string[], isInline?: boolean): any[] {
+        public ForNumbersStart(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("ForNumbersStart", functionArgs, 5);
 
-            var output: string = "for" + this.getConditionStartLeft(),
-                generalArgs: any[],
-                i: string = functionArgs[0],
-                typeName = this.parseType(functionArgs[1]),
-                initial: string = functionArgs[2],
-                comparison: string = functionArgs[3],
-                boundary: string = functionArgs[4],
-                change: string;
+            var output: string = "for" + this.getConditionStartLeft();
+            var i: string = functionArgs[0];
+            var typeName: string = this.parseType(functionArgs[1]);
+            var initial: string = functionArgs[2];
+            var comparison: string = functionArgs[3];
+            var boundary: string = functionArgs[4];
+            var direction: string = "increaseby";
+            var change: string;
+            var generalArgs: any[];
 
             if (functionArgs.length > 5) {
                 change = functionArgs[5];
@@ -2547,11 +2559,10 @@ module GLS {
 
             if (this.getRangedForLoops()) {
                 output += i;
-
                 output += this.getRangedForLoopsStart();
-                output += initial + this.getRangedForLoopsMiddle() + boundary;
+                output += initial + this.getRangedForLoopsMiddle() + change;
 
-                if (change !== "1") {
+                if (change != "1") {
                     output += this.getRangedForLoopsMiddle() + change;
                 }
 
@@ -2560,42 +2571,37 @@ module GLS {
                 generalArgs = [i, "equals", initial];
                 output += this.Operation(generalArgs, true)[0] + this.getSemiColon();
 
-                generalArgs = [i, comparison, boundary];
-                output += " " + this.Comparison(generalArgs, true)[0] + this.getSemiColon();
+                generalArgs = [i, comparison, initial];
+                output += this.Comparison(generalArgs, true)[0] + this.getSemiColon();
 
-                generalArgs = [i, "increaseby", change];
-                output += " " + this.Operation(generalArgs, true)[0];
+                generalArgs = [i, "increaseby", initial];
+                output += this.Operation(generalArgs, true)[0] + this.getSemiColon();
             }
 
             output += this.getConditionStartRight();
 
             return [output, 1];
         }
-
+        
         // string name[, string parameter, ...]
-        public FunctionCall(functionArgs: string[], isInline?: boolean): any[] {
+        public FunctionCall(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("FunctionCall", functionArgs, 1);
 
-            var output: string = functionArgs[0] + "(",
-                i: number;
+            var output: string = functionArgs[0];
+            var i: number;
 
             if (functionArgs.length > 1) {
                 for (i = 1; i < functionArgs.length - 1; i += 1) {
                     output += functionArgs[i] + ", ";
                 }
+
                 output += functionArgs[i];
-            }
-
-            output += ")";
-
-            if (!isInline) {
-                output += this.getSemiColon();
             }
 
             return [output, 0];
         }
 
-        public FunctionCallPartialEnd(functionArgs: string[], isInline?: boolean): any[] {
+        public FunctionCallPartialEnd(functionArgs: string[], isInline: boolean): any[] {
             var output: string = ")";
 
             if (!isInline) {
@@ -2604,43 +2610,43 @@ module GLS {
 
             return [output, -1];
         }
-
+        
         // string name
-        public FunctionCallPartialStart(functionArgs: string[], isInline?: boolean): any[] {
+        public FunctionCallPartialStart(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("FunctionCallPartialStart", functionArgs, 1);
 
             return [functionArgs[0] + "(", 1];
         }
 
-        public FunctionEnd(functionArgs: string[], isInline?: boolean): any[] {
+        public FunctionEnd(functionArgs: string[], isInline: boolean): any[] {
             return [this.getFunctionDefineEnd(), -1];
         }
-
+        
         // string name, string return[, string argumentName, string argumentType, ...]
-        public FunctionStart(functionArgs: string[], isInline?: boolean): any[] {
+        public FunctionStart(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("FunctionStart", functionArgs, 2);
 
-            var output: string = "",
-                variableDeclarationArguments: string[] = [],
-                i: number;
+            var output: string = "";
+            var variableDeclarationArgs: string[] = [];
+            var i: number;
 
             if (this.getFunctionReturnsExplicit() && !this.getFunctionTypeAfterName()) {
                 output += this.parseType(functionArgs[1]) + " ";
             }
 
             output += this.getFunctionDefine() + functionArgs[0] + "(";
-
+            
             // All arguments are added using VariableDeclarePartial
             if (functionArgs.length > 2) {
                 for (i = 2; i < functionArgs.length; i += 2) {
-                    variableDeclarationArguments[0] = functionArgs[i];
-                    variableDeclarationArguments[1] = functionArgs[i + 1];
+                    variableDeclarationArgs[0] = functionArgs[i];
+                    variableDeclarationArgs[1] = functionArgs[i + 1];
 
-                    output += this.VariableDeclarePartial(variableDeclarationArguments, true)[0] + ", ";
+                    output += this.VariableDeclarePartial(variableDeclarationArgs, true)[0] + ", ";
                 }
-
+                
                 // The last argument does not have the last ", " at the end
-                output = output.substr(0, output.length - 2);
+                output = output.substring(0, output.length - 2);
             }
 
             output += ")";
@@ -2650,115 +2656,114 @@ module GLS {
             }
 
             output += this.getFunctionDefineRight();
-            return [output, 1];
+            return [1];
         }
 
-        public IfEnd(functionArgs: string[], isInline?: boolean): any[] {
+        public IfEnd(functionArgs: string[], isInline: boolean): any[] {
             return [this.getConditionEnd(), -1];
         }
         
         // string value
-        public IfStart(functionArgs: string[], isInline?: boolean): any[] {
+        public IfStart(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("IfStart", functionArgs, 1);
 
             var output: string = this.getIf() + this.getConditionStartLeft();
 
-            output += functionArgs[0] + this.getConditionStartRight();
-
             return [output, 1];
         }
-
+        
         // [, string param, ...], statement
-        public LambdaDeclareInline(functionArgs: string[], isInline?: boolean): any[] {
-            this.requireArgumentsLength("LambdaTypeDeclare", functionArgs, 3);
+        public LambdaDeclareInline(functionArgs: string[], isInline: boolean): any[] {
+            this.requireArgumentsLength("LambdaTypeDeclareInline", functionArgs, 3);
 
-            var output: string = this.getLambdaDeclareStarter(),
-                i: number;
+            var output: string = this.getLambdaDeclareStarter();
+            var i: number;
 
             for (i = 0; i < functionArgs.length - 1; i += 1) {
                 output += functionArgs[i] + ", ";
             }
 
-            output = output.substr(0, output.length - 2);
+            output = output.substring(0, output.length - 2);
             output += this.getLambdaDeclareMiddle();
 
             output += functionArgs[functionArgs.length - 1] + this.getLambdaDeclareEnder();
 
-            return [output, 0];
+            return [0];
         }
-
-        // string name, string returnType[, string paramName, string paramType, ...]
-        public LambdaTypeDeclare(functionArgs: string[], isInline?: boolean): any[] {
-            this.requireArgumentsLength("LambdaTypeDeclare", functionArgs, 2);
+        
+        // string visibility, string name, string return type[, string paramName, string paramType, ...]
+        public LambdaTypeDeclare(functionArgs: string[], isInline: boolean): any[] {
+            this.requireArgumentsLength("LambdaTypeDeclare", functionArgs, 3);
 
             if (!this.getLambdaTypeDeclarationRequired()) {
                 return ["", Language.INT_MIN];
             }
 
-            var start: string[] = this.getLambdaTypeDeclarationStart(),
-                middle: string[] = this.getLambdaTypeDeclarationMiddle(),
-                end: string[] = this.getLambdaTypeDeclarationEnd(),
-                line: string,
-                i: number;
+            var start: string[] = this.getLambdaTypeDeclarationStart();
+            var middle: string[] = this.getLambdaTypeDeclarationMiddle();
+            var end: string[] = this.getLambdaTypeDeclarationEnd();
+            var line: string = "";
+            var i: number;
 
             if (this.getLambdaTypeDeclarationAsInterface()) {
-                var variableDeclarationArguments = new Array(2),
-                    output = new Array(6);
-
-                // public interface TestInterface {
-                line = this.getClassPublicAlias();
+                var variableDeclarationArgs: string[] = new Array(2);
+                var output: any[] = new Array(6);
+                
+                // public interface TestInterface 
+                line = functionArgs[0];
                 line += start[0];
-                line += functionArgs[0];
+                line += functionArgs[1];
                 line += start[1];
 
                 output[0] = line;
                 output[1] = 1;
-
-                //     (a: string, b: int): boolean;
+                
+                // a: string, b: int : boolean;
                 line = middle[0] + "(";
 
                 if (functionArgs.length > 3) {
                     // All arguments are added using VariableDeclarePartial
-                    for (i = 2; i < functionArgs.length; i += 2) {
-                        variableDeclarationArguments[0] = functionArgs[i];
-                        variableDeclarationArguments[1] = functionArgs[i + 1];
+                    for (i = 3; i < functionArgs.length; i += 2) {
+                        variableDeclarationArgs[0] = functionArgs[i];
+                        variableDeclarationArgs[1] = functionArgs[i + 1];
 
-                        line += this.VariableDeclarePartial(variableDeclarationArguments, true)[0] + ", ";
+                        line += this.VariableDeclarePartial(variableDeclarationArgs, true)[0] + ", ";
                     }
-
+                    
                     // The last argument does not have the last ", " at the end
-                    line = line.substr(0, line.length - 2);
+                    line = line.substring(0, line.length - 2);
                 }
 
                 line += ")";
 
                 if (this.getFunctionReturnsExplicit() && this.getFunctionTypeAfterName()) {
-                    line += this.getFunctionTypeMarker() + this.parseType(functionArgs[1]);
+                    line += this.getFunctionTypeMarker() + this.parseType(functionArgs[2]);
                 }
 
                 line += middle[1];
-
                 output[2] = line;
                 output[3] = 0;
-
+                
                 // }
                 output[4] = end[0];
                 output[5] = -1;
 
                 return output;
             } else {
-                line += start[0] + this.getClassPublicAlias() + start[1];
-                line += " " + this.parseType(functionArgs[1]);
-                line += " " + functionArgs[0];
+                line += start[0] + functionArgs[0] + " " + " " + start[1];
+                line += " " + this.parseType(functionArgs[2]);
+                line += " " + functionArgs[1];
 
-                if (functionArgs.length > 2) {
+                if (functionArgs.length > 3) {
                     line += middle[0];
-                    for (i = 3; i < functionArgs.length; i += 2) {
+                    
+                    // All arguments are added using VariableDeclarePartial
+                    for (i = 4; i < functionArgs.length; i += 2) {
                         line += this.parseType(functionArgs[i]) + ", ";
                     }
-
+                    
                     // The last argument does not have the last ", " at the end
-                    line = line.substr(0, line.length - 2);
+                    line = line.substring(0, line.length - 2);
                     line += middle[1];
                 }
 
@@ -2767,110 +2772,109 @@ module GLS {
             }
         }
 
-        public LoopBreak(functionArgs: string[], isInline?: boolean): any[] {
+        public LoopBreak(functionArgs: string[], isInline: boolean): any[] {
             return [this.getBreak() + this.getSemiColon(), 0];
         }
 
-        public LoopContinue(functionArgs: string[], isInline?: boolean): any[] {
+        public LoopContinue(functionArgs: string[], isInline: boolean): any[] {
             return [this.getContinue() + this.getSemiColon(), 0];
         }
 
-        public MainEnd(functionArgs: string[], isInline?: boolean): any[] {
-            return [this.getMainEndLine(), this.getMainStartLine().length === 0 ? 0 : -1];
-        }
+        public MainEnd(functionArgs: string[], isInline: boolean): any[] {
+            var start: string = this.getMainStartLine();
 
-        public MainStart(functionArgs: string[], isInline?: boolean): any[] {
-            var output: string = this.getMainStartLine();
-
-            return [output, output.length === 0 ? 0 : 1];
-        }
-
-        // string class, string function, string instance[, string parameter, ...]
-        public NativeCall(functionArgs: string[], isInline?: boolean): any[] {
-            this.requireArgumentsLength("NativeFunction", functionArgs, 3);
-
-            var className: string = this.getTypeAlias(functionArgs[0]),
-                aliasInfo: any = this.getNativeFunctionAlias(functionArgs[0], functionArgs[1]),
-                caller: string,
-                numArgs: number,
-                start: number,
-                output: string;
-
-            switch (aliasInfo.placement) {
-                case "member":
-                    caller = functionArgs[2] + "." + aliasInfo.alias;
-                    numArgs = functionArgs.length - 3;
-                    start = 2;
-                    break;
-
-                case "array":
-                    caller = functionArgs[2];
-                    numArgs = functionArgs.length - 3;
-                    start = 2;
-                    break;
-
-                case "static":
-                    caller = aliasInfo.alias;
-                    numArgs = functionArgs.length - 2;
-                    start = 1;
-                    break;
+            if (start.length == 0) {
+                return [this.getMainEndLine(), 0];
             }
 
-            switch (aliasInfo.usage) {
-                case "function":
-                    var functionCallArgs: any[] = new Array(numArgs),
-                        i: number;
+            return [this.getMainEndLine(), -1];
+        }
 
-                    functionCallArgs[0] = caller;
+        public MainStart(functionArgs: string[], isInline: boolean): any[] {
+            var output: string = this.getMainStartLine();
 
+            if (output.length == 0) {
+                return [output, 0];
+            }
+            return [output, 1];
+        }
+        
+        // string class, string function, string instance[, string parameter, ...]
+        public NativeCall(functionArgs: string[], isInline: boolean): any[] {
+            this.requireArgumentsLength("NativeFunction", functionArgs, 3);
+
+            var className: string = this.getTypeAlias(functionArgs[0]);
+            var aliasInfo: any = this.getNativeFunctionAlias(functionArgs[0], functionArgs[1]);
+            var placement: string = aliasInfo["placement"];
+            var usage: string = aliasInfo["usage"];
+            var caller: string;
+            var numArgs: number;
+            var start: number;
+            var output: string;
+
+            if (placement == "member") {
+                caller = functionArgs[2] + "." + aliasInfo["alias"];
+                numArgs = functionArgs.length - 3;
+                start = 2;
+            } else if (placement == "array") {
+                caller = functionArgs[2];
+                numArgs = functionArgs.length - 3;
+                start = 2;
+            } else if (placement == "static") {
+                caller = aliasInfo["alias"];
+                numArgs = functionArgs.length - 2;
+                start = 1;
+            }
+
+            if (usage == "function") {
+                var functionCallArgs: any[] = new Array(numArgs);
+                var i: number;
+
+                functionCallArgs[0] = caller;
+
+                for (i = 1; i < functionArgs.length - start; i += 1) {
+                    functionCallArgs[i] = functionCallArgs[i + start];
+                }
+
+                output = this.FunctionCall(functionCallArgs, isInline)[0];
+            } else if (usage == "variable") {
+                output = caller;
+            } else if (usage == "array") {
+                output = caller + "[";
+                
+                // Default to just the separator if there are no arguments
+                if (functionArgs.length - 1 == start) {
+                    output += aliasInfo["separator"];
+                } else {
                     for (i = 1; i < functionArgs.length - start; i += 1) {
-                        functionCallArgs[i] = functionArgs[i + start];
+                        output += functionArgs[i + start] + aliasInfo["separator"];
                     }
-
-                    output = this.FunctionCall(functionCallArgs, isInline)[0];
-                    break;
-
-                case "variable":
-                    output = caller;
-                    break;
-
-                case "array":
-                    output = caller + "[";
-
-                    // Default to just the separator if there are no arguments
-                    if (functionArgs.length - 1 === start) {
-                        output += aliasInfo["separator"];
-                    } else {
-                        for (i = 1; i < functionArgs.length - start; i += 1) {
-                            output += functionArgs[i + start] + aliasInfo["separator"];
-                        }
-
-                        // Remove the last separator if more than one argument is added
-                        if (functionArgs.length - start > 2) {
-                            output = output.substring(0, output.length - aliasInfo.separator.length);
-                        }
+                    
+                    // Remove the last separator if more than one argument is added
+                    if (functionArgs.length - start > 2) {
+                        output = output.substring(0, output.length - aliasInfo["separator"].length);
                     }
+                }
 
-                    output += "]";
-                    break;
+                output += "]";
             }
 
             return [output, 0];
         }
-
+        
         // string value
-        public Not(functionArgs: string[], isInline?: boolean): any[] {
+        public Not(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("Operation", functionArgs, 1);
 
             return ["!" + functionArgs[0], 0];
         }
-
-        // string i[, string operator, string difference, ...]
-        public Operation(functionArgs: string[], isInline?: boolean): any[] {
+        
+        // string left, string operator, string right[, string operator, string right, ...]
+        public Operation(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("Operation", functionArgs, 3);
 
-            var output: string = functionArgs[0] + " ",
-                i: number;
+            var output: string = functionArgs[0] + " ";
+            var i: number;
 
             for (i = 1; i < functionArgs.length; i += 2) {
                 output += this.getOperationAlias(functionArgs[i]) + " ";
@@ -2885,13 +2889,13 @@ module GLS {
 
             return [output, 0];
         }
-
-        // string anything[, ...]
-        public Parenthesis(functionArgs: string[], isInline?: boolean): any[]{
+        
+        // string inside[, ...]
+        public Parenthesis(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("Parenthesis", functionArgs, 1);
 
-            var output: string = "(",
-                i: number;
+            var output: string = "(";
+            var i: number;
 
             for (i = 0; i < functionArgs.length - 1; i += 1) {
                 output += functionArgs[i] + ", ";
@@ -2902,11 +2906,11 @@ module GLS {
 
             return [output, 0];
         }
-
+        
         // [string message, ...]
-        public PrintLine(functionArgs: string[], isInline?: boolean): any[] {
-            var output: string = this.getPrintFunction() + "(",
-                i: number;
+        public PrintLine(functionArgs: string[], isInline: boolean): any[] {
+            var output: string = this.getPrintFunction() + "(";
+            var i: number;
 
             for (i = 0; i < functionArgs.length - 1; i += 1) {
                 output += functionArgs[i] + ", ";
@@ -2921,20 +2925,20 @@ module GLS {
 
             return [output, 0];
         }
-
+        
         // string value
-        public Return(functionArgs: string[], isInline?: boolean): any[] {
+        public Return(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("FunctionReturn", functionArgs, 1);
 
             return ["return " + functionArgs[0] + this.getSemiColon(), 0];
         }
 
-        public This(functionArgs: string[], isInline?: boolean): any[] {
+        public This(functionArgs: string[], isInline: boolean): any[] {
             return [this.getClassThis(), 0];
         }
         
         // [string message]
-        public Throw(functionArgs: string[], isInline?: boolean): any[] {
+        public Throw(functionArgs: string[], isInline: boolean): any[] {
             var output: string = this.getExceptionThrow() + " ";
 
             if (functionArgs.length > 0) {
@@ -2950,30 +2954,30 @@ module GLS {
             return [output, 0];
         }
 
-        public TryStart(functionArgs: string[], isInline?: boolean): any[] {
+        public TryStart(functionArgs: string[], isInline: boolean): any[] {
             return [this.getExceptionTry() + this.getConditionContinueRight(), 1];
         }
 
-        public TryEnd(functionArgs: string[], isInline?: boolean): any[] {
+        public TryEnd(functionArgs: string[], isInline: boolean): any[] {
             return [this.getConditionEnd(), -1];
         }
-
+        
         // string type
-        public Type(functionArgs: string[], isInline?: boolean): any[] {
+        public Type(functionArgs: string[], isInline: boolean): any[] {
             return [this.getTypeAlias(functionArgs[0]), 0];
         }
-
+        
         // string value
-        public Value(functionArgs: string[], isInline?: boolean): any[] {
+        public Value(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("VariableDeclare", functionArgs, 1);
 
             return [this.getValueAlias(functionArgs[0]), 0];
         }
-
+        
         // string name, string type[, string value]
         // Ex. var x: number;
         // Ex. var x: number = 7;
-        public VariableDeclare(functionArgs: string[], isInline?: boolean): any[] {
+        public VariableDeclare(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("VariableDeclare", functionArgs, 2);
 
             var output: any[] = this.VariableDeclareIncomplete(functionArgs, isInline);
@@ -2986,21 +2990,21 @@ module GLS {
 
             return output;
         }
-
-        // string name, string type
-        // E.x. var x: number
-        // E.x. var x: number = 7
-        public VariableDeclareIncomplete(functionArgs: string[], isInline?: boolean): any[] {
+        
+        // string name, string type[, string value]
+        // Ex. var x: number
+        // Ex. var x: number = 7
+        public VariableDeclareIncomplete(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("VariableDeclareIncomplete", functionArgs, 2);
 
-            var variableType: string = this.parseType(functionArgs[1]),
-                variableDeclarationArguments: string[],
-                variableDeclared: any[];
+            var variableType: string = this.parseType(functionArgs[1]);
+            var variableDeclarationArgs: string[];
+            var variableDeclared: any[];
 
             if (functionArgs.length == 2) {
-                variableDeclarationArguments = [functionArgs[0], variableType];
+                variableDeclarationArgs = [functionArgs[0], variableType];
             } else {
-                variableDeclarationArguments = [functionArgs[0], variableType, functionArgs[2]];
+                variableDeclarationArgs = [functionArgs[0], variableType, functionArgs[2]];
             }
 
             variableDeclared = this.VariableDeclarePartial(functionArgs, isInline);
@@ -3009,15 +3013,15 @@ module GLS {
 
             return variableDeclared;
         }
-
+        
         // string name, string type[, string value]
-        // E.x. x: number;
-        // E.x. x: number = 7;
-        public VariableDeclarePartial(functionArgs: string[], isInline?: boolean): any[] {
+        // Ex. x: number
+        // Ex. x: number = 7
+        public VariableDeclarePartial(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("VariableDeclarePartial", functionArgs, 2);
 
-            var output: string = "",
-                variableType: string = this.parseType(functionArgs[1]);
+            var variableType: string = this.parseType(functionArgs[1]);
+            var output: string;
 
             if (this.getVariableTypesExplicit()) {
                 if (this.getVariableTypesAfterName()) {
@@ -3036,12 +3040,12 @@ module GLS {
             return [output, 1];
         }
 
-        public WhileEnd(functionArgs: string[], isInline?: boolean): any[] {
+        public WhileEnd(functionArgs: string[], isInline: boolean): any[] {
             return [this.getConditionEnd(), -1];
         }
-
+        
         // string value
-        public WhileStart(functionArgs: string[], isInline?: boolean): any[] {
+        public WhileStart(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("WhileVariableStart", functionArgs, 1);
 
             var output: string = "while" + this.getConditionStartLeft();
@@ -3050,15 +3054,17 @@ module GLS {
 
             return [output, 1];
         }
-
-
-        /* Utilities
+        
+        
+        /*
+        Utilities
         */
 
-        private requireArgumentsLength(functionName: string, functionArgs: string[], amount: number) {
+        private requireArgumentsLength(functionName: string, functionArgs: string[], amount: number): void {
             if (functionArgs.length < amount) {
-                throw new Error("Not enough arguments given to " + functionName + " (required: " + amount + ").");
+                throw new Error("Not enough arguments given to " + functionName + ". Required: " + amount + ".");
             }
         }
+
     }
 }
