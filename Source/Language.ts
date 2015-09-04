@@ -2962,6 +2962,8 @@ module GLS {
         }
 
         // string name, string type[, string value]
+        // Ex. var x: number;
+        // Ex. var x: number = 7;
         public VariableDeclare(functionArgs: string[], isInline?: boolean): any[] {
             this.requireArgumentsLength("VariableDeclare", functionArgs, 2);
 
@@ -2980,7 +2982,7 @@ module GLS {
         // E.x. var x: number
         // E.x. var x: number = 7
         public VariableDeclareIncomplete(functionArgs: string[], isInline?: boolean): any[] {
-            this.requireArgumentsLength("VariableDeclareStartLine", functionArgs, 2);
+            this.requireArgumentsLength("VariableDeclareIncomplete", functionArgs, 2);
 
             var variableType: string = this.parseType(functionArgs[1]),
                 variableDeclarationArguments: string[],
@@ -3025,24 +3027,12 @@ module GLS {
             return [output, 1];
         }
 
-        // string left, string operator, string right
-        public WhileConditionStart(functionArgs: string[], isInline?: boolean): any[] {
-            this.requireArgumentsLength("WhileConditionStart", functionArgs, 3);
-
-            var output: string = "while" + this.getConditionStartLeft() + functionArgs[0] + " ";
-
-            output += this.getOperationAlias(functionArgs[1]) + " ";
-            output += functionArgs[2] + this.getConditionStartRight();
-
-            return [output, 1];
-        }
-
         public WhileEnd(functionArgs: string[], isInline?: boolean): any[] {
             return [this.getConditionEnd(), -1];
         }
 
-        // string variable
-        public WhileVariableStart(functionArgs: string[], isInline?: boolean): any[] {
+        // string value
+        public WhileStartStart(functionArgs: string[], isInline?: boolean): any[] {
             this.requireArgumentsLength("WhileVariableStart", functionArgs, 1);
 
             var output: string = "while" + this.getConditionStartLeft();
