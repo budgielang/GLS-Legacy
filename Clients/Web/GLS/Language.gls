@@ -1617,6 +1617,8 @@ file start : GLS
                 if end
                 operation : output increaseby  "(" plus arraySize plus ")"
             if end
+
+            return : { array initialize : mixed output 0 }
         class member function end
 
         comment line : string name, string index
@@ -2571,7 +2573,7 @@ file start : GLS
         class member function start : Language public FunctionCall mixed[] functionArgs string[] isInline boolean
             class member function call : { this } requireArgumentsLength "FunctionCall" functionArgs 1
 
-            variable declare : output string { array get item : functionArgs 0 } plus "("
+            variable declare : output string { operation : { array get item : functionArgs 0 } plus "(" }
             variable declare : i number
 
             if start : { operation : { native call : array length functionArgs } greaterthan 1 }
@@ -2580,6 +2582,12 @@ file start : GLS
                 for end
 
                 operation : output increaseby { array get item : functionArgs i }
+            if end
+
+            operation : output increaseby ")"
+
+            if start : { not : isInline }
+                operation : output increaseby { class member function call : { this } getSemiColon }
             if end
 
             return : { array initialize : mixed output 0 }
@@ -2817,7 +2825,7 @@ file start : GLS
                 operation : { array get item : functionCallArgs 0 } equals caller
 
                 for numbers start : i number 1 lessthan { operation : { native call : array length functionArgs } minus start }
-                    operation : { array get item : functionCallArgs i } equals { array get item : functionCallArgs { operation : i plus start } }
+                    operation : { array get item : functionCallArgs i } equals { array get item : functionArgs { operation : i plus start } }
                 for end
 
                 operation : output equals { array get item : { class member function call : { this } FunctionCall functionCallArgs isInline } 0 }

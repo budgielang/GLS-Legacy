@@ -1633,6 +1633,8 @@ module GLS {
                 }
                 output += "(" + arraySize + ")";
             }
+
+            return [output, 0];
         }
         
         // string name, string index
@@ -2587,7 +2589,7 @@ module GLS {
         public FunctionCall(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("FunctionCall", functionArgs, 1);
 
-            var output: string = functionArgs[0];
+            var output: string = functionArgs[0] + "(";
             var i: number;
 
             if (functionArgs.length > 1) {
@@ -2596,6 +2598,12 @@ module GLS {
                 }
 
                 output += functionArgs[i];
+            }
+
+            output += ")";
+
+            if (!isInline) {
+                output += this.getSemiColon();
             }
 
             return [output, 0];
@@ -2833,7 +2841,7 @@ module GLS {
                 functionCallArgs[0] = caller;
 
                 for (i = 1; i < functionArgs.length - start; i += 1) {
-                    functionCallArgs[i] = functionCallArgs[i + start];
+                    functionCallArgs[i] = functionArgs[i + start];
                 }
 
                 output = this.FunctionCall(functionCallArgs, isInline)[0];
