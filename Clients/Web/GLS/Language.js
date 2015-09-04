@@ -79,9 +79,8 @@ var GLS;
                 "variable declare": this.VariableDeclare.bind(this),
                 "variable declare incomplete": this.VariableDeclareIncomplete.bind(this),
                 "variable declare partial": this.VariableDeclarePartial.bind(this),
-                "while condition start": this.WhileConditionStart.bind(this),
                 "while end": this.WhileEnd.bind(this),
-                "while variable start": this.WhileVariableStart.bind(this)
+                "while start": this.WhileStart.bind(this)
             };
             this.OperationAliases = {
                 "equals": "=",
@@ -436,6 +435,9 @@ var GLS;
         };
         Language.prototype.getClassPrivacy = function () {
             return this.ClassPrivacy;
+        };
+        Language.prototype.getClassPublicAlias = function () {
+            return this.ClassPublicAlias;
         };
         Language.prototype.getClassStaticLabel = function () {
             return this.ClassStaticLabel;
@@ -911,6 +913,10 @@ var GLS;
         };
         Language.prototype.setClassPrivacy = function (value) {
             this.ClassPrivacy = value;
+            return this;
+        };
+        Language.prototype.setClassPublicAlias = function (value) {
+            this.ClassPublicAlias = value;
             return this;
         };
         Language.prototype.setClassStaticLabel = function (value) {
@@ -1479,22 +1485,22 @@ var GLS;
             output += this.getSemiColon();
             return [output, 0];
         };
-        // string name[, string visibility[, string parentClass]]
+        // string name[, string parentClass]
         Language.prototype.ClassStart = function (functionArgs, isInline) {
             this.requireArgumentsLength("ClassStart", functionArgs, 1);
             var output = this.getClassStartLeft();
             output += this.parseType(functionArgs[0]);
-            if (functionArgs.length > 2) {
+            if (functionArgs.length > 1) {
                 if (this.getClassExtendsAsFunction()) {
-                    output += "(" + this.parseType(functionArgs[2]) + ")";
+                    output += "(" + this.parseType(functionArgs[1]) + ")";
                 }
                 else {
-                    output += " " + this.getClassExtends() + " " + this.parseType(functionArgs[2]) + " ";
+                    output += " " + this.getClassExtends() + " " + this.parseType(functionArgs[1]) + " ";
                 }
             }
             output += this.getClassStartRight();
-            if (this.getClassPrivacy() && functionArgs.length > 1) {
-                output = functionArgs[1] + " " + output;
+            if (this.getClassPrivacy()) {
+                output = this.getClassPublicAlias() + output;
             }
             return [output, 1];
         };
@@ -1797,10 +1803,9 @@ var GLS;
         };
         // string i, string type, string initial, string comparison, string boundary[, string change]
         // e.x. i int 0 lessthan 7
-        // e.x. { variable declare partial : i } int 0 lessthan 7
         Language.prototype.ForNumbersStart = function (functionArgs, isInline) {
             this.requireArgumentsLength("ForNumbersStart", functionArgs, 5);
-            var output = "for" + this.getConditionStartLeft(), generalArgs, i = functionArgs[0], typeName = this.parseType(functionArgs[1]), initial = functionArgs[2], comparison = functionArgs[3], boundary = functionArgs[4], direction = "increaseby", change;
+            var output = "for" + this.getConditionStartLeft(), generalArgs, i = functionArgs[0], typeName = this.parseType(functionArgs[1]), initial = functionArgs[2], comparison = functionArgs[3], boundary = functionArgs[4], change;
             if (functionArgs.length > 5) {
                 change = functionArgs[5];
             }
@@ -1821,7 +1826,7 @@ var GLS;
                 output += this.Operation(generalArgs, true)[0] + this.getSemiColon();
                 generalArgs = [i, comparison, boundary];
                 output += " " + this.Comparison(generalArgs, true)[0] + this.getSemiColon();
-                generalArgs = [i, direction, change];
+                generalArgs = [i, "increaseby", change];
                 output += " " + this.Operation(generalArgs, true)[0];
             }
             output += this.getConditionStartRight();
@@ -1905,27 +1910,26 @@ var GLS;
             output += functionArgs[functionArgs.length - 1] + this.getLambdaDeclareEnder();
             return [output, 0];
         };
-        // string visibility, string name, string returnType[, string paramName, string paramType, ...]
+        // string name, string returnType[, string paramName, string paramType, ...]
         Language.prototype.LambdaTypeDeclare = function (functionArgs, isInline) {
-            this.requireArgumentsLength("LambdaTypeDeclare", functionArgs, 3);
+            this.requireArgumentsLength("LambdaTypeDeclare", functionArgs, 2);
             if (!this.getLambdaTypeDeclarationRequired()) {
                 return ["", Language.INT_MIN];
             }
-            var start = this.getLambdaTypeDeclarationStart(), middle = this.getLambdaTypeDeclarationMiddle(), end = this.getLambdaTypeDeclarationEnd();
+            var start = this.getLambdaTypeDeclarationStart(), middle = this.getLambdaTypeDeclarationMiddle(), end = this.getLambdaTypeDeclarationEnd(), line, i;
             if (this.getLambdaTypeDeclarationAsInterface()) {
-                var variableDeclarationArguments = new Array(2), output = new Array(6), line, i;
+                var variableDeclarationArguments = new Array(2), output = new Array(6);
                 // public interface TestInterface {
-                line = functionArgs[0];
+                line = this.getClassPublicAlias();
                 line += start[0];
-                line += functionArgs[1];
+                line += functionArgs[0];
                 line += start[1];
                 output[0] = line;
                 output[1] = 1;
                 //     (a: string, b: int): boolean;
                 line = middle[0] + "(";
-                // All arguments are added using VariableDeclarePartial
                 if (functionArgs.length > 3) {
-                    for (i = 3; i < functionArgs.length; i += 2) {
+                    for (i = 2; i < functionArgs.length; i += 2) {
                         variableDeclarationArguments[0] = functionArgs[i];
                         variableDeclarationArguments[1] = functionArgs[i + 1];
                         line += this.VariableDeclarePartial(variableDeclarationArguments, true)[0] + ", ";
@@ -1935,7 +1939,7 @@ var GLS;
                 }
                 line += ")";
                 if (this.getFunctionReturnsExplicit() && this.getFunctionTypeAfterName()) {
-                    line += this.getFunctionTypeMarker() + this.parseType(functionArgs[2]);
+                    line += this.getFunctionTypeMarker() + this.parseType(functionArgs[1]);
                 }
                 line += middle[1];
                 output[2] = line;
@@ -1946,13 +1950,12 @@ var GLS;
                 return output;
             }
             else {
-                var line = "", i;
-                line += start[0] + functionArgs[0] + " " + start[1];
-                line += " " + this.parseType(functionArgs[2]);
-                line += " " + functionArgs[1];
-                if (functionArgs.length > 3) {
+                line += start[0] + this.getClassPublicAlias() + start[1];
+                line += " " + this.parseType(functionArgs[1]);
+                line += " " + functionArgs[0];
+                if (functionArgs.length > 2) {
                     line += middle[0];
-                    for (i = 4; i < functionArgs.length; i += 2) {
+                    for (i = 3; i < functionArgs.length; i += 2) {
                         line += this.parseType(functionArgs[i]) + ", ";
                     }
                     // The last argument does not have the last ", " at the end
@@ -2048,8 +2051,9 @@ var GLS;
             }
             return [output, 0];
         };
-        // [string anything, ...]
+        // string anything[, ...]
         Language.prototype.Parenthesis = function (functionArgs, isInline) {
+            this.requireArgumentsLength("Parenthesis", functionArgs, 1);
             var output = "(", i;
             for (i = 0; i < functionArgs.length - 1; i += 1) {
                 output += functionArgs[i] + ", ";
@@ -2109,6 +2113,8 @@ var GLS;
             return [this.getValueAlias(functionArgs[0]), 0];
         };
         // string name, string type[, string value]
+        // Ex. var x: number;
+        // Ex. var x: number = 7;
         Language.prototype.VariableDeclare = function (functionArgs, isInline) {
             this.requireArgumentsLength("VariableDeclare", functionArgs, 2);
             var output = this.VariableDeclareIncomplete(functionArgs, isInline);
@@ -2122,7 +2128,7 @@ var GLS;
         // E.x. var x: number
         // E.x. var x: number = 7
         Language.prototype.VariableDeclareIncomplete = function (functionArgs, isInline) {
-            this.requireArgumentsLength("VariableDeclareStartLine", functionArgs, 2);
+            this.requireArgumentsLength("VariableDeclareIncomplete", functionArgs, 2);
             var variableType = this.parseType(functionArgs[1]), variableDeclarationArguments, variableDeclared;
             if (functionArgs.length == 2) {
                 variableDeclarationArguments = [functionArgs[0], variableType];
@@ -2157,19 +2163,11 @@ var GLS;
             }
             return [output, 1];
         };
-        // string left, string operator, string right
-        Language.prototype.WhileConditionStart = function (functionArgs, isInline) {
-            this.requireArgumentsLength("WhileConditionStart", functionArgs, 3);
-            var output = "while" + this.getConditionStartLeft() + functionArgs[0] + " ";
-            output += this.getOperationAlias(functionArgs[1]) + " ";
-            output += functionArgs[2] + this.getConditionStartRight();
-            return [output, 1];
-        };
         Language.prototype.WhileEnd = function (functionArgs, isInline) {
             return [this.getConditionEnd(), -1];
         };
-        // string variable
-        Language.prototype.WhileVariableStart = function (functionArgs, isInline) {
+        // string value
+        Language.prototype.WhileStart = function (functionArgs, isInline) {
             this.requireArgumentsLength("WhileVariableStart", functionArgs, 1);
             var output = "while" + this.getConditionStartLeft();
             output += this.getOperationAlias(functionArgs[0]) + this.getConditionStartRight();

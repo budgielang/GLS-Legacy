@@ -1,7 +1,7 @@
 file start : GLS
-    lambda type declare : public Printer mixed[] functionArgs string[] isInline boolean
+    lambda type declare : Printer mixed[] functionArgs string[] isInline boolean
     
-    class start : Language public
+    class start : Language
         class member variable declare : Printers private { dictionary type : string Printer }
         class member variable declare : OperationAliases private { dictionary type : string string }
         class member variable declare : TypeAliases private { dictionary type : string string }
@@ -146,6 +146,7 @@ file start : GLS
         class member variable declare : ClassNewer private string
         class member variable declare : ClassParentName private string
         class member variable declare : ClassPrivacy private boolean
+        class member variable declare : ClassPublicAlias private string
         class member variable declare : ClassStaticLabel private string
         class member variable declare : ClassStaticFunctionDecorator private string
         class member variable declare : ClassStaticFunctionRequiresDecorator private boolean
@@ -702,6 +703,10 @@ file start : GLS
 
         class member function start : Language public getClassPrivacy boolean
             return : { class member variable get : { this } ClassPrivacy }
+        class member function end
+
+        class member function start : Language public getClassPublicAlias string
+            return : { class member variable get : { this } ClassPublicAlias }
         class member function end
 
         class member function start : Language public getClassStaticLabel string
@@ -1303,6 +1308,11 @@ file start : GLS
             return : { this }
         class member function end
 
+        class member function start : Language public setClassPublicAlias Language value string
+            class member variable set : { this } ClassPublicAlias value
+            return : { this }
+        class member function end
+
         class member function start : Language public setClassStaticLabel Language value string
             class member variable set : { this } ClassStaticLabel value
             return : { this }
@@ -1417,7 +1427,7 @@ file start : GLS
 
             operation : output increaseby "<"
 
-            while condition start : i < text.length
+            while start : { operation : i lessthan { native call : string length text } }
                 operation : spaceNext equals { native call : string find text (" ") i }
                 if start : { operation : spaceNext equalto -1 }
                     loop break
@@ -2073,7 +2083,7 @@ file start : GLS
             return : { array initialize : mixed output 0 }
         class member function end
 
-        comment line : string name[, string visibility[, string parentClass]]
+        comment line : string name[, string parentClass]
         class member function start : Language public ClassStart mixed[] functionArgs string[] isInline boolean
             class member function call : { this } requireArgumentsLength "ClassStart" functionArgs 1
 
@@ -2082,16 +2092,16 @@ file start : GLS
 
             if start : { operation : { native call : array length functionArgs } greaterthan 2 }
                 if start : { class member function call : { this } getClassExtendsAsFunction }
-                    operation : output increaseby "(" plus { class member function call : { this } parseType { array get item : functionArgs 2 } } plus ")"
+                    operation : output increaseby "(" plus { class member function call : { this } parseType { array get item : functionArgs 1 } } plus ")"
                 else start
-                    operation : output increaseby (" ") plus { class member function call : { this } getClassExtends } plus (" ") plus { class member function call : { this } parseType { array get item : functionArgs 2 } } plus (" ")
+                    operation : output increaseby (" ") plus { class member function call : { this } getClassExtends } plus (" ") plus { class member function call : { this } parseType { array get item : functionArgs 1 } } plus (" ")
                 if end
             if end
 
             operation : output increaseby { class member function call : { this } getClassStartRight }
 
-            if start : { operation : { class member function call : { this } getClassStartRight } and { operation : { native call : array length functionArgs } greaterthan 1 } }
-                operation : output increaseby { array get item : functionArgs 1 } plus (" ") plus output
+            if start : { class member function call : { this } getClassPrivacy }
+                operation : output increaseby { class member function call : { this } getClassPublicAlias } plus output
             if end
             
             return : { array initialize : mixed output 1 }
