@@ -2754,11 +2754,11 @@ module GLS {
                 line += " " + this.parseType(functionArgs[2]);
                 line += " " + functionArgs[1];
 
-                if (functionArgs.length > 3) {
+                if (functionArgs.length > 2) {
                     line += middle[0];
                     
                     // All arguments are added using VariableDeclarePartial
-                    for (i = 3; i < functionArgs.length; i += 2) {
+                    for (i = 2; i < functionArgs.length; i += 2) {
                         line += this.parseType(functionArgs[i]) + ", ";
                     }
                     
@@ -3021,7 +3021,7 @@ module GLS {
             this.requireArgumentsLength("VariableDeclarePartial", functionArgs, 2);
 
             var variableType: string = this.parseType(functionArgs[1]);
-            var output: string;
+            var output: string = "";
 
             if (this.getVariableTypesExplicit()) {
                 if (this.getVariableTypesAfterName()) {

@@ -3005,7 +3005,7 @@ file start : GLS
             class member function call : { this } requireArgumentsLength "VariableDeclarePartial" functionArgs 2
 
             variable declare : variableType string { class member function call : { this } parseType { array get item : functionArgs 1 } }
-            variable declare : output string
+            variable declare : output string ""
 
             if start : { class member function call : { this } getVariableTypesExplicit }
                 if start : { class member function call : { this } getVariableTypesAfterName }
