@@ -243,9 +243,8 @@ module GLS {
                 "variable declare": this.VariableDeclare.bind(this),
                 "variable declare incomplete": this.VariableDeclareIncomplete.bind(this),
                 "variable declare partial": this.VariableDeclarePartial.bind(this),
-                "while condition start": this.WhileConditionStart.bind(this),
                 "while end": this.WhileEnd.bind(this),
-                "while variable start": this.WhileVariableStart.bind(this)
+                "while start": this.WhileStart.bind(this)
             };
 
             this.OperationAliases = {
@@ -3032,7 +3031,7 @@ module GLS {
         }
 
         // string value
-        public WhileStartStart(functionArgs: string[], isInline?: boolean): any[] {
+        public WhileStart(functionArgs: string[], isInline?: boolean): any[] {
             this.requireArgumentsLength("WhileVariableStart", functionArgs, 1);
 
             var output: string = "while" + this.getConditionStartLeft();

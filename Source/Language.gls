@@ -1,7 +1,7 @@
 file start : GLS
     lambda type declare : public Printer mixed[] functionArgs string[] isInline boolean
     
-    class start : Language
+    class start : Language public
         class member variable declare : Printers private { dictionary type : string Printer }
         class member variable declare : OperationAliases private { dictionary type : string string }
         class member variable declare : TypeAliases private { dictionary type : string string }
@@ -220,7 +220,7 @@ file start : GLS
                 dictionary initialize key : ("function end") { class member function get : { this } FunctionEnd } ,
                 dictionary initialize key : ("function start") { class member function get : { this } FunctionStart } ,
                 dictionary initialize key : ("if end") { class member function get : { this } IfEnd } ,
-                dictionary initialize key : ("if start") { class member function get : { this } IfVariableStart } ,
+                dictionary initialize key : ("if start") { class member function get : { this } IfStart } ,
                 dictionary initialize key : ("lambda declare inline") { class member function get : { this } LambdaDeclareInline } ,
                 dictionary initialize key : ("lambda type declare") { class member function get : { this } LambdaTypeDeclare } ,
                 dictionary initialize key : ("main end") { class member function get : { this } MainEnd } ,
@@ -236,9 +236,8 @@ file start : GLS
                 dictionary initialize key : ("variable set") { class member function get : { this } VariableDeclare } ,
                 dictionary initialize key : ("variable set incomplete") { class member function get : { this } VariableDeclareIncomplete } ,
                 dictionary initialize key : ("variable set partial") { class member function get : { this } VariableDeclarePartial } ,
-                dictionary initialize key : ("while condition start") { class member function get : { this } WhileConditionStart } ,
                 dictionary initialize key : ("while end") { class member function get : { this } WhileEnd } ,
-                dictionary initialize key : ("while variable start") { class member function get : { this } WhileVariableStart }
+                dictionary initialize key : ("while start") { class member function get : { this } WhileStart } ,
             dictionary initialize end
 
             class member variable set incomplete : { this } OperationAliases { dictionary initialize start : string string }
@@ -1770,7 +1769,7 @@ file start : GLS
         class member function end
 
         class member function start : Language public ClassEnd mixed[] functionArgs string[] isInline boolean
-            return : { array initialize : mixed { class member function call : { this } getClassEnder } - 1 }
+            return : { array initialize : mixed { class member function call : { this } getClassEnder } -1 }
         class member function end
 
         comment line : string variable, string function[, string argumentName, ...]
@@ -1877,7 +1876,7 @@ file start : GLS
             variable declare : variableDeclared mixed[]
 
             if start : { operation : { class member function call : { this } getClassMemberVariableDefault } notequalto "" }
-                operation : variableDeclarationArgs equals { array initialize : string { array get item : functionArgs 0 } variableType { class member function call : { this } classMemberVariableDefault } }
+                operation : variableDeclarationArgs equals { array initialize : string { array get item : functionArgs 0 } variableType { class member function call : { this } getClassMemberVariableDefault } }
             else start
                 operation : variableDeclarationArgs equals { array initialize : string { array get item : functionArgs 0 } variableType }
             if end
@@ -1909,7 +1908,7 @@ file start : GLS
         class member function start : Language public ClassMemberVariableSet mixed[] functionArgs string[] isInline boolean
             class member function call : { this } requireArgumentsLength "ClassMemberVariableSet" functionArgs 3
 
-            variable declare : output mixed[] { class member function call : { this } ClassMemberVariableSetIncomplete } functionArgs isInline
+            variable declare : output mixed[] { class member function call : { this } ClassMemberVariableSetIncomplete functionArgs isInline }
 
             operation : { array get item : output 0 } increaseby { class member function call : { this } getSemiColon }
             operation : { array get item : output 1 } equals 0
@@ -2026,7 +2025,7 @@ file start : GLS
         class member function start : Language public ClassStaticVariableDeclare mixed[] functionArgs string[] isInline boolean
             class member function call : { this } requireArgumentsLength "ClassStaticVariableDeclare" functionArgs 3
 
-            variable declare : variableType string { class member function call : { this } parseType { array get item : functionArg 2 } }
+            variable declare : variableType string { class member function call : { this } parseType { array get item : functionArgs 2 } }
             variable declare : variableDeclarationArgs string[]
             variable declare : variableDeclared mixed[]
 
@@ -2043,7 +2042,7 @@ file start : GLS
             operation : { array get item : variableDeclared 1 } equals 0
 
             if start : { not : isInline }
-                operation : { array get item : variableDeclared 0 } equals { array get item : variableDeclared 0 } plus { class member function call : { this } variableDeclared }
+                operation : { array get item : variableDeclared 0 } equals { array get item : variableDeclared 0 } plus { class member function call : { this } getSemiColon }
             if end
 
             if start : { class member function call : { this } getClassMemberVariablePrivacy }
@@ -2070,6 +2069,8 @@ file start : GLS
 
             operation : output increaseby { class member function call : { this } getOperationAlias "equals" } plus (" ") plus { array get item : functionArgs 2 }
             operation : output increaseby { class member function call : { this } getSemiColon }
+
+            return : { array initialize : mixed output 0 }
         class member function end
 
         comment line : string name[, string visibility[, string parentClass]]
@@ -2092,6 +2093,8 @@ file start : GLS
             if start : { operation : { class member function call : { this } getClassStartRight } and { operation : { native call : array length functionArgs } greaterthan 1 } }
                 operation : output increaseby { array get item : functionArgs 1 } plus (" ") plus output
             if end
+            
+            return : { array initialize : mixed output 1 }
         class member function end
 
         comment line : string class[, string argumentName, string argumentType, ...]
@@ -2162,6 +2165,8 @@ file start : GLS
             variable declare : result any[] { class member function call : { this } CommentLine functionArgs isInline }
 
             operation : { array get item : result 1 } equals { class static variable get : Language INT_MIN }
+
+            return : result
         class member function end
 
         comment line : string left, string comparison, string right
@@ -2434,8 +2439,8 @@ file start : GLS
                 operation : line equals { class member function call : { this } getForEachStarter }
                 operation : variableDeclareArgs equals { array initialize sized : string 2 }
                 operation : { array get item : variableDeclareArgs 0 } equals pairName
-                operation : { array get item : variableDeclareArgs 1 } equals { class member function call : { this } getForEachPairsClass } plus "<" plus keyType plus (", ") plus valueType plus ">"
-                operation : line increaseby { array get item : { class member function call : { this } VariableDeclarePartial } 0 }
+                operation : { array get item : variableDeclareArgs 1 } equals { class member function call : { this } getForEachPairsPairClass } plus "<" plus keyType plus (", ") plus valueType plus ">"
+                operation : line increaseby { array get item : { class member function call : { this } VariableDeclarePartial variableDeclareArgs true } 0 }
 
                 comment line :                                             in container) {
                 operation : line increaseby { class member function call : { this } getForEachInner }
@@ -2501,12 +2506,12 @@ file start : GLS
             variable declare : output string { operation : "for" plus { class member function call : { this } getConditionStartLeft } }
             variable declare : i string { array get item : functionArgs 0 }
             variable declare : typeName string { class member function call : { this } parseType { array get item : functionArgs 1 } }
-            variable declare : initial { array get item : functionArgs 2 }
-            variable declare : comparison { array get item : functionArgs 3 }
-            variable declare : boundary { array get item : functionArgs 4 }
+            variable declare : initial string { array get item : functionArgs 2 }
+            variable declare : comparison string { array get item : functionArgs 3 }
+            variable declare : boundary string { array get item : functionArgs 4 }
             variable declare : direction string "increaseby"
-            variable declare : output mixed
             variable declare : change string
+            variable declare : generalArgs mixed[]
 
             if start : { operation : { native call : array length functionArgs } greaterthan 5 }
                 operation : change equals { array get item : functionArgs 5 }
@@ -2517,7 +2522,7 @@ file start : GLS
             if start : { class member function call : { this } getRangedForLoops }
                 operation : output increaseby i
                 operation : output increaseby { class member function call : { this } getRangedForLoopsStart }
-                operation : ouptut increaseby initial plus { class member function call : { this } getRangedForLoopsMiddle } plus change
+                operation : output increaseby initial plus { class member function call : { this } getRangedForLoopsMiddle } plus change
                 
                 if start : { operation : change notequalto "1" }
                     operation : output increaseby { class member function call : { this } getRangedForLoopsMiddle } plus change
@@ -2526,13 +2531,13 @@ file start : GLS
                 operation : output increaseby { class member function call : { this } getRangedForLoopsEnd }
             else start
                 operation : generalArgs equals { array initialize : string i "equals" initial }
-                operation : ouptut increaseby { array get item : { class member function call : { this } Operation generalArgs true } 0 } plus { class member function call : { this } getSemiColon }
+                operation : output increaseby { array get item : { class member function call : { this } Operation generalArgs true } 0 } plus { class member function call : { this } getSemiColon }
 
                 operation : generalArgs equals { array initialize : string i comparison initial }
-                operation : ouptut increaseby { array get item : { class member function call : { this } Comparison generalArgs true } 0 } plus { class member function call : { this } getSemiColon }
+                operation : output increaseby { array get item : { class member function call : { this } Comparison generalArgs true } 0 } plus { class member function call : { this } getSemiColon }
 
                 operation : generalArgs equals { array initialize : string i "increaseby" initial }
-                operation : ouptut increaseby { array get item : { class member function call : { this } Operation generalArgs true } 0 } plus { class member function call : { this } getSemiColon }
+                operation : output increaseby { array get item : { class member function call : { this } Operation generalArgs true } 0 } plus { class member function call : { this } getSemiColon }
             if end
 
             operation : output increaseby { class member function call : { this } getConditionStartRight }
@@ -2542,18 +2547,20 @@ file start : GLS
 
         comment line : string name[, string parameter, ...]
         class member function start : Language public FunctionCall mixed[] functionArgs string[] isInline boolean
-            class member function call : { this } requireArgumentsLength "FunctionCall" functionArgs 1 }
+            class member function call : { this } requireArgumentsLength "FunctionCall" functionArgs 1
 
             variable declare : output string { array get item : functionArgs 0 } plus "("
             variable declare : i number
 
             if start : { operation : { native call : array length functionArgs } greaterthan 1 }
                 for numbers start : i number 1 lessthan { operation : { native call : array length functionArgs } minus 1 }
-                    operation : output increaseby { array get item : functionArgs i } plus ", "
+                    operation : output increaseby { array get item : functionArgs i } plus (", ")
                 for end
 
                 operation : output increaseby { array get item : functionArgs i }
             if end
+
+            return : { array initialize : mixed output 0 }
         class member function end
 
         class member function start : Language public FunctionCallPartialEnd mixed[] functionArgs string[] isInline boolean
@@ -2568,7 +2575,7 @@ file start : GLS
 
         comment line : string name
         class member function start : Language public FunctionCallPartialStart mixed[] functionArgs string[] isInline boolean
-            class member function call : { this } requireArgumentsLength "FunctionCallPartialStart" functionArgs 1 }
+            class member function call : { this } requireArgumentsLength "FunctionCallPartialStart" functionArgs 1
 
             return : { array initialize : mixed { operation : { array get item : functionArgs 0 } plus "(" } 1 }
         class member function end
@@ -2578,7 +2585,7 @@ file start : GLS
         class member function end
 
         comment line : string name, string return[, string argumentName, string argumentType, ...]
-        class member function start : Language public Catch mixed[] functionArgs string[] isInline boolean
+        class member function start : Language public FunctionStart mixed[] functionArgs string[] isInline boolean
             class member function call : { this } requireArgumentsLength "FunctionStart" functionArgs 2
 
             variable declare : output string ""
@@ -2597,7 +2604,7 @@ file start : GLS
                     operation : { array get item : variableDeclarationArgs 0 } equals { array get item : functionArgs i }
                     operation : { array get item : variableDeclarationArgs 1 } equals { array get item : functionArgs { operation : i + 1 } }
 
-                    operation : output increaseby { array get item : { class member function call : { this } VariableDeclarePartial variableDeclarationArgs } 0 } plus ", "
+                    operation : output increaseby { array get item : { class member function call : { this } VariableDeclarePartial variableDeclarationArgs true } 0 } plus (", ")
                 for end
 
                 comment line : The last argument does not have the last ", " at the end
@@ -2623,6 +2630,8 @@ file start : GLS
             class member function call : { this } requireArgumentsLength "IfStart" functionArgs 1
 
             variable declare : output string { operation : { class member function call : { this } getIf } plus { class member function call : { this } getConditionStartLeft } }
+
+            return : { array initialize : mixed output 1 }
         class member function end
 
         comment line : [, string param, ...], statement
@@ -2652,13 +2661,15 @@ file start : GLS
                 return : { array initialize : mixed "" { class static variable get : Language INT_MIN } }
             if end
             
-            variable declare : start string] { class member function call : { this } getLambdaTypeDeclarationStart }
-            variable declare : middle string] { class member function call : { this } getLambdaTypeDeclarationMiddle }
-            variable declare : end string] { class member function call : { this } getLambdaTypeDeclarationEnd }
+            variable declare : start string[] { class member function call : { this } getLambdaTypeDeclarationStart }
+            variable declare : middle string[] { class member function call : { this } getLambdaTypeDeclarationMiddle }
+            variable declare : end string[] { class member function call : { this } getLambdaTypeDeclarationEnd }
+            variable declare : line string
+            variable declare : i number
 
             if start : { class member function call : { this } getLambdaTypeDeclarationAsInterface }
-                variable declare : variableDeclarationArgs { array initialize sized : string 2 }
-                variable declare : output { array initialize sized: mixed 6 }
+                variable declare : variableDeclarationArgs string[] { array initialize sized : string 2 }
+                variable declare : output mixed[] { array initialize sized: mixed 6 }
 
                 comment line : public interface TestInterface {
                 operation : line equals { array get item : functionArgs 0 }
@@ -2675,8 +2686,8 @@ file start : GLS
                 if start : { operation : { native call : array length functionArgs } greaterthan 3 }
                     comment line : All arguments are added using VariableDeclarePartial
                     for numbers start : i number 3 lessthan { native call : array length functionArgs } 2
-                        operation : { array get item : variableDeclarartionArgs 0 } equals { array get item : functionArgs i }
-                        operation : { array get item : variableDeclarartionArgs 1 } equals { array get item : functionArgs { operation : i plus 1 } }
+                        operation : { array get item : variableDeclarationArgs 0 } equals { array get item : functionArgs i }
+                        operation : { array get item : variableDeclarationArgs 1 } equals { array get item : functionArgs { operation : i plus 1 } }
 
                         operation : line increaseby { array get item : { class member function call : { this } VariableDeclarePartial variableDeclarationArgs true } 0 } plus (", ")
                     for end
@@ -2729,6 +2740,16 @@ file start : GLS
 
         class member function start : Language public LoopContinue mixed[] functionArgs string[] isInline boolean
             return : { array initialize : mixed { operation : { class member function call : { this } getContinue } plus { class member function call : { this } getSemiColon } } 0 }
+        class member function end
+
+        class member function start : Language public MainEnd mixed[] functionArgs string[] isInline boolean
+            variable declare : start string { class member function call : { this } getMainStartLine }
+
+            if start : { operation : { native call : string length start } equalto 0 }
+                return : { array initialize : mixed { class member function call : { this } getMainEndLine } 0 }
+            if end
+            
+            return : { array initialize : mixed { class member function call : { this } getMainEndLine } -1 }
         class member function end
 
         class member function start : Language public MainStart mixed[] functionArgs string[] isInline boolean
@@ -2901,7 +2922,7 @@ file start : GLS
 
         comment line : string type
         class member function start : Language public Type mixed[] functionArgs string[] isInline boolean
-            return : { array initialize : mixed { class member function call : { this } getTypeAlias { array get item : functionArgs 0 } 0 }
+            return : { array initialize : mixed { class member function call : { this } getTypeAlias { array get item : functionArgs 0 } } 0 }
         class member function end
 
         comment line : string value
@@ -2943,6 +2964,8 @@ file start : GLS
             else start
                 operation : variableDeclarationArgs equals { array initialize : string { array get item : functionArgs 0 } variableType { array get item : functionArgs 2 } }
             if end
+
+            return : variableDeclared
         class member function end
         
         comment line : string name, string type[, string value]
@@ -2958,7 +2981,7 @@ file start : GLS
                 if start : { class member function call : { this } getVariableTypesAfterName }
                     operation : output increaseby { array get item : functionArgs 0 } plus { class member function call : { this } getVariableTypeMarker } plus { class member function call : { this } parseType { array get item : functionArgs 1 } }
                 else start
-                    operation : output increaseby { class member function call : { this } variableType } plus (" ") plus { array get item : functionArgs 0 }
+                    operation : output increaseby { class member function call : { this } parseType variableType } plus (" ") plus { array get item : functionArgs 0 }
                 if end
             else start
                 operation : output increaseby { array get item : functionArgs 0 }
