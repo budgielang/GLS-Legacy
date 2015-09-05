@@ -2467,7 +2467,7 @@ file start : GLS
                 operation : { array get item : variableDeclareArgs 1 } equals { class member function call : { this } getForEachPairsPairClass } plus "<" plus keyType plus (", ") plus valueType plus ">"
                 operation : line increaseby { array get item : { class member function call : { this } VariableDeclarePartial variableDeclareArgs true } 0 }
 
-                comment line : (                                            in container) {)
+                comment line : ((                                            in container) {)
                 operation : line increaseby { class member function call : { this } getForEachInner }
                 operation : line increaseby container
                 operation : line increaseby { class member function call : { this } getConditionStartRight }
@@ -2668,7 +2668,7 @@ file start : GLS
 
         comment line : [, string param, ...], statement
         class member function start : Language public LambdaDeclareInline mixed[] functionArgs string[] isInline boolean
-            class member function call : { this } requireArgumentsLength "LambdaTypeDeclareInline" functionArgs 3
+            class member function call : { this } requireArgumentsLength "LambdaDeclareInline" functionArgs 3
 
             variable declare : output string { class member function call : { this } getLambdaDeclareStarter }
             variable declare : i number
@@ -2700,7 +2700,7 @@ file start : GLS
             variable declare : i number
 
             if start : { class member function call : { this } getLambdaTypeDeclarationAsInterface }
-                variable declare : variableDeclarationArgs string[] { array initialize sized : string 2 }
+            variable declare : variableDeclarationArgs string[] { array initialize sized : string 2 }
                 variable declare : output mixed[] { array initialize sized: mixed 6 }
 
                 comment line : public interface TestInterface {
@@ -2717,7 +2717,7 @@ file start : GLS
 
                 if start : { operation : { native call : array length functionArgs } greaterthan 2 }
                     comment line : All arguments are added using VariableDeclarePartial
-                    for numbers start : i 2 lessthan { native call : array length functionArgs } 2
+                    for numbers start : i 3 lessthan { native call : array length functionArgs } 2
                         operation : { array get item : variableDeclarationArgs 0 } equals { array get item : functionArgs i }
                         operation : { array get item : variableDeclarationArgs 1 } equals { array get item : functionArgs { operation : i plus 1 } }
 
@@ -2753,7 +2753,10 @@ file start : GLS
 
                     comment line : All arguments are added using VariableDeclarePartial
                     for numbers start : i 2 lessthan { native call : array length functionArgs } 2
-                        operation : line increaseby { class member function call : { this } parseType { array get item : functionArgs i } } plus (", ")
+                        operation : { array get item : variableDeclarationArgs 0 } equals { array get item : functionArgs i }
+                        operation : { array get item : variableDeclarationArgs 1 } equals { array get item : functionArgs { operation : i plus 1 } }
+
+                        operation : line increaseby { array get item : { class member function call : { this } VariableDeclarePartial variableDeclarationArgs true } 0 } plus (", ")
                     for end
 
                     comment line : The last argument does not have the last (", ") at the end
@@ -2958,7 +2961,7 @@ file start : GLS
 
         comment line : string type
         class member function start : Language public Type mixed[] functionArgs string[] isInline boolean
-            class member function call : { this } requireArgumentLength "Type" 1
+            class member function call : { this } requireArgumentslength "Type" functionArgs 1
             return : { array initialize : mixed { class member function call : { this } getTypeAlias { array get item : functionArgs 0 } } 0 }
         class member function end
 

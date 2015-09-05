@@ -1640,7 +1640,11 @@ var GLS;
         // string name, string key, string value
         Language.prototype.DictionaryKeySet = function (functionArgs, isInline) {
             this.requireArgumentsLength("DictionaryKeySet", functionArgs, 3);
-            return [functionArgs[0] + "[" + functionArgs[1] + "] = " + functionArgs[2], 0];
+            var output = functionArgs[0] + "[" + functionArgs[1] + "] = " + functionArgs[2];
+            if (!isInline) {
+                output += this.getSemiColon();
+            }
+            return [output, 0];
         };
         // string key, string value
         Language.prototype.DictionaryInitialize = function (functionArgs, isInline) {
@@ -1989,10 +1993,10 @@ var GLS;
             var start = this.getLambdaTypeDeclarationStart();
             var middle = this.getLambdaTypeDeclarationMiddle();
             var end = this.getLambdaTypeDeclarationEnd();
+            var variableDeclarationArgs = new Array(2);
             var line = "";
             var i;
             if (this.getLambdaTypeDeclarationAsInterface()) {
-                var variableDeclarationArgs = new Array(2);
                 var output = new Array(6);
                 // public interface TestInterface 
                 line = this.getClassPublicAlias();
@@ -2031,7 +2035,9 @@ var GLS;
                 if (functionArgs.length > 2) {
                     line += middle[0];
                     for (i = 2; i < functionArgs.length; i += 2) {
-                        line += this.parseType(functionArgs[i]) + ", ";
+                        variableDeclarationArgs[0] = functionArgs[i];
+                        variableDeclarationArgs[1] = functionArgs[i + 1];
+                        line += this.VariableDeclarePartial(variableDeclarationArgs, true)[0] + ", ";
                     }
                     // The last argument does not have the last ", " at the end
                     line = line.substring(0, line.length - 2);

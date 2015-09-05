@@ -2250,7 +2250,13 @@ file start : GLS
         class member function start : Language public DictionaryKeySet mixed[] functionArgs string[] isInline boolean
             class member function call : { this } requireArgumentsLength "DictionaryKeySet" functionArgs 3
 
-            return : { array initialize : mixed { operation : { array get item : functionArgs 0 } plus "[" plus { array get item : functionArgs 1 } plus ("] = ") plus { array get item : functionArgs 2 } } 0 }
+            variable declare : output string operation : { array get item : functionArgs 0 } plus "[" plus { array get item : functionArgs 1 } plus ("] = ") plus { array get item : functionArgs 2 } }
+
+            if start : { not : isInline }
+                operation : output increaseby { class member function call : { this } getSemiColon }
+            if end
+
+            return : { array initialize : mixed { output 0 }
         class member function end
 
         comment line : string key, string value
@@ -2467,7 +2473,7 @@ file start : GLS
                 operation : { array get item : variableDeclareArgs 1 } equals { class member function call : { this } getForEachPairsPairClass } plus "<" plus keyType plus (", ") plus valueType plus ">"
                 operation : line increaseby { array get item : { class member function call : { this } VariableDeclarePartial variableDeclareArgs true } 0 }
 
-                comment line : (                                            in container) {)
+                comment line : ((                                            in container) {)
                 operation : line increaseby { class member function call : { this } getForEachInner }
                 operation : line increaseby container
                 operation : line increaseby { class member function call : { this } getConditionStartRight }
@@ -2668,7 +2674,7 @@ file start : GLS
 
         comment line : [, string param, ...], statement
         class member function start : Language public LambdaDeclareInline mixed[] functionArgs string[] isInline boolean
-            class member function call : { this } requireArgumentsLength "LambdaTypeDeclareInline" functionArgs 3
+            class member function call : { this } requireArgumentsLength "LambdaDeclareInline" functionArgs 3
 
             variable declare : output string { class member function call : { this } getLambdaDeclareStarter }
             variable declare : i number
@@ -2696,11 +2702,11 @@ file start : GLS
             variable declare : start string[] { class member function call : { this } getLambdaTypeDeclarationStart }
             variable declare : middle string[] { class member function call : { this } getLambdaTypeDeclarationMiddle }
             variable declare : end string[] { class member function call : { this } getLambdaTypeDeclarationEnd }
+            variable declare : variableDeclarationArgs string[] { array initialize sized : string 2 }
             variable declare : line string ""
             variable declare : i number
 
             if start : { class member function call : { this } getLambdaTypeDeclarationAsInterface }
-                variable declare : variableDeclarationArgs string[] { array initialize sized : string 2 }
                 variable declare : output mixed[] { array initialize sized: mixed 6 }
 
                 comment line : public interface TestInterface {
@@ -2717,7 +2723,7 @@ file start : GLS
 
                 if start : { operation : { native call : array length functionArgs } greaterthan 2 }
                     comment line : All arguments are added using VariableDeclarePartial
-                    for numbers start : i 2 lessthan { native call : array length functionArgs } 2
+                    for numbers start : i 3 lessthan { native call : array length functionArgs } 2
                         operation : { array get item : variableDeclarationArgs 0 } equals { array get item : functionArgs i }
                         operation : { array get item : variableDeclarationArgs 1 } equals { array get item : functionArgs { operation : i plus 1 } }
 

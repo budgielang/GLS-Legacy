@@ -2266,7 +2266,13 @@ module GLS {
         public DictionaryKeySet(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("DictionaryKeySet", functionArgs, 3);
 
-            return [functionArgs[0] + "[" + functionArgs[1] + "] = " + functionArgs[2], 0];
+            var output: string = functionArgs[0] + "[" + functionArgs[1] + "] = " + functionArgs[2];
+
+            if (!isInline) {
+                output += this.getSemiColon();
+            }
+
+            return [output, 0];
         }
         
         // string key, string value
@@ -2712,11 +2718,11 @@ module GLS {
             var start: string[] = this.getLambdaTypeDeclarationStart();
             var middle: string[] = this.getLambdaTypeDeclarationMiddle();
             var end: string[] = this.getLambdaTypeDeclarationEnd();
+            var variableDeclarationArgs: string[] = new Array(2);
             var line: string = "";
             var i: number;
 
             if (this.getLambdaTypeDeclarationAsInterface()) {
-                var variableDeclarationArgs: string[] = new Array(2);
                 var output: any[] = new Array(6);
                 
                 // public interface TestInterface 
@@ -2769,7 +2775,10 @@ module GLS {
                     
                     // All arguments are added using VariableDeclarePartial
                     for (i = 2; i < functionArgs.length; i += 2) {
-                        line += this.parseType(functionArgs[i]) + ", ";
+                        variableDeclarationArgs[0] = functionArgs[i];
+                        variableDeclarationArgs[1] = functionArgs[i + 1];
+
+                        line += this.VariableDeclarePartial(variableDeclarationArgs, true)[0] + ", ";
                     }
                     
                     // The last argument does not have the last ", " at the end
