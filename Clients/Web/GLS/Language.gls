@@ -161,6 +161,8 @@ file start : GLS
         class member variable declare : FileEndLine private string
         class member variable declare : FileStartLeft private string
         class member variable declare : FileStartRight private string
+        class member variable declare : IncludeEnder private string
+        class member variable declare : IncludeStarter private string
 
         comment line : Main
         class member variable declare : MainEndLine private string
@@ -226,6 +228,7 @@ file start : GLS
                 dictionary initialize key : ("function start") { class member function get : { this } FunctionStart } ,
                 dictionary initialize key : ("if end") { class member function get : { this } IfEnd } ,
                 dictionary initialize key : ("if start") { class member function get : { this } IfStart } ,
+                dictionary initialize key : ("include") { class member function get : { this } Include } ,
                 dictionary initialize key : ("lambda declare inline") { class member function get : { this } LambdaDeclareInline } ,
                 dictionary initialize key : ("lambda type declare") { class member function get : { this } LambdaTypeDeclare } ,
                 dictionary initialize key : ("loop break") { class member function get : { this } LoopBreak } ,
@@ -767,6 +770,14 @@ file start : GLS
 
         class member function start : Language public getFileStartRight string
             return : { class member variable get : { this } FileStartRight }
+        class member function end
+
+        class member function start : Language public getIncludeEnder string
+            return : { class member variable get : { this } IncludeEnder }
+        class member function end
+
+        class member function start : Language public getIncludeStarter string
+            return : { class member variable get : { this } IncludeStarter }
         class member function end
 
         class member function start : Language public getMainEndLine string
@@ -1382,6 +1393,16 @@ file start : GLS
 
         class member function start : Language public setFileStartRight Language value string
             class member variable set : { this } FileStartRight value
+            return : { this }
+        class member function end
+
+        class member function start : Language public setIncludeEnder Language value string
+            class member variable set : { this } IncludeEnder value
+            return : { this }
+        class member function end
+
+        class member function start : Language public setIncludeStarter Language value string
+            class member variable set : { this } IncludeStarter value
             return : { this }
         class member function end
 
@@ -2664,6 +2685,18 @@ file start : GLS
             operation : output increaseby { array get item : functionArgs 0 } plus { class member function call : { this } getConditionStartRight }
 
             return : { array initialize : mixed output 1 }
+        class member function end
+
+        comment line : string file
+        class member function start : Language public Include mixed[] functionArgs string[] isInline boolean
+            class member function call : { this } requireArgumentsLength "Include" functionArgs 1
+            
+            variable declare : output string { class member function call : { this } getIncludeStarter }
+            operation : output increaseby { array get item : functionArgs 0 }
+            operation : output increaseby "." plus { class member function call : { this } getExtension }
+            operation : output increaseby { class member function call : { this } getIncludeEnder }
+
+            return : { array initialize : mixed output 0 }
         class member function end
 
         comment line : [, string param, ...], statement

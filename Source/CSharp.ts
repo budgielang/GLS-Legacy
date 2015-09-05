@@ -74,6 +74,8 @@ module GLS.Languages {
         .setFunctionReturnsExplicit(true)
         .setFunctionTypeAfterName(false)
         .setIf("if")
+        .setIncludeEnder("")
+        .setIncludeStarter("using ")
         .setLambdaDeclareEnder("")
         .setLambdaDeclareMiddle(") => ")
         .setLambdaDeclareStarter("(")
