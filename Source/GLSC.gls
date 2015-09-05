@@ -83,6 +83,7 @@ file start : GLS
             variable declare : colonIndex number { native call : string find commandRaw ":" }
             variable declare : result mixed[]
             variable declare : functionArgs string[]
+            variable declare : functionName string
             variable declare : argumentsRaw string
 
             comment line : Arguments only exist if there is a colon separating them from the command
@@ -99,6 +100,8 @@ file start : GLS
         class member function end
 
         class member function start : GLSC public parseArguments string[] language Language argumentsRaw string isInline boolean
+            comment line : Directly putting '{' in GLSC code is tough (see #79)
+            variable declare : commandStarter character '{'
             variable declare : numArgs number 0
             variable declare : argumentsConverted string[]
             variable declare : argument string
@@ -153,7 +156,7 @@ file start : GLS
                 operation : argument equals { native call : string substring argumentsRaw i { operation : end minus i } }
                 operation : i equals end
 
-                if start : { operation : starter equalto '{' }
+                if start : { operation : starter equalto commandStarter }
                     operation : argument equals { array get item : { class member function call : { this } parseCommand language argument true } 0 }
                 if end
 
