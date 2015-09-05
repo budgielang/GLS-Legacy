@@ -161,7 +161,9 @@ file start : GLS
         class member variable declare : FileEndLine private string
         class member variable declare : FileStartLeft private string
         class member variable declare : FileStartRight private string
+        class member variable declare : IncludeDictionaryType private string
         class member variable declare : IncludeEnder private string
+        class member variable declare : IncludeFileExtension private boolean
         class member variable declare : IncludeStarter private string
 
         comment line : Main
@@ -772,8 +774,16 @@ file start : GLS
             return : { class member variable get : { this } FileStartRight }
         class member function end
 
+        class member function start : Language public getIncludeDictionaryType string
+            return : { class member variable get : { this } IncludeDictionaryType }
+        class member function end
+        
         class member function start : Language public getIncludeEnder string
             return : { class member variable get : { this } IncludeEnder }
+        class member function end
+
+        class member function start : Language public getIncludeFileExtension boolean
+            return : { class member variable get : { this } IncludeFileExtension }
         class member function end
 
         class member function start : Language public getIncludeStarter string
@@ -2669,7 +2679,7 @@ file start : GLS
             if end
 
             operation : output increaseby { class member function call : { this } getFunctionDefineRight }
-            return : { array initialize : output 1 }
+            return : { array initialize : mixed output 1 }
         class member function end
 
         class member function start : Language public IfEnd mixed[] functionArgs string[] isInline boolean
@@ -2693,10 +2703,24 @@ file start : GLS
             
             variable declare : output string { class member function call : { this } getIncludeStarter }
             operation : output increaseby { array get item : functionArgs 0 }
-            operation : output increaseby "." plus { class member function call : { this } getExtension }
+
+            if start : { class member function call : { this } getIncludeFileExtension } }
+                operation : output increaseby "." plus { class member function call : { this } getExtension }
+            if end
+            
             operation : output increaseby { class member function call : { this } getIncludeEnder }
 
             return : { array initialize : mixed output 0 }
+        class member function end
+
+        class member function start : Language public IncludeDictionary mixed[] functionArgs string[] isInline boolean
+            variable declare : dictionaryType string { class member function call : { this } getIncludeDictionaryType }
+
+            if start : { operation : { native call : string length dictionaryType } equalto 0 }
+                return : { array initialize : mixed ("") { class static variable get : Language INT_MIN } }
+            if end
+
+            return : { class member function call : { this } Include { array initialize : string dictionaryType } isInline }
         class member function end
 
         comment line : [, string param, ...], statement
@@ -2715,7 +2739,7 @@ file start : GLS
 
             operation : output increaseby { array get item : functionArgs { operation : { native call : array length functionArgs } minus 1 } } plus { class member function call : { this } getLambdaDeclareEnder }
 
-            return : { array initialize : output 0 }
+            return : { array initialize : mixed output 0 }
         class member function end
 
         comment line : string visibility, string name, string return type[, string paramName, string paramType, ...]

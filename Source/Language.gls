@@ -161,7 +161,7 @@ file start : GLS
         class member variable declare : FileEndLine private string
         class member variable declare : FileStartLeft private string
         class member variable declare : FileStartRight private string
-        class member variable declare : IncludeDictionary private string
+        class member variable declare : IncludeDictionaryType private string
         class member variable declare : IncludeEnder private string
         class member variable declare : IncludeFileExtension private boolean
         class member variable declare : IncludeStarter private string
@@ -774,8 +774,8 @@ file start : GLS
             return : { class member variable get : { this } FileStartRight }
         class member function end
 
-        class member function start : Language public getIncludeDictionary string
-            return : { class member variable get : { this } IncludeDictionary }
+        class member function start : Language public getIncludeDictionaryType string
+            return : { class member variable get : { this } IncludeDictionaryType }
         class member function end
         
         class member function start : Language public getIncludeEnder string
@@ -2679,7 +2679,7 @@ file start : GLS
             if end
 
             operation : output increaseby { class member function call : { this } getFunctionDefineRight }
-            return : { array initialize : output 1 }
+            return : { array initialize : mixed output 1 }
         class member function end
 
         class member function start : Language public IfEnd mixed[] functionArgs string[] isInline boolean
@@ -2713,6 +2713,16 @@ file start : GLS
             return : { array initialize : mixed output 0 }
         class member function end
 
+        class member function start : Language public IncludeDictionary mixed[] functionArgs string[] isInline boolean
+            variable declare : dictionaryType string { class member function call : { this } getIncludeDictionaryType }
+
+            if start : { operation : { native call : string length dictionaryType } equalto 0 }
+                return : { array initialize : mixed ("") { class static variable get : Language INT_MIN } }
+            if end
+
+            return : { class member function call : { this } Include { array initialize : string dictionaryType } isInline }
+        class member function end
+
         comment line : [, string param, ...], statement
         class member function start : Language public LambdaDeclareInline mixed[] functionArgs string[] isInline boolean
             class member function call : { this } requireArgumentsLength "LambdaDeclareInline" functionArgs 3
@@ -2729,7 +2739,7 @@ file start : GLS
 
             operation : output increaseby { array get item : functionArgs { operation : { native call : array length functionArgs } minus 1 } } plus { class member function call : { this } getLambdaDeclareEnder }
 
-            return : { array initialize : output 0 }
+            return : { array initialize : mixed output 0 }
         class member function end
 
         comment line : string visibility, string name, string return type[, string paramName, string paramType, ...]

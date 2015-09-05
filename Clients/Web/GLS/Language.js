@@ -477,8 +477,14 @@ var GLS;
         Language.prototype.getFileStartRight = function () {
             return this.FileStartRight;
         };
+        Language.prototype.getIncludeDictionaryType = function () {
+            return this.IncludeDictionaryType;
+        };
         Language.prototype.getIncludeEnder = function () {
             return this.IncludeEnder;
+        };
+        Language.prototype.getIncludeFileExtension = function () {
+            return this.IncludeFileExtension;
         };
         Language.prototype.getIncludeStarter = function () {
             return this.IncludeStarter;
@@ -976,8 +982,16 @@ var GLS;
             this.FileStartRight = value;
             return this;
         };
+        Language.prototype.setIncludeDictionaryType = function (value) {
+            this.IncludeDictionaryType = value;
+            return this;
+        };
         Language.prototype.setIncludeEnder = function (value) {
             this.IncludeEnder = value;
+            return this;
+        };
+        Language.prototype.setIncludeFileExtension = function (value) {
+            this.IncludeFileExtension = value;
             return this;
         };
         Language.prototype.setIncludeStarter = function (value) {
@@ -1987,9 +2001,18 @@ var GLS;
             this.requireArgumentsLength("Include", functionArgs, 1);
             var output = this.getIncludeStarter();
             output += functionArgs[0];
-            output += "." + this.getExtension();
+            if (this.getIncludeFileExtension()) {
+                output += "." + this.getExtension();
+            }
             output += this.getIncludeEnder();
             return [output, 0];
+        };
+        Language.prototype.IncludeDictionary = function (functionArgs, isInline) {
+            var dictionaryType = this.getIncludeDictionaryType();
+            if (dictionaryType.length === 0) {
+                return ["", Language.INT_MIN];
+            }
+            return this.Include([dictionaryType], isInline);
         };
         // [, string param, ...], statement
         Language.prototype.LambdaDeclareInline = function (functionArgs, isInline) {

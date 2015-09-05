@@ -163,7 +163,9 @@ module GLS {
         private FileEndLine: string;
         private FileStartLeft: string;
         private FileStartRight: string;
+        private IncludeDictionaryType: string;
         private IncludeEnder: string;
+        private IncludeFileExtension: boolean;
         private IncludeStarter: string;
         
         // Main
@@ -776,8 +778,16 @@ module GLS {
             return this.FileStartRight;
         }
 
+        public getIncludeDictionaryType(): string {
+            return this.IncludeDictionaryType;
+        }
+
         public getIncludeEnder(): string {
             return this.IncludeEnder;
+        }
+
+        public getIncludeFileExtension(): boolean {
+            return this.IncludeFileExtension;
         }
 
         public getIncludeStarter(): string {
@@ -1402,8 +1412,18 @@ module GLS {
             return this;
         }
 
+        public setIncludeDictionaryType(value: string): Language {
+            this.IncludeDictionaryType = value;
+            return this;
+        }
+
         public setIncludeEnder(value: string): Language {
             this.IncludeEnder = value;
+            return this;
+        }
+
+        public setIncludeFileExtension(value: boolean): Language {
+            this.IncludeFileExtension = value;
             return this;
         }
 
@@ -2709,10 +2729,24 @@ module GLS {
 
             var output: string = this.getIncludeStarter();
             output += functionArgs[0];
-            output += "." + this.getExtension();
+
+            if (this.getIncludeFileExtension()) {
+                output += "." + this.getExtension();
+            }
+
             output += this.getIncludeEnder();
 
             return [output, 0];
+        }
+
+        public IncludeDictionary(functionArgs: string[], isInline: boolean): any[]{
+            var dictionaryType: string = this.getIncludeDictionaryType();
+
+            if (dictionaryType.length === 0) {
+                return ["", Language.INT_MIN];
+            }
+
+            return this.Include([dictionaryType], isInline);
         }
         
         // [, string param, ...], statement

@@ -163,7 +163,7 @@ module GLS {
         private FileEndLine: string;
         private FileStartLeft: string;
         private FileStartRight: string;
-        private IncludeDictionary: string;
+        private IncludeDictionaryType: string;
         private IncludeEnder: string;
         private IncludeFileExtension: boolean;
         private IncludeStarter: string;
@@ -778,8 +778,8 @@ module GLS {
             return this.FileStartRight;
         }
 
-        public getIncludeDictionary(): string {
-            return this.IncludeDictionary;
+        public getIncludeDictionaryType(): string {
+            return this.IncludeDictionaryType;
         }
 
         public getIncludeEnder(): string {
@@ -1412,8 +1412,8 @@ module GLS {
             return this;
         }
 
-        public setIncludeDictionary(value: string): Language {
-            this.IncludeDictionary = value;
+        public setIncludeDictionaryType(value: string): Language {
+            this.IncludeDictionaryType = value;
             return this;
         }
 
@@ -2737,6 +2737,16 @@ module GLS {
             output += this.getIncludeEnder();
 
             return [output, 0];
+        }
+
+        public IncludeDictionary(functionArgs: string[], isInline: boolean): any[]{
+            var dictionaryType: string = this.getIncludeDictionaryType();
+
+            if (dictionaryType.length === 0) {
+                return ["", Language.INT_MIN];
+            }
+
+            return this.Include([dictionaryType], isInline);
         }
         
         // [, string param, ...], statement
