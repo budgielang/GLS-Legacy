@@ -1,0 +1,17 @@
+include : Language
+
+file start : GLS
+    class start : GLSC
+        class member variable declare : Languages private { dictionary type : string Language }
+        class member variable declare : SearchEnds private { dictionary type : string Language }
+
+        class constructor start : GLSC
+            class member variable set : { this } Languages { dictionary initialize : string string }
+            class member variable set incomplete : { this } SearchEnds { dictionary initialize start : string string }
+                dictionary initialize key : (" ") (" ") ,
+                dictionary initialize key : "{" "}" ,
+                dictionary initialize key : "(" ")" 
+            dictionary initialize end
+        class constructor end
+    class end
+file end
