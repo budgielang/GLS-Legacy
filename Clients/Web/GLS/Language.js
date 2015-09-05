@@ -1793,7 +1793,7 @@ var GLS;
                 variableDeclareArgs[0] = keyName;
                 variableDeclareArgs[1] = keyType;
                 line += this.VariableDeclarePartial(variableDeclareArgs, true)[0];
-                //                           , valueName|
+                //                            , valueName|
                 variableDeclareArgs[0] = valueName;
                 variableDeclareArgs[1] = valueType;
                 line += ", " + this.VariableDeclarePartial(variableDeclareArgs, true)[0];
@@ -1828,11 +1828,11 @@ var GLS;
                 // valueName = pairName.Value
                 variableDeclareArgs = new Array(3);
                 variableDeclareArgs[0] = valueName;
-                variableDeclareArgs[0] = "equals";
-                variableDeclareArgs[0] = pairName + this.getForEachPairsRetrieveValue();
+                variableDeclareArgs[1] = "equals";
+                variableDeclareArgs[2] = pairName + this.getForEachPairsRetrieveValue();
                 line = this.Operation(variableDeclareArgs, false)[0];
-                output[3] = line;
-                output[4] = 0;
+                output[4] = line;
+                output[5] = 0;
             }
             else {
                 // for keyName in container 
@@ -2194,6 +2194,7 @@ var GLS;
         };
         // string type
         Language.prototype.Type = function (functionArgs, isInline) {
+            this.requireArgumentsLength("Type", functionArgs, 1);
             return [this.getTypeAlias(functionArgs[0]), 0];
         };
         // string value

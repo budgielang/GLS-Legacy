@@ -2447,7 +2447,7 @@ file start : GLS
                 operation : { array get item : variableDeclareArgs 1 } equals keyType
                 operation : line increaseby { array get item : { class member function call : { this } VariableDeclarePartial variableDeclareArgs true } 0 }
 
-                comment line : (                          , valueName|)
+                comment line : (                           , valueName|)
                 operation : { array get item : variableDeclareArgs 0 } equals valueName
                 operation : { array get item : variableDeclareArgs 1 } equals valueType
                 operation : line increaseby (", ") plus { array get item : { class member function call : { this } VariableDeclarePartial variableDeclareArgs true } 0 }
@@ -2467,7 +2467,7 @@ file start : GLS
                 operation : { array get item : variableDeclareArgs 1 } equals { class member function call : { this } getForEachPairsPairClass } plus "<" plus keyType plus (", ") plus valueType plus ">"
                 operation : line increaseby { array get item : { class member function call : { this } VariableDeclarePartial variableDeclareArgs true } 0 }
 
-                comment line :                                             in container) {
+                comment line : (                                            in container) {)
                 operation : line increaseby { class member function call : { this } getForEachInner }
                 operation : line increaseby container
                 operation : line increaseby { class member function call : { this } getConditionStartRight }
@@ -2487,11 +2487,11 @@ file start : GLS
                 comment line :     valueName = pairName.Value
                 operation : variableDeclareArgs equals { array initialize sized : string 3 }
                 operation : { array get item : variableDeclareArgs 0 } equals valueName
-                operation : { array get item : variableDeclareArgs 0 } equals "equals"
-                operation : { array get item : variableDeclareArgs 0 } equals pairName plus { class member function call : { this } getForEachPairsRetrieveValue }
+                operation : { array get item : variableDeclareArgs 1 } equals "equals"
+                operation : { array get item : variableDeclareArgs 2 } equals pairName plus { class member function call : { this } getForEachPairsRetrieveValue }
                 operation : line equals { array get item : { class member function call : { this } Operation variableDeclareArgs false } 0 }
-                operation : { array get item : output 3 } equals line
-                operation : { array get item : output 4 } equals 0
+                operation : { array get item : output 4 } equals line
+                operation : { array get item : output 5 } equals 0
             else start
                 comment line : for (keyName in container) {
                 comment line :     valueName = container[keyName]
@@ -2958,6 +2958,7 @@ file start : GLS
 
         comment line : string type
         class member function start : Language public Type mixed[] functionArgs string[] isInline boolean
+            class member function call : { this } requireArgumentLength "Type" 1
             return : { array initialize : mixed { class member function call : { this } getTypeAlias { array get item : functionArgs 0 } } 0 }
         class member function end
 
