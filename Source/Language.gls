@@ -1406,8 +1406,18 @@ file start : GLS
             return : { this }
         class member function end
 
+        class member function start : Language public setIncludeDictionaryType Language value string
+            class member variable set : { this } IncludeDictionaryType value
+            return : { this }
+        class member function end
+
         class member function start : Language public setIncludeEnder Language value string
             class member variable set : { this } IncludeEnder value
+            return : { this }
+        class member function end
+
+        class member function start : Language public setIncludeFileExtension Language value boolean
+            class member variable set : { this } IncludeFileExtension value
             return : { this }
         class member function end
 

@@ -1984,7 +1984,7 @@ var GLS;
                 output += this.getFunctionTypeMarker() + this.parseType(functionArgs[1]);
             }
             output += this.getFunctionDefineRight();
-            return [1];
+            return [output, 1];
         };
         Language.prototype.IfEnd = function (functionArgs, isInline) {
             return [this.getConditionEnd(), -1];
@@ -2009,7 +2009,7 @@ var GLS;
         };
         Language.prototype.IncludeDictionary = function (functionArgs, isInline) {
             var dictionaryType = this.getIncludeDictionaryType();
-            if (dictionaryType.length === 0) {
+            if (dictionaryType.length == 0) {
                 return ["", Language.INT_MIN];
             }
             return this.Include([dictionaryType], isInline);
@@ -2025,7 +2025,7 @@ var GLS;
             output = output.substring(0, output.length - 2);
             output += this.getLambdaDeclareMiddle();
             output += functionArgs[functionArgs.length - 1] + this.getLambdaDeclareEnder();
-            return [0];
+            return [output, 0];
         };
         // string visibility, string name, string return type[, string paramName, string paramType, ...]
         Language.prototype.LambdaTypeDeclare = function (functionArgs, isInline) {

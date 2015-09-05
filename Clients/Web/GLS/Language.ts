@@ -2705,7 +2705,7 @@ module GLS {
             }
 
             output += this.getFunctionDefineRight();
-            return [1];
+            return [output, 1];
         }
 
         public IfEnd(functionArgs: string[], isInline: boolean): any[] {
@@ -2739,10 +2739,10 @@ module GLS {
             return [output, 0];
         }
 
-        public IncludeDictionary(functionArgs: string[], isInline: boolean): any[]{
+        public IncludeDictionary(functionArgs: string[], isInline: boolean): any[] {
             var dictionaryType: string = this.getIncludeDictionaryType();
 
-            if (dictionaryType.length === 0) {
+            if (dictionaryType.length == 0) {
                 return ["", Language.INT_MIN];
             }
 
@@ -2765,7 +2765,7 @@ module GLS {
 
             output += functionArgs[functionArgs.length - 1] + this.getLambdaDeclareEnder();
 
-            return [0];
+            return [output, 0];
         }
         
         // string visibility, string name, string return type[, string paramName, string paramType, ...]
