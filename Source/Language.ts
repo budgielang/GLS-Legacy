@@ -2360,7 +2360,7 @@ module GLS {
         
         // string keyType, string valueType
         public DictionaryType(functionArgs: string[], isInline: boolean): any[] {
-            this.requireArgumentsLength("ClassStart", functionArgs, 2);
+            this.requireArgumentsLength("DictionaryType", functionArgs, 2);
 
             if (!this.getVariableTypesExplicit()) {
                 return ["", 0];
