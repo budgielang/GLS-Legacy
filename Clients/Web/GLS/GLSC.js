@@ -56,26 +56,44 @@ var GLS;
             return output;
         };
         GLSC.prototype.parseCommand = function (language, commandRaw, isInline) {
-            var output = ["", 0];
             if (this.isStringSpace(commandRaw)) {
-                return output;
+                return ["", 0];
             }
-            var result, functionArgs, functionName, argumentsRaw, colonIndex;
-            colonIndex = commandRaw.indexOf(":");
-            if (colonIndex !== -1) {
+            var colonIndex = commandRaw.indexOf(":"), result, functionArgs, functionName, argumentsRaw, colonIndex;
+            // Arguments only exist if there is a colon separating them from the command
+            if (colonIndex === -1) {
+                functionName = this.trimString(commandRaw);
+                functionArgs = [];
+            }
+            else {
                 functionName = this.trimString(commandRaw.substring(0, colonIndex));
                 argumentsRaw = this.trimString(commandRaw.substring(colonIndex + 1));
                 functionArgs = this.parseArguments(language, argumentsRaw, isInline);
             }
-            else {
-                functionName = this.trimString(commandRaw);
-                functionArgs = [];
-            }
-            output = language.print(functionName, functionArgs, isInline);
-            return output;
+            return language.print(functionName, functionArgs, isInline);
         };
         GLSC.prototype.parseArguments = function (language, argumentsRaw, isInline) {
-            var argumentsConverted = [], argument, starter, end, i;
+            var numArgs = 0, argumentsConverted, argument, starter, end, i;
+            for (i = 0; i < argumentsRaw.length; i += 1) {
+                starter = argumentsRaw[i];
+                if (this.isCharacterSpace(starter)) {
+                    continue;
+                }
+                if (starter == '{' || starter == '(') {
+                    end = this.findSearchEnd(argumentsRaw, starter, i);
+                    i += 1;
+                }
+                else {
+                    end = this.findNextSpace(argumentsRaw, i);
+                }
+                if (end === -1) {
+                    end = argumentsRaw.length;
+                }
+                i = end;
+                numArgs += 1;
+            }
+            argumentsConverted = new Array(numArgs);
+            numArgs = 0;
             for (i = 0; i < argumentsRaw.length; i += 1) {
                 starter = argumentsRaw[i];
                 if (this.isCharacterSpace(starter)) {
@@ -92,11 +110,12 @@ var GLS;
                     end = argumentsRaw.length;
                 }
                 argument = argumentsRaw.substr(i, end - i);
+                i = end;
                 if (starter === '{') {
                     argument = this.parseCommand(language, argument, true)[0];
                 }
-                argumentsConverted.push(argument);
-                i = end;
+                argumentsConverted[numArgs] = argument;
+                numArgs += 1;
             }
             return argumentsConverted;
         };

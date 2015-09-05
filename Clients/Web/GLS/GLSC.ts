@@ -73,40 +73,63 @@ module GLS {
         }
 
         public parseCommand(language: Language, commandRaw: string, isInline?: boolean): any[] {
-            var output: any[] = ["", 0];
-
             if (this.isStringSpace(commandRaw)) {
-                return output;
+                return ["", 0];
             }
 
-            var result: any[],
+            var colonIndex = commandRaw.indexOf(":"),
+                result: any[],
                 functionArgs: string[],
                 functionName: string,
                 argumentsRaw: string,
                 colonIndex: number;
-
-            colonIndex = commandRaw.indexOf(":");
-
-            if (colonIndex !== -1) {
+            
+            // Arguments only exist if there is a colon separating them from the command
+            if (colonIndex === -1) {
+                functionName = this.trimString(commandRaw);
+                functionArgs = [];
+            } else {
                 functionName = this.trimString(commandRaw.substring(0, colonIndex));
                 argumentsRaw = this.trimString(commandRaw.substring(colonIndex + 1));
                 functionArgs = this.parseArguments(language, argumentsRaw, isInline);
-            } else {
-                functionName = this.trimString(commandRaw);
-                functionArgs = [];
             }
 
-            output = language.print(functionName, functionArgs, isInline);
-
-            return output;
+            return language.print(functionName, functionArgs, isInline);
         }
 
         public parseArguments(language: Language, argumentsRaw: string, isInline?: boolean): string[] {
-            var argumentsConverted: string[] = [],
+            var numArgs: number = 0,
+                argumentsConverted: string[],
                 argument: string,
                 starter: string,
                 end: number,
                 i: number;
+
+            // Until native array pushing is suported, this is required...
+            for (i = 0; i < argumentsRaw.length; i += 1) {
+                starter = argumentsRaw[i];
+
+                if (this.isCharacterSpace(starter)) {
+                    continue;
+                }
+
+                if (starter == '{' || starter == '(') {
+                    end = this.findSearchEnd(argumentsRaw, starter, i);
+                    i += 1;
+                } else {
+                    end = this.findNextSpace(argumentsRaw, i);
+                }
+
+                if (end === -1) {
+                    end = argumentsRaw.length;
+                }
+
+                i = end;
+                numArgs += 1;
+            }
+
+            argumentsConverted = new Array(numArgs);
+            numArgs = 0;
 
             for (i = 0; i < argumentsRaw.length; i += 1) {
                 starter = argumentsRaw[i];
@@ -127,13 +150,14 @@ module GLS {
                 }
 
                 argument = argumentsRaw.substr(i, end - i);
+                i = end;
 
                 if (starter === '{') {
                     argument = this.parseCommand(language, argument, true)[0];
                 }
 
-                argumentsConverted.push(argument);
-                i = end;
+                argumentsConverted[numArgs] = argument;
+                numArgs += 1;
             }
 
             return argumentsConverted;
