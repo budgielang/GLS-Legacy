@@ -161,7 +161,9 @@ file start : GLS
         class member variable declare : FileEndLine private string
         class member variable declare : FileStartLeft private string
         class member variable declare : FileStartRight private string
+        class member variable declare : IncludeDictionary private string
         class member variable declare : IncludeEnder private string
+        class member variable declare : IncludeFileExtension private boolean
         class member variable declare : IncludeStarter private string
 
         comment line : Main
@@ -772,8 +774,16 @@ file start : GLS
             return : { class member variable get : { this } FileStartRight }
         class member function end
 
+        class member function start : Language public getIncludeDictionary string
+            return : { class member variable get : { this } IncludeDictionary }
+        class member function end
+        
         class member function start : Language public getIncludeEnder string
             return : { class member variable get : { this } IncludeEnder }
+        class member function end
+
+        class member function start : Language public getIncludeFileExtension boolean
+            return : { class member variable get : { this } IncludeFileExtension }
         class member function end
 
         class member function start : Language public getIncludeStarter string
@@ -2693,7 +2703,11 @@ file start : GLS
             
             variable declare : output string { class member function call : { this } getIncludeStarter }
             operation : output increaseby { array get item : functionArgs 0 }
-            operation : output increaseby "." plus { class member function call : { this } getExtension }
+
+            if start : { class member function call : { this } getIncludeFileExtension } }
+                operation : output increaseby "." plus { class member function call : { this } getExtension }
+            if end
+            
             operation : output increaseby { class member function call : { this } getIncludeEnder }
 
             return : { array initialize : mixed output 0 }

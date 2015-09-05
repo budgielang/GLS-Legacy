@@ -163,7 +163,9 @@ module GLS {
         private FileEndLine: string;
         private FileStartLeft: string;
         private FileStartRight: string;
+        private IncludeDictionary: string;
         private IncludeEnder: string;
+        private IncludeFileExtension: boolean;
         private IncludeStarter: string;
         
         // Main
@@ -776,8 +778,16 @@ module GLS {
             return this.FileStartRight;
         }
 
+        public getIncludeDictionary(): string {
+            return this.IncludeDictionary;
+        }
+
         public getIncludeEnder(): string {
             return this.IncludeEnder;
+        }
+
+        public getIncludeFileExtension(): boolean {
+            return this.IncludeFileExtension;
         }
 
         public getIncludeStarter(): string {
@@ -1402,8 +1412,18 @@ module GLS {
             return this;
         }
 
+        public setIncludeDictionary(value: string): Language {
+            this.IncludeDictionary = value;
+            return this;
+        }
+
         public setIncludeEnder(value: string): Language {
             this.IncludeEnder = value;
+            return this;
+        }
+
+        public setIncludeFileExtension(value: boolean): Language {
+            this.IncludeFileExtension = value;
             return this;
         }
 
@@ -2709,7 +2729,11 @@ module GLS {
 
             var output: string = this.getIncludeStarter();
             output += functionArgs[0];
-            output += "." + this.getExtension();
+
+            if (this.getIncludeFileExtension()) {
+                output += "." + this.getExtension();
+            }
+
             output += this.getIncludeEnder();
 
             return [output, 0];
