@@ -58,6 +58,7 @@ var GLS;
                 "function start": this.FunctionStart.bind(this),
                 "if end": this.IfEnd.bind(this),
                 "if start": this.IfStart.bind(this),
+                "include": this.Include.bind(this),
                 "lambda declare inline": this.LambdaDeclareInline.bind(this),
                 "lambda type declare": this.LambdaTypeDeclare.bind(this),
                 "loop break": this.LoopBreak.bind(this),
@@ -475,6 +476,12 @@ var GLS;
         };
         Language.prototype.getFileStartRight = function () {
             return this.FileStartRight;
+        };
+        Language.prototype.getIncludeEnder = function () {
+            return this.IncludeEnder;
+        };
+        Language.prototype.getIncludeStarter = function () {
+            return this.IncludeStarter;
         };
         Language.prototype.getMainEndLine = function () {
             return this.MainEndLine;
@@ -969,6 +976,14 @@ var GLS;
             this.FileStartRight = value;
             return this;
         };
+        Language.prototype.setIncludeEnder = function (value) {
+            this.IncludeEnder = value;
+            return this;
+        };
+        Language.prototype.setIncludeStarter = function (value) {
+            this.IncludeStarter = value;
+            return this;
+        };
         Language.prototype.setMainEndLine = function (value) {
             this.MainEndLine = value;
             return this;
@@ -1351,7 +1366,7 @@ var GLS;
                 variableDeclarationArgs[1] = functionArgs[0];
                 output += this.VariableDeclarePartial(variableDeclarationArgs, true)[0];
             }
-            // All arguments are added using VariableDeclarePartial
+            // All arguments are added Include VariableDeclarePartial
             if (functionArgs.length > 4) {
                 if (this.getClassFunctionsTakeThis()) {
                     output += ", ";
@@ -1459,7 +1474,7 @@ var GLS;
                 output = functionArgs[1] + " " + output;
             }
             output += functionArgs[2] + "(";
-            // All arguments are added using VariableDeclarePartial
+            // All arguments are added Include VariableDeclarePartial
             if (functionArgs.length > 4) {
                 if (this.getClassFunctionsTakeThis()) {
                     output += ", ";
@@ -1940,7 +1955,7 @@ var GLS;
                 output += this.parseType(functionArgs[1]) + " ";
             }
             output += this.getFunctionDefine() + functionArgs[0] + "(";
-            // All arguments are added using VariableDeclarePartial
+            // All arguments are added Include VariableDeclarePartial
             if (functionArgs.length > 2) {
                 for (i = 2; i < functionArgs.length; i += 2) {
                     variableDeclarationArgs[0] = functionArgs[i];
@@ -1966,6 +1981,15 @@ var GLS;
             var output = this.getIf() + this.getConditionStartLeft();
             output += functionArgs[0] + this.getConditionStartRight();
             return [output, 1];
+        };
+        // string file
+        Language.prototype.Include = function (functionArgs, isInline) {
+            this.requireArgumentsLength("Include", functionArgs, 1);
+            var output = this.getIncludeStarter();
+            output += functionArgs[0];
+            output += "." + this.getExtension();
+            output += this.getIncludeEnder();
+            return [output, 0];
         };
         // [, string param, ...], statement
         Language.prototype.LambdaDeclareInline = function (functionArgs, isInline) {

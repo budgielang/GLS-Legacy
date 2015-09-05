@@ -69,6 +69,8 @@ module GLS.Languages {
         .setFunctionTypeMarker(": ")
         .setFunctionTypeAfterName(true)
         .setIf("if")
+        .setIncludeEnder("' />")
+        .setIncludeStarter("/// <reference path='")
         .setLambdaDeclareEnder("")
         .setLambdaDeclareMiddle(") => ")
         .setLambdaDeclareStarter("(")

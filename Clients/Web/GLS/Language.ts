@@ -163,6 +163,8 @@ module GLS {
         private FileEndLine: string;
         private FileStartLeft: string;
         private FileStartRight: string;
+        private IncludeEnder: string;
+        private IncludeStarter: string;
         
         // Main
         private MainEndLine: string;
@@ -228,6 +230,7 @@ module GLS {
                 "function start": this.FunctionStart.bind(this),
                 "if end": this.IfEnd.bind(this),
                 "if start": this.IfStart.bind(this),
+                "include": this.Include.bind(this),
                 "lambda declare inline": this.LambdaDeclareInline.bind(this),
                 "lambda type declare": this.LambdaTypeDeclare.bind(this),
                 "loop break": this.LoopBreak.bind(this),
@@ -771,6 +774,14 @@ module GLS {
 
         public getFileStartRight(): string {
             return this.FileStartRight;
+        }
+
+        public getIncludeEnder(): string {
+            return this.IncludeEnder;
+        }
+
+        public getIncludeStarter(): string {
+            return this.IncludeStarter;
         }
 
         public getMainEndLine(): string {
@@ -1388,6 +1399,16 @@ module GLS {
 
         public setFileStartRight(value: string): Language {
             this.FileStartRight = value;
+            return this;
+        }
+
+        public setIncludeEnder(value: string): Language {
+            this.IncludeEnder = value;
+            return this;
+        }
+
+        public setIncludeStarter(value: string): Language {
+            this.IncludeStarter = value;
             return this;
         }
 
@@ -2680,6 +2701,18 @@ module GLS {
             output += functionArgs[0] + this.getConditionStartRight();
 
             return [output, 1];
+        }
+        
+        // string file
+        public Include(functionArgs: string[], isInline: boolean): any[] {
+            this.requireArgumentsLength("Include", functionArgs, 1);
+
+            var output: string = this.getIncludeStarter();
+            output += functionArgs[0];
+            output += "." + this.getExtension();
+            output += this.getIncludeEnder();
+
+            return [output, 0];
         }
         
         // [, string param, ...], statement
