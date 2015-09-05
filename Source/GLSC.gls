@@ -1,0 +1,107 @@
+include : Language
+
+file start : GLS
+    class start : GLSC
+        class member variable declare : Languages private { dictionary type : string Language }
+        class member variable declare : SearchEnds private { dictionary type : string Language }
+
+        class constructor start : GLSC
+            class member variable set : { this } Languages { dictionary initialize : string string }
+            class member variable set incomplete : { this } SearchEnds { dictionary initialize start : string string }
+                dictionary initialize key : (" ") (" ") ,
+                dictionary initialize key : "{" "}" ,
+                dictionary initialize key : "(" ")" 
+            dictionary initialize end
+        class constructor end
+
+
+        comment block : (Private utilities)
+
+        class member function start : GLSC private generateTabs string numTabs number
+            variable declare : numTabsActual number { operation : numTabs times 4 }
+            variable declare : output string ""
+            variable declare : i number
+
+            for numbers start : i 0 lessthan numTabsActual
+                operation : output increaseby (" ")
+            for end
+
+            return : output
+        class member function end
+
+        class member function start : GLSC private isStringSpace boolean text string
+            variable declare : i number
+            for numbers start : i 0 lessthan { native call : string length text }
+                if start : { not : { class member function call : { this } isCharacterSpace { array get item : text i } } }
+                    return : false
+                if end
+            for end
+
+            return : true
+        class member function end
+
+        class member function start : GLSC private isCharacterSpace boolean character string
+            return : { operation : character equalto (' ') character equalto '\r' character equalto '\n' }
+        class member function end
+
+        class member function start : GLSC private findNextSpace number haystack string start number
+            variable declare : i number
+
+            for numbers start : i { operation : start plus 1 } lessthan { native call : string length haystack }
+                if start : { class member function call : { this } isCharacterSpace { array get item : haystack i } }
+                    return : i
+                if end
+            for end
+
+            return : { native call : string length haystack }
+        class member function end
+
+        class member function start : GLSC private findSearchEnd number haystack string starter string start number
+            variable declare : ender string { dictionary key get : { class member variable get : { this } SearchEnds } starter }
+            variable declare : numStarts number 1
+            variable declare : current string
+            variable declare : i number
+
+            for numbers start : i { operation : start plus 1 } lessthan { native call : string length haystack }
+                operation : current equals { array get item : haystack i }
+
+                if start : { operation : current equalto starter }
+                    operation : numStarts increaseby 1
+                elif start : { operation : current equalto ender }
+                    operation : numStarts decreaseby 1
+                    if start : { operation : numStarts lessthan 1 }
+                        return : i
+                    if end
+                if end
+            for end
+
+            return : -1
+        class member function end
+
+        class member function start : GLSC private trimString string text string
+            return : { class member function call : { this } trimStringLeft { class member function call : { this } trimStringRight text } }
+        class member function end
+
+        class member function start : GLSC private trimStringLeft string text string
+            variable declare : i number
+            for numbers start : i 0 lessthan { native call : string length text }
+                if start : { not : { class member function call : { this } isCharacterSpace { array get item : text i } } }
+                    return : { native call : string substring text i }
+                if end
+            for end
+
+            return : ""
+        class member function end
+
+        class member function start : GLSC private trimStringRight string text string
+            variable declare : i number
+            for numbers start : i { operation : { native call : string length text } minus 1 } greaterthan 0 -1 
+                if start : { not : { class member function call : { this } isCharacterSpace { array get item : text i } } }
+                    return : { native call : string substring text 0 { operation : i plus 1 } }
+                if end
+            for end
+
+            return : ""
+        class member function end
+    class end
+file end
