@@ -44,7 +44,8 @@ file start : GLS
         class member variable declare : VariableTypeMarker private string
         class member variable declare : VariableDeclareStart private string
 
-        comment line : booleans
+        comment line : Booleans
+
         class member variable declare : BooleanClass private string
         class member variable declare : True private string
         class member variable declare : False private string
@@ -98,7 +99,6 @@ file start : GLS
         class member variable declare : DictionaryKeyLeft private string
         class member variable declare : DictionaryKeyMiddle private string
         class member variable declare : DictionaryKeyRight private string
-        class member variable declare : DictionaryKeysNatural private boolean
 
         comment line : Exceptions
         class member variable declare : ExceptionCatch private string
@@ -174,6 +174,7 @@ file start : GLS
                 dictionary initialize key : ("array initialize") { class member function get : { this } ArrayInitialize } ,
                 dictionary initialize key : ("array initialize sized") { class member function get : { this } ArrayInitializeSized } ,
                 dictionary initialize key : ("array get item") { class member function get : { this } ArrayGetItem } ,
+                dictionary initialize key : ("catch") { class member function get : { this } Catch } ,
                 dictionary initialize key : ("class constructor end") { class member function get : { this } ClassConstructorEnd } ,
                 dictionary initialize key : ("class constructor inherited call") { class member function get : { this } ClassConstructorInheritedCall } ,
                 dictionary initialize key : ("class constructor inherited start") { class member function get : { this } ClassConstructorInheritedStart } ,
@@ -209,8 +210,11 @@ file start : GLS
                 dictionary initialize key : ("dictionary initialize key") { class member function get : { this } DictionaryInitializeKey } ,
                 dictionary initialize key : ("dictionary initialize start") { class member function get : { this } DictionaryInitializeStart } ,
                 dictionary initialize key : ("dictionary type") { class member function get : { this } DictionaryType } ,
+                dictionary initialize key : ("elif start") { class member function get : { this } ElifStart } ,
+                dictionary initialize key : ("else start") { class member function get : { this } ElseStart } ,
                 dictionary initialize key : ("file end") { class member function get : { this } FileEnd } ,
                 dictionary initialize key : ("file start") { class member function get : { this } FileStart } ,
+                dictionary initialize key : ("finally") { class member function get : { this } Finally } ,
                 dictionary initialize key : ("for each keys start") { class member function get : { this } ForEachKeysStart } ,
                 dictionary initialize key : ("for each pairs start") { class member function get : { this } ForEachPairsStart } ,
                 dictionary initialize key : ("for end") { class member function get : { this } ForEnd } ,
@@ -224,6 +228,8 @@ file start : GLS
                 dictionary initialize key : ("if start") { class member function get : { this } IfStart } ,
                 dictionary initialize key : ("lambda declare inline") { class member function get : { this } LambdaDeclareInline } ,
                 dictionary initialize key : ("lambda type declare") { class member function get : { this } LambdaTypeDeclare } ,
+                dictionary initialize key : ("loop break") { class member function get : { this } LoopBreak } ,
+                dictionary initialize key : ("loop continue") { class member function get : { this } LoopContinue } ,
                 dictionary initialize key : ("main end") { class member function get : { this } MainEnd } ,
                 dictionary initialize key : ("main start") { class member function get : { this } MainStart } ,
                 dictionary initialize key : ("native call") { class member function get : { this } NativeCall } ,
@@ -232,13 +238,17 @@ file start : GLS
                 dictionary initialize key : ("parenthesis") { class member function get : { this } Parenthesis } ,
                 dictionary initialize key : ("print line") { class member function get : { this } PrintLine } ,
                 dictionary initialize key : ("return") { class member function get : { this } Return } ,
+                dictionary initialize key : ("this") { class member function get : { this } This } ,
+                dictionary initialize key : ("throw") { class member function get : { this } Throw } ,
+                dictionary initialize key : ("try end") { class member function get : { this } TryEnd} ,
+                dictionary initialize key : ("try start") { class member function get : { this } TryStart } ,
                 dictionary initialize key : ("type") { class member function get : { this } Type } ,
                 dictionary initialize key : ("value") { class member function get : { this } Value } ,
-                dictionary initialize key : ("variable set") { class member function get : { this } VariableDeclare } ,
-                dictionary initialize key : ("variable set incomplete") { class member function get : { this } VariableDeclareIncomplete } ,
-                dictionary initialize key : ("variable set partial") { class member function get : { this } VariableDeclarePartial } ,
+                dictionary initialize key : ("variable declare") { class member function get : { this } VariableDeclare } ,
+                dictionary initialize key : ("variable declare incomplete") { class member function get : { this } VariableDeclareIncomplete } ,
+                dictionary initialize key : ("variable declare partial") { class member function get : { this } VariableDeclarePartial } ,
                 dictionary initialize key : ("while end") { class member function get : { this } WhileEnd } ,
-                dictionary initialize key : ("while start") { class member function get : { this } WhileStart } ,
+                dictionary initialize key : ("while start") { class member function get : { this } WhileStart }
             dictionary initialize end
 
             class member variable set incomplete : { this } OperationAliases { dictionary initialize start : string string }
@@ -255,6 +265,8 @@ file start : GLS
                 dictionary initialize key : "greaterthan" ">" ,
                 dictionary initialize key : "lessthanequal" "<=" ,
                 dictionary initialize key : "greaterthanequal" ">=" ,
+                dictionary initialize key : "equalto" "==" ,
+                dictionary initialize key : "notequalto" "!=" ,
                 dictionary initialize key : "and" "&&" ,
                 dictionary initialize key : "or" "||" ,
                 dictionary initialize key : "mod" "%"
@@ -1445,6 +1457,7 @@ file start : GLS
             while end
 
             operation : output increaseby { class member function call : { this } parseType { native call : string substring text i { operation : { native call : string length text } minus 1 } } }
+            operation : output increaseby ">"
 
             return : output
         class member function end
@@ -1473,7 +1486,7 @@ file start : GLS
         class member function end
 
         class member function start : Language public addTypeAlias Language key string alias string
-            dictionary key set : { class member variable get : { this } TypeAliases } alias key
+            dictionary key set : { class member variable get : { this } TypeAliases } key alias
             return : { this }
         class member function end
 
@@ -1488,7 +1501,7 @@ file start : GLS
         class member function end
 
         class member function start : Language public addOperationAlias Language key string alias string
-            dictionary key set : { class member variable get : { this } OperationAliases } alias key
+            dictionary key set : { class member variable get : { this } OperationAliases } key alias
             return : { this }
         class member function end
 
@@ -1503,7 +1516,7 @@ file start : GLS
         class member function end
 
         class member function start : Language public addValueAlias Language key string alias string
-            dictionary key set : { class member variable get : { this } ValueAliases } alias key
+            dictionary key set : { class member variable get : { this } ValueAliases } key alias
             return : { this }
         class member function end
 
@@ -1562,7 +1575,7 @@ file start : GLS
             if end
             
             if start : { operation : { native call : array length functionArgs } greaterthan 1 }
-                for numbers start : i number 1 lessthan { operation : { native call : array length functionArgs } minus 1 }
+                for numbers start : i 1 lessthan { operation : { native call : array length functionArgs } minus 1 }
                     operation : output increaseby { array get item : functionArgs i } plus (", ")
                 for end
 
@@ -1605,6 +1618,8 @@ file start : GLS
                 if end
                 operation : output increaseby  "(" plus arraySize plus ")"
             if end
+
+            return : { array initialize : mixed output 0 }
         class member function end
 
         comment line : string name, string index
@@ -1676,7 +1691,7 @@ file start : GLS
                 operation : { array get item : callingArgs 1 } equals { class member function call : { this } getClassThis }
             if end
 
-            for numbers start : i number loopStart lessthan { native call : array length functionArgs }
+            for numbers start : i loopStart lessthan { native call : array length functionArgs }
                 operation : { array get item : callingArgs { operation : i plus 1 } } equals { array get item : functionArgs i }
             for end
 
@@ -1700,7 +1715,7 @@ file start : GLS
             if start : { operation : { native call : array length functionArgs } greaterthan 2 }
                 operation : callingArgs equals { array initialize sized : string { operation : { native call : array length functionArgs } minus 1 }
 
-                for numbers start : i number 2 lessthan { native call : array length functionArgs }
+                for numbers start : i 2 lessthan { native call : array length functionArgs }
                     operation : { array get item : callingArgs { operation : i minus 1 } } equals { array get item : functionArgs i }
                 for end
 
@@ -1717,7 +1732,7 @@ file start : GLS
                 operation : { array get item : output 0 } equals { native call : string substring { array get item : generalCall 0 } 0 { operation : { native call : string length { array get item : generalCall 0 } } minus { native call : string length { class member function call : { this } getFunctionDefineRight } } } }
                 operation : { array get item : output 0 } increaseby { array get item : functionArgs 1 } plus { class member function call : { this } getFunctionDefineRight }
 
-                for numbers start : i number 1 lessthan { native call : array length generalCall }
+                for numbers start : i 1 lessthan { native call : array length generalCall }
                     operation : { array get item : output i } equals { array get item : generalCall i }
                 for end
             else start
@@ -1731,7 +1746,7 @@ file start : GLS
                     operation : { array get item : output { operation : { native call : array length output } minus 2 } } increaseby { class member function call : this getSemiColon }
                 if end
 
-                for numbers start : i number 0 lessthan { operation : { native call : array length generalCall } minus 1 }
+                for numbers start : i 0 lessthan { operation : { native call : array length generalCall } minus 1 }
                     operation : { array get item : output i } equals { array get item : generalCall i }
                 for end
             if end
@@ -1763,7 +1778,7 @@ file start : GLS
                     operation : output increaseby (", ")
                 if end
 
-                for numbers start : i number 1 lessthan { native call : array length functionArgs } 2
+                for numbers start : i 1 lessthan { native call : array length functionArgs } 2
                     operation : { array get item : variableDeclarationArgs 0 } equals { array get item : functionArgs i }
                     operation : { array get item : variableDeclarationArgs 1 } equals { array get item : functionArgs i + 1 }
 
@@ -1790,7 +1805,7 @@ file start : GLS
             variable declare : i number
 
             if start : { operation : { native call : array length functionArgs } greaterthan 2 }
-                for numbers start : i number 2 lessthan { operation : { native call : array length functionArgs } minus 1 }
+                for numbers start : i 2 lessthan { operation : { native call : array length functionArgs } minus 1 }
                     operation : output increaseby { array get item : functionArgs i } plus (", ")
                 for end
                 operation : output increaseby { array get item : functionArgs i }
@@ -1856,7 +1871,7 @@ file start : GLS
                     operation : output increaseby (", ")
                 if end
 
-                for numbers start : i number 4 lessthan { native call : array length functionArgs } 2
+                for numbers start : i 4 lessthan { native call : array length functionArgs } 2
                     operation : { array get item : variableDeclarationArgs 0 } equals { array get item : functionArgs i }
                     operation : { array get item : variableDeclarationArgs 1 } equals { array get item : functionArgs { operation : i + 1 } }
 
@@ -1945,7 +1960,7 @@ file start : GLS
             variable declare : i number
 
             if start : { operation : { native call : array length functionArgs } greaterthan 2 }
-                for numbers start : i number 2 lessthan { operation : { native call : array length functionArgs } minus 1 }
+                for numbers start : i 2 lessthan { operation : { native call : array length functionArgs } minus 1 }
                     operation : output increaseby { array get item : functionArgs i } plus (", ")
                 for end
 
@@ -2007,7 +2022,7 @@ file start : GLS
                     operation : output increaseby (", ")
                 if end
 
-                for numbers start : i number 4 lessthan { native call : array length functionArgs } 2
+                for numbers start : i 4 lessthan { native call : array length functionArgs } 2
                     operation : { array get item : variableDeclarationArgs 0 } equals { array get item : functionArgs i }
                     operation : { array get item : variableDeclarationArgs 1 } equals { array get item : functionArgs { operation : i plus 1 } }
 
@@ -2090,7 +2105,7 @@ file start : GLS
             variable declare : output string { class member function call : { this } getClassStartLeft }
             operation : output increaseby { class member function call : { this } parseType { array get item : functionArgs 0 } }
 
-            if start : { operation : { native call : array length functionArgs } greaterthan 2 }
+            if start : { operation : { native call : array length functionArgs } greaterthan 1 }
                 if start : { class member function call : { this } getClassExtendsAsFunction }
                     operation : output increaseby "(" plus { class member function call : { this } parseType { array get item : functionArgs 1 } } plus ")"
                 else start
@@ -2101,7 +2116,7 @@ file start : GLS
             operation : output increaseby { class member function call : { this } getClassStartRight }
 
             if start : { class member function call : { this } getClassPrivacy }
-                operation : output increaseby { class member function call : { this } getClassPublicAlias } plus output
+                operation : output equals { class member function call : { this } getClassPublicAlias } plus output
             if end
             
             return : { array initialize : mixed output 1 }
@@ -2121,12 +2136,12 @@ file start : GLS
             if end
 
             if start : { operation : { native call : array length functionArgs } greaterthan 1 }
-                for numbers start : i number 1 lessthan { native call : array length functionArgs }
+                for numbers start : i 1 lessthan { native call : array length functionArgs }
                     operation : output increaseby { array get item : functionArgs i } plus (", ")
                 for end
 
                 comment line : The last argument does not have the last ", " at the end
-                operation : output increaseby { native call : string substring output 0 { operation : { native call : string length output } minus 2 }
+                operation : output equals { native call : string substring output 0 { operation : { native call : string length output } minus 2 }
             if end
 
             operation : output increaseby ")"
@@ -2146,7 +2161,7 @@ file start : GLS
             operation : { array get item : output 0 } equals { class member function call : { this } getCommentorBlockStart }
             operation : { array get item : output 1 } equals 0
 
-            for numbers start : i number 0 lessthan { native call : array length functionArgs }
+            for numbers start : i 0 lessthan { native call : array length functionArgs }
                 operation : { array get item : output { operation : i times 1 plus 2 } } equals { array get item : functionArgs i }
                 operation : { array get item : output { operation : i times 2 plus 3 } } equals 0
             for end
@@ -2162,7 +2177,7 @@ file start : GLS
             variable declare : output string { operation : { class member function call : { this } getCommentorInline } plus (" ") }
             variable declare : i number
 
-            for numbers start : i number 0 lessthan { operation : { native call : array length functionArgs } minus 1 }
+            for numbers start : i 0 lessthan { operation : { native call : array length functionArgs } minus 1 }
                 operation : output increaseby { operation : { array get item : functionArgs i } plus (" ") }
             for end
             operation : output increaseby { array get item : functionArgs i }
@@ -2317,7 +2332,7 @@ file start : GLS
             variable declare : output string { class member function call : { this } getDictionaryClass }
 
             if start : { class member function call : { this } getDictionaryInitializationAsNew }
-                operation : output equals "<" plus { class member function call : { this } parseType { array get item : functionArgs 0 } }
+                operation : output increaseby "<" plus { class member function call : { this } parseType { array get item : functionArgs 0 } }
                 operation : output increaseby { class member function call : { this } getClassTemplatesBetween }
                 operation : output increaseby { class member function call : { this } parseType { array get item : functionArgs 1 } } plus ">"
             if end
@@ -2331,7 +2346,7 @@ file start : GLS
 
             variable declare : output string { operation : { class member function call : { this } getElif } plus { class member function call : { this } getConditionStartLeft }
 
-            variable declare : output string { operation : { array get item : functionArgs 0 } plus { class member function call : { this } getConditionStartRight }
+            operation : output increaseby { array get item : functionArgs 0 } plus { class member function call : { this } getConditionStartRight }
 
             return : { array initialize : mixed "\0" -1 output 1 }
         class member function end
@@ -2432,7 +2447,7 @@ file start : GLS
                 operation : { array get item : variableDeclareArgs 1 } equals keyType
                 operation : line increaseby { array get item : { class member function call : { this } VariableDeclarePartial variableDeclareArgs true } 0 }
 
-                comment line : (                          , valueName|)
+                comment line : (                           , valueName|)
                 operation : { array get item : variableDeclareArgs 0 } equals valueName
                 operation : { array get item : variableDeclareArgs 1 } equals valueType
                 operation : line increaseby (", ") plus { array get item : { class member function call : { this } VariableDeclarePartial variableDeclareArgs true } 0 }
@@ -2452,7 +2467,7 @@ file start : GLS
                 operation : { array get item : variableDeclareArgs 1 } equals { class member function call : { this } getForEachPairsPairClass } plus "<" plus keyType plus (", ") plus valueType plus ">"
                 operation : line increaseby { array get item : { class member function call : { this } VariableDeclarePartial variableDeclareArgs true } 0 }
 
-                comment line :                                             in container) {
+                comment line : ((                                            in container) {)
                 operation : line increaseby { class member function call : { this } getForEachInner }
                 operation : line increaseby container
                 operation : line increaseby { class member function call : { this } getConditionStartRight }
@@ -2472,11 +2487,11 @@ file start : GLS
                 comment line :     valueName = pairName.Value
                 operation : variableDeclareArgs equals { array initialize sized : string 3 }
                 operation : { array get item : variableDeclareArgs 0 } equals valueName
-                operation : { array get item : variableDeclareArgs 0 } equals "equals"
-                operation : { array get item : variableDeclareArgs 0 } equals pairName plus { class member function call : { this } getForEachPairsRetrieveValue }
+                operation : { array get item : variableDeclareArgs 1 } equals "equals"
+                operation : { array get item : variableDeclareArgs 2 } equals pairName plus { class member function call : { this } getForEachPairsRetrieveValue }
                 operation : line equals { array get item : { class member function call : { this } Operation variableDeclareArgs false } 0 }
-                operation : { array get item : output 3 } equals line
-                operation : { array get item : output 4 } equals 0
+                operation : { array get item : output 4 } equals line
+                operation : { array get item : output 5 } equals 0
             else start
                 comment line : for (keyName in container) {
                 comment line :     valueName = container[keyName]
@@ -2508,23 +2523,22 @@ file start : GLS
             return : { array initialize : mixed { class member function call : { this } getConditionEnd } -1 }
         class member function end
 
-        comment line : string i, string type, string initial, string comparison, string boundary[, string change]
+        comment line : string i, string initial, string comparison, string boundary[, string change]
         comment line : e.x. i int 0 lessthan 7
         class member function start : Language public ForNumbersStart mixed[] functionArgs string[] isInline boolean
-            class member function call : { this } requireArgumentsLength "ForNumbersStart" functionArgs 5
+            class member function call : { this } requireArgumentsLength "ForNumbersStart" functionArgs 4
 
             variable declare : output string { operation : "for" plus { class member function call : { this } getConditionStartLeft } }
             variable declare : i string { array get item : functionArgs 0 }
-            variable declare : typeName string { class member function call : { this } parseType { array get item : functionArgs 1 } }
-            variable declare : initial string { array get item : functionArgs 2 }
-            variable declare : comparison string { array get item : functionArgs 3 }
-            variable declare : boundary string { array get item : functionArgs 4 }
+            variable declare : initial string { array get item : functionArgs 1 }
+            variable declare : comparison string { array get item : functionArgs 2 }
+            variable declare : boundary string { array get item : functionArgs 3 }
             variable declare : direction string "increaseby"
             variable declare : change string
             variable declare : generalArgs mixed[]
 
-            if start : { operation : { native call : array length functionArgs } greaterthan 5 }
-                operation : change equals { array get item : functionArgs 5 }
+            if start : { operation : { native call : array length functionArgs } greaterthan 4 }
+                operation : change equals { array get item : functionArgs 4 }
             else start
                 operation : change equals "1"
             if end
@@ -2541,13 +2555,13 @@ file start : GLS
                 operation : output increaseby { class member function call : { this } getRangedForLoopsEnd }
             else start
                 operation : generalArgs equals { array initialize : string i "equals" initial }
-                operation : output increaseby { array get item : { class member function call : { this } Operation generalArgs true } 0 } plus { class member function call : { this } getSemiColon }
+                operation : output increaseby { array get item : { class member function call : { this } Operation generalArgs true } 0 } plus { class member function call : { this } getSemiColon } plus (" ")
 
-                operation : generalArgs equals { array initialize : string i comparison initial }
-                operation : output increaseby { array get item : { class member function call : { this } Comparison generalArgs true } 0 } plus { class member function call : { this } getSemiColon }
+                operation : generalArgs equals { array initialize : string i comparison boundary }
+                operation : output increaseby { array get item : { class member function call : { this } Comparison generalArgs true } 0 } plus { class member function call : { this } getSemiColon } plus (" ")
 
-                operation : generalArgs equals { array initialize : string i "increaseby" initial }
-                operation : output increaseby { array get item : { class member function call : { this } Operation generalArgs true } 0 } plus { class member function call : { this } getSemiColon }
+                operation : generalArgs equals { array initialize : string i direction change }
+                operation : output increaseby { array get item : { class member function call : { this } Operation generalArgs true } 0 }
             if end
 
             operation : output increaseby { class member function call : { this } getConditionStartRight }
@@ -2559,15 +2573,21 @@ file start : GLS
         class member function start : Language public FunctionCall mixed[] functionArgs string[] isInline boolean
             class member function call : { this } requireArgumentsLength "FunctionCall" functionArgs 1
 
-            variable declare : output string { array get item : functionArgs 0 } plus "("
+            variable declare : output string { operation : { array get item : functionArgs 0 } plus "(" }
             variable declare : i number
 
             if start : { operation : { native call : array length functionArgs } greaterthan 1 }
-                for numbers start : i number 1 lessthan { operation : { native call : array length functionArgs } minus 1 }
+                for numbers start : i 1 lessthan { operation : { native call : array length functionArgs } minus 1 }
                     operation : output increaseby { array get item : functionArgs i } plus (", ")
                 for end
 
                 operation : output increaseby { array get item : functionArgs i }
+            if end
+
+            operation : output increaseby ")"
+
+            if start : { not : isInline }
+                operation : output increaseby { class member function call : { this } getSemiColon }
             if end
 
             return : { array initialize : mixed output 0 }
@@ -2610,7 +2630,7 @@ file start : GLS
 
             comment line : All arguments are added using VariableDeclarePartial
             if start : { operation : { native call : array length functionArgs } greaterthan 2 }
-                for numbers start : i number 2 lessthan { native call : array length functionArgs } 2
+                for numbers start : i 2 lessthan { native call : array length functionArgs } 2
                     operation : { array get item : variableDeclarationArgs 0 } equals { array get item : functionArgs i }
                     operation : { array get item : variableDeclarationArgs 1 } equals { array get item : functionArgs { operation : i + 1 } }
 
@@ -2641,17 +2661,19 @@ file start : GLS
 
             variable declare : output string { operation : { class member function call : { this } getIf } plus { class member function call : { this } getConditionStartLeft } }
 
+            operation : output increaseby { array get item : functionArgs 0 } plus { class member function call : { this } getConditionStartRight }
+
             return : { array initialize : mixed output 1 }
         class member function end
 
         comment line : [, string param, ...], statement
         class member function start : Language public LambdaDeclareInline mixed[] functionArgs string[] isInline boolean
-            class member function call : { this } requireArgumentsLength "LambdaTypeDeclareInline" functionArgs 3
+            class member function call : { this } requireArgumentsLength "LambdaDeclareInline" functionArgs 3
 
             variable declare : output string { class member function call : { this } getLambdaDeclareStarter }
             variable declare : i number
 
-            for numbers start : i number 0 lessthan { operation : { native call : array length functionArgs } minus 1 }
+            for numbers start : i 0 lessthan { operation : { native call : array length functionArgs } minus 1 }
                 operation : output increaseby { array get item : functionArgs i } plus (", ")
             for end
 
@@ -2674,17 +2696,17 @@ file start : GLS
             variable declare : start string[] { class member function call : { this } getLambdaTypeDeclarationStart }
             variable declare : middle string[] { class member function call : { this } getLambdaTypeDeclarationMiddle }
             variable declare : end string[] { class member function call : { this } getLambdaTypeDeclarationEnd }
-            variable declare : line string
+            variable declare : variableDeclarationArgs string[] { array initialize sized : string 2 }
+            variable declare : line string ""
             variable declare : i number
 
             if start : { class member function call : { this } getLambdaTypeDeclarationAsInterface }
-                variable declare : variableDeclarationArgs string[] { array initialize sized : string 2 }
                 variable declare : output mixed[] { array initialize sized: mixed 6 }
 
                 comment line : public interface TestInterface {
-                operation : line equals { array get item : functionArgs 0 }
+                operation : line equals { class member function call : { this } getClassPublicAlias }
                 operation : line increaseby { array get item : start 0 }
-                operation : line increaseby { array get item : functionArgs 1 }
+                operation : line increaseby { array get item : functionArgs 0 }
                 operation : line increaseby { array get item : start 1 }
 
                 operation : { array get item : output 0 } equals line
@@ -2693,9 +2715,9 @@ file start : GLS
                 comment line :     (a: string, b: int): boolean;
                 operation : line equals { array get item : middle 0 } plus "("
 
-                if start : { operation : { native call : array length functionArgs } greaterthan 3 }
+                if start : { operation : { native call : array length functionArgs } greaterthan 2 }
                     comment line : All arguments are added using VariableDeclarePartial
-                    for numbers start : i number 3 lessthan { native call : array length functionArgs } 2
+                    for numbers start : i 2 lessthan { native call : array length functionArgs } 2
                         operation : { array get item : variableDeclarationArgs 0 } equals { array get item : functionArgs i }
                         operation : { array get item : variableDeclarationArgs 1 } equals { array get item : functionArgs { operation : i plus 1 } }
 
@@ -2709,7 +2731,7 @@ file start : GLS
                 operation : line increaseby ")"
 
                 if start : { operation : { class member function call : { this } getFunctionReturnsExplicit } and { class member function call : { this } getFunctionTypeAfterName } }
-                    operation : line increaseby { class member function call : { this } getFunctionTypeMarker } plus { class member function call : { this } parseType { array get item : functionArgs 2 } }
+                    operation : line increaseby { class member function call : { this } getFunctionTypeMarker } plus { class member function call : { this } parseType { array get item : functionArgs 1 } }
                 if end
 
                 operation : line increaseby { array get item : middle 1 }
@@ -2722,16 +2744,19 @@ file start : GLS
 
                 return : output
             else start
-                operation : line increaseby { array get item : start 0 } plus { array get item : functionArgs 0 } plus (" ") plus (" ") plus { array get item : start 1 }
-                operation : line increaseby (" ") plus { class member function call : { this } parseType { array get item : functionArgs 2 } }
-                operation : line increaseby (" ") plus { array get item : functionArgs 1 }
+                operation : line increaseby { array get item : start 0 } plus { class member function call : { this } getClassPublicAlias } plus { array get item : start 1 }
+                operation : line increaseby (" ") plus { class member function call : { this } parseType { array get item : functionArgs 1 } }
+                operation : line increaseby (" ") plus { array get item : functionArgs 0 }
 
-                if start : { operation : { native call : array length functionArgs } greaterthan 3 }
+                if start : { operation : { native call : array length functionArgs } greaterthan 2 }
                     operation : line increaseby { array get item : middle 0 }
 
                     comment line : All arguments are added using VariableDeclarePartial
-                    for numbers start : i number 4 lessthan { native call : array length functionArgs } 2
-                        operation : line increaseby { class member function call : { this } parseType { array get item : functionArgs i } } plus (", ")
+                    for numbers start : i 2 lessthan { native call : array length functionArgs } 2
+                        operation : { array get item : variableDeclarationArgs 0 } equals { array get item : functionArgs i }
+                        operation : { array get item : variableDeclarationArgs 1 } equals { array get item : functionArgs { operation : i plus 1 } }
+
+                        operation : line increaseby { array get item : { class member function call : { this } VariableDeclarePartial variableDeclarationArgs true } 0 } plus (", ")
                     for end
 
                     comment line : The last argument does not have the last (", ") at the end
@@ -2804,8 +2829,8 @@ file start : GLS
 
                 operation : { array get item : functionCallArgs 0 } equals caller
 
-                for numbers start : i number 1 lessthan { operation : { native call : array length functionArgs } minus start }
-                    operation : { array get item : functionCallArgs i } equals { array get item : functionCallArgs { operation : i plus start } }
+                for numbers start : i 1 lessthan { operation : { native call : array length functionArgs } minus start }
+                    operation : { array get item : functionCallArgs i } equals { array get item : functionArgs { operation : i plus start } }
                 for end
 
                 operation : output equals { array get item : { class member function call : { this } FunctionCall functionCallArgs isInline } 0 }
@@ -2818,7 +2843,7 @@ file start : GLS
                 if start : { operation : { native call : array length functionArgs } minus 1 equalto start }
                     operation : output increaseby { dictionary key get : aliasInfo "separator" }
                 else start
-                    for numbers start : i number 1 lessthan { operation : { native call : array length functionArgs } minus start }
+                    for numbers start : i 1 lessthan { operation : { native call : array length functionArgs } minus start }
                         operation : output increaseby { array get item : functionArgs { operation : i plus start } } plus { dictionary key get : aliasInfo "separator" }
                     for end
 
@@ -2848,7 +2873,7 @@ file start : GLS
             variable declare : output string { operation : { array get item : functionArgs 0 } plus (" ") }
             variable declare : i number
 
-            for numbers start : i number 1 lessthan { native call : array length functionArgs } 2
+            for numbers start : i 1 lessthan { native call : array length functionArgs } 2
                 operation : output increaseby { operation : { class member function call : { this } getOperationAlias { array get item : functionArgs i } } plus (" ") }
                 operation : output increaseby { operation : { class member function call : { this } getValueAlias { array get item : functionArgs { operation : i plus 1 } } } plus (" ") }
             for end
@@ -2869,7 +2894,7 @@ file start : GLS
             variable declare : output string "("
             variable declare : i number
 
-            for numbers start : i number 0 lessthan { operation : { native call : array length functionArgs } minus 1 }
+            for numbers start : i 0 lessthan { operation : { native call : array length functionArgs } minus 1 }
                 operation : output increaseby { array get item : functionArgs i } plus (", ")
             for end
 
@@ -2884,7 +2909,7 @@ file start : GLS
             variable declare : output string { operation : { class member function call : { this } getPrintFunction } plus "(" }
             variable declare : i number
 
-            for numbers start : i number 0 lessthan { operation : { native call : array length functionArgs } minus 1 }
+            for numbers start : i 0 lessthan { operation : { native call : array length functionArgs } minus 1 }
                 operation : output increaseby { array get item : functionArgs i } plus (", ")
             for end
             
@@ -2903,6 +2928,10 @@ file start : GLS
             class member function call : { this } requireArgumentsLength "FunctionReturn" functionArgs 1
 
             return : { array initialize : mixed { operation : ("return ") plus { array get item : functionArgs 0 } plus { class member function call : { this } getSemiColon } } 0 }
+        class member function end
+
+        class member function start : Language public This mixed[] functionArgs string[] isInline boolean
+            return : { array initialize : mixed { class member function call : { this } getClassThis } 0 }
         class member function end
 
         comment line : [string message]
@@ -2932,6 +2961,7 @@ file start : GLS
 
         comment line : string type
         class member function start : Language public Type mixed[] functionArgs string[] isInline boolean
+            class member function call : { this } requireArgumentsLength "Type" functionArgs 1
             return : { array initialize : mixed { class member function call : { this } getTypeAlias { array get item : functionArgs 0 } } 0 }
         class member function end
 
@@ -2975,6 +3005,10 @@ file start : GLS
                 operation : variableDeclarationArgs equals { array initialize : string { array get item : functionArgs 0 } variableType { array get item : functionArgs 2 } }
             if end
 
+            operation : variableDeclared equals { class member function call : { this } VariableDeclarePartial functionArgs isInline }
+            operation : { array get item : variableDeclared 0 } equals { class member function call : { this } getVariableDeclareStart } plus { array get item : variableDeclared 0 }
+            operation : { array get item : variableDeclared 1 } equals 1
+
             return : variableDeclared
         class member function end
         
@@ -2985,7 +3019,7 @@ file start : GLS
             class member function call : { this } requireArgumentsLength "VariableDeclarePartial" functionArgs 2
 
             variable declare : variableType string { class member function call : { this } parseType { array get item : functionArgs 1 } }
-            variable declare : output string
+            variable declare : output string ""
 
             if start : { class member function call : { this } getVariableTypesExplicit }
                 if start : { class member function call : { this } getVariableTypesAfterName }
@@ -3022,7 +3056,7 @@ file start : GLS
         
         comment block : Utilities
 
-        class member function start : Language public requireArgumentsLength void functionName string functionArgs string[] amount number
+        class member function start : Language private requireArgumentsLength void functionName string functionArgs string[] amount number
             if start : { operation  : { native call : array length functionArgs } lessthan amount }
                 throw : { operation : ("Not enough arguments given to ") plus functionName plus (". Required: ") plus amount plus "."  }
             if end

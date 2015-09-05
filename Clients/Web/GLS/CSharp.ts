@@ -21,7 +21,7 @@ module GLS.Languages {
         .setClassMemberVariableStarter("")
         .setClassNewer("new ")
         .setClassParentName("base")
-        .setClassPublicAlias("export ")
+        .setClassPublicAlias("public ")
         .setClassPrivacy(true)
         .setClassStaticLabel("static ")
         .setClassStartLeft("class ")
