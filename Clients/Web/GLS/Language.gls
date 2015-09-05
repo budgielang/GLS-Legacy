@@ -1,3 +1,5 @@
+include dictionary
+
 file start : GLS
     lambda type declare : Printer mixed[] functionArgs string[] isInline boolean
     
@@ -231,6 +233,7 @@ file start : GLS
                 dictionary initialize key : ("if end") { class member function get : { this } IfEnd } ,
                 dictionary initialize key : ("if start") { class member function get : { this } IfStart } ,
                 dictionary initialize key : ("include") { class member function get : { this } Include } ,
+                dictionary initialize key : ("include dictionary") { class member function get : { this } IncludeDictionary } ,
                 dictionary initialize key : ("lambda declare inline") { class member function get : { this } LambdaDeclareInline } ,
                 dictionary initialize key : ("lambda type declare") { class member function get : { this } LambdaTypeDeclare } ,
                 dictionary initialize key : ("loop break") { class member function get : { this } LoopBreak } ,

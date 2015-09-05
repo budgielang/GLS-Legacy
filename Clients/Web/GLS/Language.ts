@@ -233,6 +233,7 @@ module GLS {
                 "if end": this.IfEnd.bind(this),
                 "if start": this.IfStart.bind(this),
                 "include": this.Include.bind(this),
+                "include dictionary": this.IncludeDictionary.bind(this),
                 "lambda declare inline": this.LambdaDeclareInline.bind(this),
                 "lambda type declare": this.LambdaTypeDeclare.bind(this),
                 "loop break": this.LoopBreak.bind(this),
