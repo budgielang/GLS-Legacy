@@ -98,12 +98,13 @@ file start : GLS
             return : { class member function call : language print functionName functionArgs isInline }
         class member function end
 
-        class member function start : GLSC public parseArguments string[]
-            variable declare : argumentsConverted string[] { array initialize : string }
+        class member function start : GLSC public parseArguments string[] language Language argumentsRaw string isInline boolean
+            variable declare : numArgs number 0
+            variable declare : argumentsConverted string[]
             variable declare : argument string
             variable declare : starter string
             variable declare : end number
-            variable declrae : i number
+            variable declare : i number
 
             comment line : Until native array pushing is supported, this is required...
             for numbers start : i 0 lessthan { native call : string length argumentsRaw }
@@ -113,7 +114,7 @@ file start : GLS
                     loop continue
                 if end
 
-                if start : { operation : starter equalto '{' or starter equalto '(' }
+                if start : { dictionary key check : { class member variable get : { this } SearchEnds } starter }
                     operation : end equals { class member function call : { this } findSearchEnd argumentsRaw starter i }
                     operation : i increaseby 1
                 else start
@@ -138,7 +139,7 @@ file start : GLS
                     loop continue
                 if end
 
-                if start : { operation : starter equalto '{' or starter equalto '(' }
+                if start : { dictionary key check : { class member variable get : { this } SearchEnds } starter }
                     operation : end equals { class member function call : { this } findSearchEnd argumentsRaw starter i }
                     operation : i increaseby 1
                 else start
@@ -190,7 +191,7 @@ file start : GLS
         class member function end
 
         class member function start : GLSC private isCharacterSpace boolean character string
-            return : { operation : character equalto (' ') character equalto '\r' character equalto '\n' }
+            return : { operation : character equalto (' ') or character equalto '\r' or character equalto '\n' }
         class member function end
 
         class member function start : GLSC private findNextSpace number haystack string start number
