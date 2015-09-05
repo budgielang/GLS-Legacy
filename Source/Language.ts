@@ -2266,13 +2266,7 @@ module GLS {
         public DictionaryKeySet(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("DictionaryKeySet", functionArgs, 3);
 
-            var output: string = operation;
-
-            if (!isInline) {
-                output += this.getSemiColon();
-            }
-
-            return [output, 0];
+            return [functionArgs[0] + "[" + functionArgs[1] + "] = " + functionArgs[2], 0];
         }
         
         // string key, string value
@@ -2718,7 +2712,7 @@ module GLS {
             var start: string[] = this.getLambdaTypeDeclarationStart();
             var middle: string[] = this.getLambdaTypeDeclarationMiddle();
             var end: string[] = this.getLambdaTypeDeclarationEnd();
-            var variableDeclarationArgs: string[] = new Array(2);
+                var variableDeclarationArgs: string[] = new Array(2);
             var line: string = "";
             var i: number;
 

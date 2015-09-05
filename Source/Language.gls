@@ -2696,12 +2696,12 @@ file start : GLS
             variable declare : start string[] { class member function call : { this } getLambdaTypeDeclarationStart }
             variable declare : middle string[] { class member function call : { this } getLambdaTypeDeclarationMiddle }
             variable declare : end string[] { class member function call : { this } getLambdaTypeDeclarationEnd }
+            variable declare : output mixed[] { array initialize sized: mixed 6 }
             variable declare : line string ""
             variable declare : i number
 
             if start : { class member function call : { this } getLambdaTypeDeclarationAsInterface }
             variable declare : variableDeclarationArgs string[] { array initialize sized : string 2 }
-                variable declare : output mixed[] { array initialize sized: mixed 6 }
 
                 comment line : public interface TestInterface {
                 operation : line equals { class member function call : { this } getClassPublicAlias }
