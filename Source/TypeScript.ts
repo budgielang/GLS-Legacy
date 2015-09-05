@@ -70,6 +70,7 @@ module GLS.Languages {
         .setFunctionTypeAfterName(true)
         .setIf("if")
         .setIncludeEnder("' />")
+        .setIncludeFileExtension(true)
         .setIncludeStarter("/// <reference path='")
         .setLambdaDeclareEnder("")
         .setLambdaDeclareMiddle(") => ")

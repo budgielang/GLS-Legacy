@@ -74,6 +74,7 @@ module GLS.Languages {
         .setFunctionReturnsExplicit(true)
         .setFunctionTypeAfterName(false)
         .setIf("if")
+        .setIncludeDictionaryType("java.util.*")
         .setIncludeEnder("")
         .setIncludeStarter("import ")
         .setLambdaDeclareEnder("")

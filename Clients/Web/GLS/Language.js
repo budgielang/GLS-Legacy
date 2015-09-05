@@ -59,6 +59,7 @@ var GLS;
                 "if end": this.IfEnd.bind(this),
                 "if start": this.IfStart.bind(this),
                 "include": this.Include.bind(this),
+                "include dictionary": this.IncludeDictionary.bind(this),
                 "lambda declare inline": this.LambdaDeclareInline.bind(this),
                 "lambda type declare": this.LambdaTypeDeclare.bind(this),
                 "loop break": this.LoopBreak.bind(this),
@@ -477,8 +478,14 @@ var GLS;
         Language.prototype.getFileStartRight = function () {
             return this.FileStartRight;
         };
+        Language.prototype.getIncludeDictionaryType = function () {
+            return this.IncludeDictionaryType;
+        };
         Language.prototype.getIncludeEnder = function () {
             return this.IncludeEnder;
+        };
+        Language.prototype.getIncludeFileExtension = function () {
+            return this.IncludeFileExtension;
         };
         Language.prototype.getIncludeStarter = function () {
             return this.IncludeStarter;
@@ -976,8 +983,16 @@ var GLS;
             this.FileStartRight = value;
             return this;
         };
+        Language.prototype.setIncludeDictionaryType = function (value) {
+            this.IncludeDictionaryType = value;
+            return this;
+        };
         Language.prototype.setIncludeEnder = function (value) {
             this.IncludeEnder = value;
+            return this;
+        };
+        Language.prototype.setIncludeFileExtension = function (value) {
+            this.IncludeFileExtension = value;
             return this;
         };
         Language.prototype.setIncludeStarter = function (value) {
@@ -1970,7 +1985,7 @@ var GLS;
                 output += this.getFunctionTypeMarker() + this.parseType(functionArgs[1]);
             }
             output += this.getFunctionDefineRight();
-            return [1];
+            return [output, 1];
         };
         Language.prototype.IfEnd = function (functionArgs, isInline) {
             return [this.getConditionEnd(), -1];
@@ -1987,9 +2002,18 @@ var GLS;
             this.requireArgumentsLength("Include", functionArgs, 1);
             var output = this.getIncludeStarter();
             output += functionArgs[0];
-            output += "." + this.getExtension();
+            if (this.getIncludeFileExtension()) {
+                output += "." + this.getExtension();
+            }
             output += this.getIncludeEnder();
             return [output, 0];
+        };
+        Language.prototype.IncludeDictionary = function (functionArgs, isInline) {
+            var dictionaryType = this.getIncludeDictionaryType();
+            if (dictionaryType.length == 0) {
+                return ["", Language.INT_MIN];
+            }
+            return this.Include([dictionaryType], isInline);
         };
         // [, string param, ...], statement
         Language.prototype.LambdaDeclareInline = function (functionArgs, isInline) {
@@ -2002,7 +2026,7 @@ var GLS;
             output = output.substring(0, output.length - 2);
             output += this.getLambdaDeclareMiddle();
             output += functionArgs[functionArgs.length - 1] + this.getLambdaDeclareEnder();
-            return [0];
+            return [output, 0];
         };
         // string visibility, string name, string return type[, string paramName, string paramType, ...]
         Language.prototype.LambdaTypeDeclare = function (functionArgs, isInline) {

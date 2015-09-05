@@ -73,6 +73,7 @@ module GLS.Languages {
         .setFunctionDefineEnd("\0")
         .setIf("if")
         .setIncludeEnder("import *")
+        .setIncludeFileExtension(true)
         .setIncludeStarter("from ")
         .setLambdaDeclareEnder("")
         .setLambdaDeclareMiddle(": ")
