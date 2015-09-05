@@ -2344,7 +2344,7 @@ file start : GLS
 
         comment line : string keyType, string valueType
         class member function start : Language public DictionaryType mixed[] functionArgs string[] isInline boolean
-            class member function call : { this } requireArgumentsLength "ClassStart" functionArgs 2
+            class member function call : { this } requireArgumentsLength "DictionaryType" functionArgs 2
 
             if start : { not : { class member function call : { this } getVariableTypesExplicit } }
                 return : { array initialize : mixed "" 0 }

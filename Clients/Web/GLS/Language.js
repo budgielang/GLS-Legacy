@@ -1366,7 +1366,7 @@ var GLS;
                 variableDeclarationArgs[1] = functionArgs[0];
                 output += this.VariableDeclarePartial(variableDeclarationArgs, true)[0];
             }
-            // All arguments are added Include VariableDeclarePartial
+            // All arguments are added using VariableDeclarePartial
             if (functionArgs.length > 4) {
                 if (this.getClassFunctionsTakeThis()) {
                     output += ", ";
@@ -1474,7 +1474,7 @@ var GLS;
                 output = functionArgs[1] + " " + output;
             }
             output += functionArgs[2] + "(";
-            // All arguments are added Include VariableDeclarePartial
+            // All arguments are added using VariableDeclarePartial
             if (functionArgs.length > 4) {
                 if (this.getClassFunctionsTakeThis()) {
                     output += ", ";
@@ -1713,7 +1713,7 @@ var GLS;
         };
         // string keyType, string valueType
         Language.prototype.DictionaryType = function (functionArgs, isInline) {
-            this.requireArgumentsLength("ClassStart", functionArgs, 2);
+            this.requireArgumentsLength("DictionaryType", functionArgs, 2);
             if (!this.getVariableTypesExplicit()) {
                 return ["", 0];
             }
@@ -1955,7 +1955,7 @@ var GLS;
                 output += this.parseType(functionArgs[1]) + " ";
             }
             output += this.getFunctionDefine() + functionArgs[0] + "(";
-            // All arguments are added Include VariableDeclarePartial
+            // All arguments are added using VariableDeclarePartial
             if (functionArgs.length > 2) {
                 for (i = 2; i < functionArgs.length; i += 2) {
                     variableDeclarationArgs[0] = functionArgs[i];

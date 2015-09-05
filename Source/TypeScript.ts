@@ -94,7 +94,8 @@ module GLS.Languages {
             "double": "number",
             "float": "number",
             "bool": "boolean",
-            "mixed": "any"
+            "mixed": "any",
+            "character": "string"
         })
         .addNativeFunctionAliases("array",
         {

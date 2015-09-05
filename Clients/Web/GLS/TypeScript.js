@@ -7,7 +7,8 @@ var GLS;
             "double": "number",
             "float": "number",
             "bool": "boolean",
-            "mixed": "any"
+            "mixed": "any",
+            "character": "string"
         }).addNativeFunctionAliases("array", {
             "length": {
                 "alias": "length",
