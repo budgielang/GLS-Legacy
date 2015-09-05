@@ -15,6 +15,90 @@ file start : GLS
         class constructor end
 
 
+        comment block : (Core parsing)
+
+        class member function start : GLSC public parseCommands string language Language commandsRaw string[]
+            if start : { operation : { native call : array length commandsRaw } equalto 0 or { parenthesis : { operation : { native call : array length commandsRaw } equalto 1 and { native call : string length { array get item : commandsRaw 0 } } equalto 0 }
+                return : ""
+            if end
+
+            variable declare : output string ""
+            variable declare : numTabs number 0
+            variable declare : lastTabRequest number 0
+            variable declare : lastLineSkipped boolean false
+            variable declare : command mixed[]
+            variable declare : i number
+            variable declare : j number
+
+            for numbers start : i 0 lessthan { native call : array length commandsRaw }
+                operation : command equals { class member function call : { this } parseCommand language { array get item : commandsRaw i } false }
+
+                comment line : Each command is an even-length [string, int, ...]
+                for numbers start : j 0 lessthan { native call : string length command } 2
+                    comment line : Special case: a blank line after an inline command is ignored
+                    comment line : This is useful for things like lambda types that aren't in every language
+                    if start : { operation : lastTabRequest equalto { class static variable get : Language INT_MIN } and { native call : string length command } equalto 2 and { array get item : command 0 } equalto "" }
+                        operation : lastLineSkipped equals true
+                        loop continue
+                    if end
+
+                    if start : { operation : { array get item : command 1 } equalto { class static variable get : Language INT_MIN } }
+                        if start : { operation : { array get item : command 0 } notequalto "" }
+                            operation : output increaseby (" ") plus { array get item : command 0 }
+                        if end
+                    else start
+                        comment line : Just "\0" changes numTabs without adding a line
+                        if start : { operation : { array get item : command j } notequalto "\0" and { not : lastLineSkipped } }
+                            operation : output increaseby "\n"
+                        if end
+
+                        if start : { operation : { array get item : command { operation : j plus 1 } } lessthan 0 }
+                            operation : numTabs increaseby { array get item : command { operation : j plus 1 } }
+                            operation : output increaseby { class member function call : { this } generateTabs numTabs }
+                            if start : { operation : { array get item : command j } notequalto "\0" }
+                                operation : output increaseby { array get item : command j }
+                            if end
+                        else start
+                            operation : output increaseby { class member function call : { this } generateTabs numTabs }
+                            if start : { operation : { array get item : command j } notequalto "\0" }
+                                operation : output increaseby { array get item : command j }
+                            if end
+                            operation : numTabs increaseby { array get item : command { operation : j plus 1 } }
+                        if end
+                    if end
+
+                    operation : lastTabRequest equals { array get item : command { operation : { native call : array length command } minus 1 } }
+                    operation : lastLineSkipped equals false
+                for end
+            for end
+
+            return : output
+        class member function end
+
+        class member function start : GLSC public parseCommand mixed[] language Language commandRaw string isInline boolean
+            if start : { class member function call : { this } isStringSpace commandRaw }
+                return : { array initialize : mixed "" 0 }
+            if end
+
+            variable declare : colonIndex number { native call : string find commandRaw ":" }
+            variable declare : result mixed[]
+            variable declare : functionArgs string[]
+            variable declare : argumentsRaw string
+
+            comment line : Arguments only exist if there is a colon separating them from the command
+            if start : { operation : colonIndex equalto -1 }
+                operation : functionName equals { class member function call : { this } trimString commandRaw }
+                operation : functionArgs equals { array initialize : string }
+            else start
+                operation : functionName equals { class member function call : { this } trimString { native call : string substring commandRaw substring 0 colonIndex } }
+                operation : argumentsRaw equals { class member function call : { this } trimString { native call : string substring commandRaw substring { operation : colonIndex plus 1 } } }
+                operation : functionArgs equals { class member function call : { this } parseArguments language argumentsRaw isInline }
+            if end
+
+            return : { class member function call : language print functionName functionArgs isInline }
+        class member function end
+
+
         comment block : (Private utilities)
 
         class member function start : GLSC private generateTabs string numTabs number

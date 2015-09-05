@@ -73,32 +73,28 @@ module GLS {
         }
 
         public parseCommand(language: Language, commandRaw: string, isInline?: boolean): any[] {
-            var output: any[] = ["", 0];
-
             if (this.isStringSpace(commandRaw)) {
-                return output;
+                return ["", 0];
             }
 
-            var result: any[],
+            var colonIndex = commandRaw.indexOf(":"),
+                result: any[],
                 functionArgs: string[],
                 functionName: string,
                 argumentsRaw: string,
                 colonIndex: number;
-
-            colonIndex = commandRaw.indexOf(":");
-
-            if (colonIndex !== -1) {
+            
+            // Arguments only exist if there is a colon separating them from the command
+            if (colonIndex === -1) {
+                functionName = this.trimString(commandRaw);
+                functionArgs = [];
+            } else {
                 functionName = this.trimString(commandRaw.substring(0, colonIndex));
                 argumentsRaw = this.trimString(commandRaw.substring(colonIndex + 1));
                 functionArgs = this.parseArguments(language, argumentsRaw, isInline);
-            } else {
-                functionName = this.trimString(commandRaw);
-                functionArgs = [];
             }
 
-            output = language.print(functionName, functionArgs, isInline);
-
-            return output;
+            return language.print(functionName, functionArgs, isInline);
         }
 
         public parseArguments(language: Language, argumentsRaw: string, isInline?: boolean): string[] {
