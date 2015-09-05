@@ -103,7 +103,7 @@ module GLS {
 
         public parseArguments(language: Language, argumentsRaw: string, isInline: boolean): string[] {
             // Directly putting '{' in GLSC code is tough see #79
-            var commandStarter: character = '{';
+            var commandStarter: string = '{';
             var numArgs: number = 0;
             var argumentsConverted: string[];
             var argument: string;
@@ -155,7 +155,7 @@ module GLS {
                     end = argumentsRaw.length;
                 }
 
-                argument = argumentsRaw.substring(i, end - i);
+                argument = argumentsRaw.substring(i, end);
                 i = end;
 
                 if (starter == commandStarter) {

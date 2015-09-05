@@ -129,7 +129,7 @@ var GLS;
                 if (end == -1) {
                     end = argumentsRaw.length;
                 }
-                argument = argumentsRaw.substring(i, end - i);
+                argument = argumentsRaw.substring(i, end);
                 i = end;
                 if (starter == commandStarter) {
                     argument = this.parseCommand(language, argument, true)[0];
