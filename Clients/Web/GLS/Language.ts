@@ -2266,13 +2266,7 @@ module GLS {
         public DictionaryKeySet(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("DictionaryKeySet", functionArgs, 3);
 
-            var output: string = functionArgs[0] + "[" + functionArgs[1] + "] = " + functionArgs[2];
-
-            if (!isInline) {
-                output += this.getSemiColon();
-            }
-
-            return [output, 0];
+            return [functionArgs[0] + "[" + functionArgs[1] + "] = " + functionArgs[2], 0];
         }
         
         // string key, string value
@@ -2489,7 +2483,7 @@ module GLS {
                 variableDeclareArgs[1] = this.getForEachPairsPairClass() + "<" + keyType + ", " + valueType + ">";
                 line += this.VariableDeclarePartial(variableDeclareArgs, true)[0];
                 
-                // in container) 
+                // (                                            in container) {
                 line += this.getForEachInner();
                 line += container;
                 line += this.getConditionStartRight();
@@ -2690,7 +2684,7 @@ module GLS {
         
         // [, string param, ...], statement
         public LambdaDeclareInline(functionArgs: string[], isInline: boolean): any[] {
-            this.requireArgumentsLength("LambdaTypeDeclareInline", functionArgs, 3);
+            this.requireArgumentsLength("LambdaDeclareInline", functionArgs, 3);
 
             var output: string = this.getLambdaDeclareStarter();
             var i: number;

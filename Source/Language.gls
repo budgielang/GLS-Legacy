@@ -2696,12 +2696,12 @@ file start : GLS
             variable declare : start string[] { class member function call : { this } getLambdaTypeDeclarationStart }
             variable declare : middle string[] { class member function call : { this } getLambdaTypeDeclarationMiddle }
             variable declare : end string[] { class member function call : { this } getLambdaTypeDeclarationEnd }
-            variable declare : output mixed[] { array initialize sized: mixed 6 }
+            variable declare : variableDeclarationArgs string[] { array initialize sized : string 2 }
             variable declare : line string ""
             variable declare : i number
 
             if start : { class member function call : { this } getLambdaTypeDeclarationAsInterface }
-            variable declare : variableDeclarationArgs string[] { array initialize sized : string 2 }
+                variable declare : output mixed[] { array initialize sized: mixed 6 }
 
                 comment line : public interface TestInterface {
                 operation : line equals { class member function call : { this } getClassPublicAlias }
@@ -2717,7 +2717,7 @@ file start : GLS
 
                 if start : { operation : { native call : array length functionArgs } greaterthan 2 }
                     comment line : All arguments are added using VariableDeclarePartial
-                    for numbers start : i 3 lessthan { native call : array length functionArgs } 2
+                    for numbers start : i 2 lessthan { native call : array length functionArgs } 2
                         operation : { array get item : variableDeclarationArgs 0 } equals { array get item : functionArgs i }
                         operation : { array get item : variableDeclarationArgs 1 } equals { array get item : functionArgs { operation : i plus 1 } }
 
@@ -2961,7 +2961,7 @@ file start : GLS
 
         comment line : string type
         class member function start : Language public Type mixed[] functionArgs string[] isInline boolean
-            class member function call : { this } requireArgumentslength "Type" functionArgs 1
+            class member function call : { this } requireArgumentsLength "Type" functionArgs 1
             return : { array initialize : mixed { class member function call : { this } getTypeAlias { array get item : functionArgs 0 } } 0 }
         class member function end
 

@@ -1640,11 +1640,7 @@ var GLS;
         // string name, string key, string value
         Language.prototype.DictionaryKeySet = function (functionArgs, isInline) {
             this.requireArgumentsLength("DictionaryKeySet", functionArgs, 3);
-            var output = functionArgs[0] + "[" + functionArgs[1] + "] = " + functionArgs[2];
-            if (!isInline) {
-                output += this.getSemiColon();
-            }
-            return [output, 0];
+            return [functionArgs[0] + "[" + functionArgs[1] + "] = " + functionArgs[2], 0];
         };
         // string key, string value
         Language.prototype.DictionaryInitialize = function (functionArgs, isInline) {
@@ -1815,7 +1811,7 @@ var GLS;
                 variableDeclareArgs[0] = pairName;
                 variableDeclareArgs[1] = this.getForEachPairsPairClass() + "<" + keyType + ", " + valueType + ">";
                 line += this.VariableDeclarePartial(variableDeclareArgs, true)[0];
-                // in container) 
+                // (                                            in container) {
                 line += this.getForEachInner();
                 line += container;
                 line += this.getConditionStartRight();
@@ -1973,7 +1969,7 @@ var GLS;
         };
         // [, string param, ...], statement
         Language.prototype.LambdaDeclareInline = function (functionArgs, isInline) {
-            this.requireArgumentsLength("LambdaTypeDeclareInline", functionArgs, 3);
+            this.requireArgumentsLength("LambdaDeclareInline", functionArgs, 3);
             var output = this.getLambdaDeclareStarter();
             var i;
             for (i = 0; i < functionArgs.length - 1; i += 1) {

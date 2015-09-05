@@ -1496,7 +1496,7 @@ module GLS {
         }
 
         public addTypeAlias(key: string, alias: string): Language {
-            this.TypeAliases[key] = alias;
+            this.TypeAliases[key] = alias
             return this;
         }
 
@@ -1512,7 +1512,7 @@ module GLS {
         }
 
         public addOperationAlias(key: string, alias: string): Language {
-            this.OperationAliases[key] = alias;
+            this.OperationAliases[key] = alias
             return this;
         }
 
@@ -1528,7 +1528,7 @@ module GLS {
         }
 
         public addValueAlias(key: string, alias: string): Language {
-            this.ValueAliases[key] = alias;
+            this.ValueAliases[key] = alias
             return this;
         }
 
@@ -2712,7 +2712,7 @@ module GLS {
             var start: string[] = this.getLambdaTypeDeclarationStart();
             var middle: string[] = this.getLambdaTypeDeclarationMiddle();
             var end: string[] = this.getLambdaTypeDeclarationEnd();
-                var variableDeclarationArgs: string[] = new Array(2);
+            var variableDeclarationArgs: string[] = new Array(2);
             var line: string = "";
             var i: number;
 
@@ -2733,7 +2733,7 @@ module GLS {
 
                 if (functionArgs.length > 2) {
                     // All arguments are added using VariableDeclarePartial
-                    for (i = 3; i < functionArgs.length; i += 2) {
+                    for (i = 2; i < functionArgs.length; i += 2) {
                         variableDeclarationArgs[0] = functionArgs[i];
                         variableDeclarationArgs[1] = functionArgs[i + 1];
 
