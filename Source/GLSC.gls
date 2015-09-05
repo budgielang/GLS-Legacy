@@ -98,6 +98,40 @@ file start : GLS
             return : { class member function call : language print functionName functionArgs isInline }
         class member function end
 
+        class member function start : GLSC public parseArguments string[]
+            variable declare : argumentsConverted string[] { array initialize : string }
+            variable declare : argument string
+            variable declare : starter string
+            variable declare : end number
+            variable declrae : i number
+
+            for numbers start : i 0 lessthan { native call : string length argumentsRaw }
+                operation : starter equals { array get item : argumentsRaw i }
+
+                if start : { operation : starter equalto '{' or starter equalto '(' }
+                    operation : end equals { class member function call : { this } findSearchEnd argumentsRaw starter i }
+                    operation : i increaseby 1
+                else start
+                    operation : end equals { class member function call : { this } findNextSpace argumentsRaw i }
+                if end
+
+                if start : { operation : end equalto -1 }
+                    operation : end equals { native call : string length argumentsRaw }
+                if end
+
+                operation : argument equals { native call : string substring argumentsRaw i { operation : end minus i } }
+
+                if start : { operation : starter equalto '{' }
+                    operation : argument equals { array get item : { class member function call : { this } parseCommand language argument true } 0 }
+                if end
+
+                comment line : ARRAY PUSH?!
+                operation : i equals end
+            for end
+
+            return : argumentsConverted
+        class member function end
+
 
         comment block : (Private utilities)
 
