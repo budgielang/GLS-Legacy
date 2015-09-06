@@ -1479,34 +1479,35 @@ module GLS {
         public parseTypeWithTemplate(text: string): string {
             var ltIndex: number = text.indexOf("<");
             var output: string = text.substring(0, ltIndex);
-            var i: number = ltIndex + 1;
-            var templateType: string;
-            var spaceNext: number;
 
             if (!this.getClassTemplates()) {
                 return output;
             }
 
+            var typeStart: number = ltIndex + 1;
+            var typeEnd: number;
+            var typeCheck: string;
+
             output += "<";
 
-            while (i < text.length) {
-                spaceNext = text.indexOf(" ", i);
-                if (spaceNext == -1) {
+            while (typeStart < text.length) {
+                for (typeEnd = typeStart; typeEnd < text.length; typeEnd += 1) {
+                    typeCheck = text[typeCheck];
+                    if (typeCheck == ',' || typeCheck == '<' || typeCheck == '>' || typeCheck == ' ') {
+                        break;
+                    }
+                }
+
+                if (typeEnd == text.length) {
                     break;
                 }
 
-                templateType = text.substring(i, spaceNext);
-                
-                // These may have commas already such as from DictionaryType
-                if (templateType[templateType.length - 1] == ",") {
-                    templateType = templateType.substring(0, templateType.length - 1);
-                }
-
-                output += this.parseType(templateType) + this.getClassTemplatesBetween();
-                i = spaceNext + 1;
+                output += this.parseType(text.substring(typeStart, typeEnd));
+                output += this.getClassTemplatesBetween();
+                typeStart = typeEnd + 1;
             }
 
-            output += this.parseType(text.substring(i, text.length - 1));
+            output += this.parseType(text.substring(typeStart, text.length - 1));
             output += ">";
 
             return output;
@@ -2391,9 +2392,9 @@ module GLS {
                 return [this.getDictionaryClass(), 0];
             }
 
-            var output: string = this.getDictionaryClass(),
-                numKeys: number = functionArgs.length - 1,
-                i: number;
+            var output: string = this.getDictionaryClass();
+            var numKeys: number = functionArgs.length - 1;
+            var i: number;
 
             output += "<" + this.parseType(functionArgs[0]);
             output += this.getClassTemplatesBetween();

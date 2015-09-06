@@ -66,6 +66,7 @@ module GLS.Languages {
         .setFunctionDefineRight("")
         .setFunctionDefineEnd("end")
         .setIf("if")
+        .setIncludeDictionaryType("")
         .setIncludeEnder("'")
         .setIncludeFileExtension(true)
         .setIncludeStarter("require '")

@@ -1473,34 +1473,35 @@ file start : GLS
         class member function start : Language public parseTypeWithTemplate string text string
             variable declare : ltIndex number { native call : string find text "<" }
             variable declare : output string { native call : string substring text 0 ltIndex }
-            variable declare : i number { operation : ltIndex plus 1 }
-            variable declare : templateType string
-            variable declare : spaceNext number
-
+            
             if start : { not : { class member function call : { this } getClassTemplates } }
                 return : output
             if end
 
+            variable declare : typeStart number { operation : ltIndex plus 1 }
+            variable declare : typeEnd number
+            variable declare : typeCheck string
+
             operation : output increaseby "<"
 
-            while start : { operation : i lessthan { native call : string length text } }
-                operation : spaceNext equals { native call : string find text (" ") i }
-                if start : { operation : spaceNext equalto -1 }
+            while start : { operation : typeStart lessthan { native call : string length text } }
+                for numbers start : typeEnd typeStart lessthan { native call : string length text }
+                    operation : typeCheck equals { array get item : text typeCheck }
+                    if start : { operation : typeCheck equalto ',' or typeCheck equalto '<' or typeCheck equalto '>' or typeCheck equalto (' ') }
+                        loop break
+                    if end
+                for end
+
+                if start : { operation : typeEnd equalto { native call : string length text } }
                     loop break
                 if end
 
-                operation : templateType equals { native call : string substring text i spaceNext }
-
-                comment line : These may have commas already (such as from DictionaryType)
-                if start : { operation : { array get item : templateType { operation : { native call : array length templateType } minus 1 } } equalto "," }
-                    operation : templateType equals { native call : string substring templateType 0 { operation : { native call : array length templateType } minus 1 } }
-                if end
-
-                operation : output increaseby { operation : { class member function call : { this } parseType templateType } plus { class member function call : { this } getClassTemplatesBetween } }
-                operation : i equals { operation : spaceNext plus 1 }
+                operation : output increaseby { class member function call : { this } parseType { native call : string substring text typeStart typeEnd } }
+                operation : output increaseby { class member function call : { this } getClassTemplatesBetween }
+                operation : typeStart equals typeEnd plus 1
             while end
 
-            operation : output increaseby { class member function call : { this } parseType { native call : string substring text i { operation : { native call : string length text } minus 1 } } }
+            operation : output increaseby { class member function call : { this } parseType { native call : string substring text typeStart { operation : { native call : string length text } minus 1 } } }
             operation : output increaseby ">"
 
             return : output

@@ -1034,27 +1034,28 @@ var GLS;
         Language.prototype.parseTypeWithTemplate = function (text) {
             var ltIndex = text.indexOf("<");
             var output = text.substring(0, ltIndex);
-            var i = ltIndex + 1;
-            var templateType;
-            var spaceNext;
             if (!this.getClassTemplates()) {
                 return output;
             }
+            var typeStart = ltIndex + 1;
+            var typeEnd;
+            var typeCheck;
             output += "<";
-            while (i < text.length) {
-                spaceNext = text.indexOf(" ", i);
-                if (spaceNext == -1) {
+            while (typeStart < text.length) {
+                for (typeEnd = typeStart; typeEnd < text.length; typeEnd += 1) {
+                    typeCheck = text[typeCheck];
+                    if (typeCheck == ',' || typeCheck == '<' || typeCheck == '>' || typeCheck == ' ') {
+                        break;
+                    }
+                }
+                if (typeEnd == text.length) {
                     break;
                 }
-                templateType = text.substring(i, spaceNext);
-                // These may have commas already such as from DictionaryType
-                if (templateType[templateType.length - 1] == ",") {
-                    templateType = templateType.substring(0, templateType.length - 1);
-                }
-                output += this.parseType(templateType) + this.getClassTemplatesBetween();
-                i = spaceNext + 1;
+                output += this.parseType(text.substring(typeStart, typeEnd));
+                output += this.getClassTemplatesBetween();
+                typeStart = typeEnd + 1;
             }
-            output += this.parseType(text.substring(i, text.length - 1));
+            output += this.parseType(text.substring(typeStart, text.length - 1));
             output += ">";
             return output;
         };
@@ -1735,7 +1736,9 @@ var GLS;
             if (!this.getDictionaryInitializationAsNew()) {
                 return [this.getDictionaryClass(), 0];
             }
-            var output = this.getDictionaryClass(), numKeys = functionArgs.length - 1, i;
+            var output = this.getDictionaryClass();
+            var numKeys = functionArgs.length - 1;
+            var i;
             output += "<" + this.parseType(functionArgs[0]);
             output += this.getClassTemplatesBetween();
             for (i = 1; i < numKeys; i += 1) {
