@@ -1596,16 +1596,16 @@ module GLS {
             return this.NativeFunctionAliases[className][memberName];
         }
 
-        public addNativeFunctionAlias(className: string, memberName: string, alias: string): Language {
-            this.NativeFunctionAliases[className][memberName] = alias;
+        public addNativeFunctionAlias(className: string, memberName: string, aliasInfo: any): Language {
+            this.NativeFunctionAliases[className][memberName] = aliasInfo;
             return this;
         }
 
-        public addNativeFunctionAliases(className: string, aliases: any): Language {
+        public addNativeFunctionAliases(className: string, aliasInfos: any): Language {
             var key: string;
-            var alias: string;
-            for (key in aliases) {
-                alias = aliases[key];
+            var alias: any;
+            for (key in aliasInfos) {
+                alias = aliasInfos[key];
                 this.addNativeFunctionAlias(className, key, alias);
             }
 
