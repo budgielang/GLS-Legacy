@@ -8,7 +8,7 @@ file start : GLS
         class member variable declare : OperationAliases private { dictionary type : string string }
         class member variable declare : TypeAliases private { dictionary type : string string }
         class member variable declare : ValueAliases private { dictionary type : string string }
-        class member variable declare : NativeFunctionAliases private { dictionary type : string { dictionary type : string string } }
+        class member variable declare : NativeFunctionAliases private { dictionary type : string string string }
 
         comment line : General information
         class member variable declare : Name private string
@@ -1583,7 +1583,7 @@ file start : GLS
             return : { this }
         class member function end
 
-        class member function start : Language public addNativeFunctionAliases Language className string aliasInfos { dictionary type : string { dictionary type : string string } }
+        class member function start : Language public addNativeFunctionAliases Language className string aliasInfos { dictionary type : string string string }
             variable declare : key string
             variable declare : aliasInfo { dictionary type : string string }
             for each pairs start : pair key string aliasInfo { dictionary type : string string } aliasInfos

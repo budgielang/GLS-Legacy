@@ -1726,17 +1726,26 @@ var GLS;
             output += this.getDictionaryInitializeStarter();
             return [output, 0];
         };
-        // string keyType, string valueType
+        // string keyType[, ...], string valueType
         Language.prototype.DictionaryType = function (functionArgs, isInline) {
             this.requireArgumentsLength("DictionaryType", functionArgs, 2);
             if (!this.getVariableTypesExplicit()) {
                 return ["", 0];
             }
-            var output = this.getDictionaryClass();
-            if (this.getDictionaryInitializationAsNew()) {
-                output += "<" + this.parseType(functionArgs[0]);
+            if (!this.getDictionaryInitializationAsNew()) {
+                return [this.getDictionaryClass(), 0];
+            }
+            var output = this.getDictionaryClass(), numKeys = functionArgs.length - 1, i;
+            output += "<" + this.parseType(functionArgs[0]);
+            output += this.getClassTemplatesBetween();
+            for (i = 1; i < numKeys; i += 1) {
+                output += this.getDictionaryClass() + "<";
+                output += this.parseType(functionArgs[i]);
                 output += this.getClassTemplatesBetween();
-                output += this.parseType(functionArgs[1]) + ">";
+            }
+            output += this.parseType(functionArgs[i]);
+            for (i = 0; i < numKeys; i += 1) {
+                output += ">";
             }
             return [output, 0];
         };
