@@ -2365,7 +2365,7 @@ file start : GLS
             return : { array initialize : mixed output 0 }
         class member function end
 
-        comment line : string keyType, string valueType
+        comment line : string keyType[, ...], string valueType
         class member function start : Language public DictionaryType mixed[] functionArgs string[] isInline boolean
             class member function call : { this } requireArgumentsLength "DictionaryType" functionArgs 2
 
@@ -2373,13 +2373,28 @@ file start : GLS
                 return : { array initialize : mixed "" 0 }
             if end
 
-            variable declare : output string { class member function call : { this } getDictionaryClass }
-
-            if start : { class member function call : { this } getDictionaryInitializationAsNew }
-                operation : output increaseby "<" plus { class member function call : { this } parseType { array get item : functionArgs 0 } }
-                operation : output increaseby { class member function call : { this } getClassTemplatesBetween }
-                operation : output increaseby { class member function call : { this } parseType { array get item : functionArgs 1 } } plus ">"
+            if start : { not : { class member function call : { this } getDictionaryInitializationAsNew } }
+                return : { array initialize : mixed { class member function call : { this } getDictionaryClass } 0 }
             if end
+
+            variable declare : output string { class member function call : { this } getDictionaryClass }
+            variable declare : numKeys number { operation : { native call : array length functionArgs } minus 1 }
+            variable declare : i number
+
+            operation : output increaseby "<" plus { class member function call : { this } parseType { array get item : functionArgs 0 } }
+            operation : output increaseby { class member function call : { this } getClassTemplatesBetween }
+
+            for numbers start : i 1 lessthan numKeys
+                operation : output increaseby { class member function call : { this } getDictionaryClass } plus "<"
+                operation : output increaseby { class member function call : { this } parseType { array get item : functionArgs i } }
+                operation : output increaseby { class member function call : { this } getClassTemplatesBetween }
+            for end
+
+            operation : output increaseby { class member function call : { this } parseType { array get item : functionArgs i } }
+
+            for numbers start : i 0 lessthan numKeys
+                operation : output increaseby ">"
+            for end
 
             return : { array initialize : mixed output 0 }
         class member function end
