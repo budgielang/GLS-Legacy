@@ -72,6 +72,7 @@ module GLS.Languages {
         .setFunctionDefineRight(":")
         .setFunctionDefineEnd("\0")
         .setIf("if")
+        .setIncludeDictionaryType("")
         .setIncludeEnder("import *")
         .setIncludeFileExtension(true)
         .setIncludeStarter("from ")

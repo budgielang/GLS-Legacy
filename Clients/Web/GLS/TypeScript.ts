@@ -69,6 +69,7 @@ module GLS.Languages {
         .setFunctionTypeMarker(": ")
         .setFunctionTypeAfterName(true)
         .setIf("if")
+        .setIncludeDictionaryType("")
         .setIncludeEnder("' />")
         .setIncludeFileExtension(true)
         .setIncludeStarter("/// <reference path='")
