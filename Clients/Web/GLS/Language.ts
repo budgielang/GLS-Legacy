@@ -190,6 +190,7 @@ module GLS {
                 "class constructor start": this.ClassConstructorStart.bind(this),
                 "class end": this.ClassEnd.bind(this),
                 "class member function call": this.ClassMemberFunctionCall.bind(this),
+                "class member function call partial": this.ClassMemberFunctionCallPartial.bind(this),
                 "class member function end": this.ClassMemberFunctionEnd.bind(this),
                 "class member function get": this.ClassMemberFunctionGet.bind(this),
                 "class member function start": this.ClassMemberFunctionStart.bind(this),
@@ -1904,6 +1905,19 @@ module GLS {
         public ClassMemberFunctionCall(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("ClassMemberFunctionCall", functionArgs, 2);
 
+            var output: any[] = this.ClassMemberFunctionCallPartial(functionArgs, isInline);
+
+            if (!isInline) {
+                output[0] += this.getSemiColon();
+            }
+
+            return output;
+        }
+        
+        // string variable, string function[, string argumentName, ...]
+        public ClassMemberFunctionCallPartial(functionArgs: string[], isInline: boolean): any[] {
+            this.requireArgumentsLength("ClassMemberFunctionCallPartial", functionArgs, 2);
+
             var output: string = functionArgs[0] + "." + functionArgs[1] + "(";
             var i: number;
 
@@ -1915,10 +1929,6 @@ module GLS {
             }
 
             output += ")";
-
-            if (!isInline) {
-                output += this.getSemiColon();
-            }
 
             return [output, 0];
         }

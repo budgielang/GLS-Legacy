@@ -190,6 +190,7 @@ file start : GLS
                 dictionary initialize key : ("class constructor start") { class member function get : { this } ClassConstructorStart } ,
                 dictionary initialize key : ("class end") { class member function get : { this } ClassEnd } ,
                 dictionary initialize key : ("class member function call") { class member function get : { this } ClassMemberFunctionCall } ,
+                dictionary initialize key : ("class member function call partial") { class member function get : { this } ClassMemberFunctionCallPartial } ,
                 dictionary initialize key : ("class member function end") { class member function get : { this } ClassMemberFunctionEnd } ,
                 dictionary initialize key : ("class member function get") { class member function get : { this } ClassMemberFunctionGet } ,
                 dictionary initialize key : ("class member function start") { class member function get : { this } ClassMemberFunctionStart } ,
@@ -1888,6 +1889,19 @@ file start : GLS
 
         comment line : string variable, string function[, string argumentName, ...]
         class member function start : Language public ClassMemberFunctionCall mixed[] functionArgs string[] isInline boolean
+            class member function call : { this } requireArgumentsLength "ClassMemberFunctionCall" functionArgs 2
+            
+            variable declare : output mixed[] { class member function call : { this } ClassMemberFunctionCallPartial functionArgs isInline }
+            
+            if start : { not : isInline }
+                operation : { array get item : output 0 } increaseby { class member function call : { this } getSemiColon }
+            if end
+
+            return : output
+        class member function end
+        
+        comment line : string variable, string function[, string argumentName, ...]
+        class member function start : Language public ClassMemberFunctionPartial mixed[] functionArgs string[] isInline boolean
             class member function call : { this } requireArgumentsLength "ClassMemberFunctionCall" functionArgs 2
 
             variable declare : output string { operation : { array get item : functionArgs 0 } plus "." plus { array get item : functionArgs 1 } plus "(" }
