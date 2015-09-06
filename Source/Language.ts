@@ -40,6 +40,8 @@ module GLS {
         private Or: string;
         
         // Variables
+        private CastEnd: string;
+        private CastStart: string;
         private Undefined: string;
         private VariableTypesExplicit: boolean;
         private VariableTypesAfterName: boolean;
@@ -377,6 +379,14 @@ module GLS {
 
         public getOr(): string {
             return this.Or;
+        }
+
+        public getCastEnd(): string {
+            return this.CastEnd;
+        }
+
+        public getCastStart(): string {
+            return this.CastStart;
         }
 
         public getUndefined(): string {
@@ -910,6 +920,16 @@ module GLS {
 
         public setOr(value: string): Language {
             this.Or = value;
+            return this;
+        }
+
+        public setCastEnd(value: string): Language {
+            this.CastEnd = value;
+            return this;
+        }
+
+        public setCastStart(value: string): Language {
+            this.CastStart = value;
             return this;
         }
 
