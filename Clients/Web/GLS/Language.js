@@ -1263,7 +1263,6 @@ var GLS;
             var callingArgsLength = functionArgs.length;
             var loopStart = 0;
             var callingArgs;
-            var callingResult;
             var i;
             // Blank parentName indicates the super's class name should be used
             if (parentName.length == 0) {
@@ -2166,10 +2165,10 @@ var GLS;
             var aliasInfo = this.getNativeFunctionAlias(functionArgs[0], functionArgs[1]);
             var placement = aliasInfo["placement"];
             var usage = aliasInfo["usage"];
-            var caller;
-            var numArgs;
-            var start;
-            var output;
+            var caller = "";
+            var output = "";
+            var numArgs = 0;
+            var start = 0;
             var i;
             if (placement == "member") {
                 caller = functionArgs[2] + "." + aliasInfo["alias"];

@@ -1754,7 +1754,6 @@ file start : GLS
             variable declare : callingArgsLength number { native call : array length functionArgs }
             variable declare : loopStart number 0
             variable declare : callingArgs string[]
-            variable declare : callingResult mixed[]
             variable declare : i number
 
             comment line : Blank parentName indicates the super's class name should be used
@@ -2351,7 +2350,7 @@ file start : GLS
         class member function start : Language public DictionaryInitialize mixed[] functionArgs string[] isInline boolean
             class member function call : { this } requireArgumentsLength "DictionaryInitialize" functionArgs 2
 
-            variable declare : dictionaryType string { array get item : { class member function call : { this } DictionaryType functionArgs true } 0 }
+            variable declare : dictionaryType string { cast : string { array get item : { class member function call : { this } DictionaryType functionArgs true } 0 } }
             variable declare : output string
 
             if start : { class member function call : { this } getDictionaryInitializationAsNew }
@@ -2398,7 +2397,7 @@ file start : GLS
             variable declare : output string
 
             if start : { class member function call : { this } getDictionaryInitializationAsNew }
-                operation : dictionaryType equals { array get item : { class member function call : { this } DictionaryType functionArgs true } 0 }
+                operation : dictionaryType equals { cast : string { array get item : { class member function call : { this } DictionaryType functionArgs true } 0 } }
             else start
                 operation : dictionaryType equals ""
             if end
@@ -2589,7 +2588,7 @@ file start : GLS
                 operation : { array get item : variableDeclareArgs 0 } equals keyName
                 operation : { array get item : variableDeclareArgs 1 } equals "equals"
                 operation : { array get item : variableDeclareArgs 2 } equals pairName plus { class member function call : { this } getForEachPairsRetrieveKey }
-                operation : line equals { array get item : { class member function call : { this } Operation variableDeclareArgs false } 0 }
+                operation : line equals { cast : string { array get item : { class member function call : { this } Operation variableDeclareArgs false } 0 } }
                 operation : { array get item : output 2 } equals line
                 operation : { array get item : output 3 } equals 0
 
@@ -2598,7 +2597,7 @@ file start : GLS
                 operation : { array get item : variableDeclareArgs 0 } equals valueName
                 operation : { array get item : variableDeclareArgs 1 } equals "equals"
                 operation : { array get item : variableDeclareArgs 2 } equals pairName plus { class member function call : { this } getForEachPairsRetrieveValue }
-                operation : line equals { array get item : { class member function call : { this } Operation variableDeclareArgs false } 0 }
+                operation : line equals { cast : string { array get item : { class member function call : { this } Operation variableDeclareArgs false } 0 } }
                 operation : { array get item : output 4 } equals line
                 operation : { array get item : output 5 } equals 0
             else start
@@ -2620,7 +2619,7 @@ file start : GLS
                 operation : { array get item : variableDeclareArgs 0 } equals valueName
                 operation : { array get item : variableDeclareArgs 1 } equals "equals"
                 operation : { array get item : variableDeclareArgs 2 } equals container plus "[" plus keyName plus "]"
-                operation : line equals { array get item : { class member function call : { this } Operation variableDeclareArgs false } 0 }
+                operation : line equals { cast : string { array get item : { class member function call : { this } Operation variableDeclareArgs false } 0 } }
                 operation : { array get item : output 2 } equals line
                 operation : { array get item : output 3 } equals 0
             if end
@@ -2939,10 +2938,10 @@ file start : GLS
             variable declare : aliasInfo { dictionary type : string string } { class member function call : { this } getNativeFunctionAlias { array get item : functionArgs 0 } { array get item : functionArgs 1 } }
             variable declare : placement string { dictionary key get : aliasInfo "placement" }
             variable declare : usage string { dictionary key get : aliasInfo "usage" }
-            variable declare : caller string
-            variable declare : numArgs number
-            variable declare : start number
-            variable declare : output string
+            variable declare : caller string ""
+            variable declare : output string ""
+            variable declare : numArgs number 0
+            variable declare : start number 0
             variable declare : i number
 
             if start : { operation : placement equalto "member" }
@@ -2968,7 +2967,7 @@ file start : GLS
                     operation : { array get item : functionCallArgs i } equals { array get item : functionArgs { operation : i plus start } }
                 for end
 
-                operation : output equals { array get item : { class member function call : { this } FunctionCall functionCallArgs isInline } 0 }
+                operation : output equals { cast : string { array get item : { class member function call : { this } FunctionCall functionCallArgs isInline } 0 } }
             elif start : { operation : usage equalto "variable" }
                 operation : output equals caller
             elif start : { operation : usage equalto "array" }
