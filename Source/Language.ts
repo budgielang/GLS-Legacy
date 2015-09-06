@@ -1768,7 +1768,6 @@ module GLS {
             var callingArgsLength: number = functionArgs.length;
             var loopStart: number = 0;
             var callingArgs: string[];
-            var callingResult: any[];
             var i: number;
             
             // Blank parentName indicates the super's class name should be used
@@ -1831,7 +1830,7 @@ module GLS {
             if (this.getClassConstructorInheritedShorthand()) {
                 // "Shorthand" usage, like in C#, comes before FunctionDefineRight
                 output = new Array(generalCall.length);
-                output[0] = generalCall[0].substring(0, generalCall[0].length - this.getFunctionDefineRight().length);
+                output[0] = (<string>generalCall[0]).substring(0,(<string>generalCall[0]).length - this.getFunctionDefineRight().length);
                 output[0] += functionArgs[1] + this.getFunctionDefineRight();
 
                 for (i = 1; i < generalCall.length; i += 1) {
@@ -2365,7 +2364,7 @@ module GLS {
         public DictionaryInitialize(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("DictionaryInitialize", functionArgs, 2);
 
-            var dictionaryType: string = this.DictionaryType(functionArgs, true)[0];
+            var dictionaryType: string = <string>this.DictionaryType(functionArgs, true)[0];
             var output: string;
 
             if (this.getDictionaryInitializationAsNew()) {
@@ -2412,7 +2411,7 @@ module GLS {
             var output: string;
 
             if (this.getDictionaryInitializationAsNew()) {
-                dictionaryType = this.DictionaryType(functionArgs, true)[0];
+                dictionaryType = <string>this.DictionaryType(functionArgs, true)[0];
             } else {
                 dictionaryType = "";
             }
@@ -2603,7 +2602,7 @@ module GLS {
                 variableDeclareArgs[0] = keyName;
                 variableDeclareArgs[1] = "equals";
                 variableDeclareArgs[2] = pairName + this.getForEachPairsRetrieveKey();
-                line = this.Operation(variableDeclareArgs, false)[0];
+                line = <string>this.Operation(variableDeclareArgs, false)[0];
                 output[2] = line;
                 output[3] = 0;
                 
@@ -2612,7 +2611,7 @@ module GLS {
                 variableDeclareArgs[0] = valueName;
                 variableDeclareArgs[1] = "equals";
                 variableDeclareArgs[2] = pairName + this.getForEachPairsRetrieveValue();
-                line = this.Operation(variableDeclareArgs, false)[0];
+                line = <string>this.Operation(variableDeclareArgs, false)[0];
                 output[4] = line;
                 output[5] = 0;
             } else {
@@ -2634,7 +2633,7 @@ module GLS {
                 variableDeclareArgs[0] = valueName;
                 variableDeclareArgs[1] = "equals";
                 variableDeclareArgs[2] = container + "[" + keyName + "]";
-                line = this.Operation(variableDeclareArgs, false)[0];
+                line = <string>this.Operation(variableDeclareArgs, false)[0];
                 output[2] = line;
                 output[3] = 0;
             }
@@ -2953,10 +2952,10 @@ module GLS {
             var aliasInfo: any = this.getNativeFunctionAlias(functionArgs[0], functionArgs[1]);
             var placement: string = aliasInfo["placement"];
             var usage: string = aliasInfo["usage"];
-            var caller: string;
-            var numArgs: number;
-            var start: number;
-            var output: string;
+            var caller: string = "";
+            var output: string = "";
+            var numArgs: number = 0;
+            var start: number = 0;
             var i: number;
 
             if (placement == "member") {
@@ -2982,7 +2981,7 @@ module GLS {
                     functionCallArgs[i] = functionArgs[i + start];
                 }
 
-                output = this.FunctionCall(functionCallArgs, isInline)[0];
+                output = <string>this.FunctionCall(functionCallArgs, isInline)[0];
             } else if (usage == "variable") {
                 output = caller;
             } else if (usage == "array") {
