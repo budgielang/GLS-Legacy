@@ -8,7 +8,7 @@ file start : GLS
         class member variable declare : OperationAliases private { dictionary type : string string }
         class member variable declare : TypeAliases private { dictionary type : string string }
         class member variable declare : ValueAliases private { dictionary type : string string }
-        class member variable declare : NativeFunctionAliases private { dictionary type : string string string }
+        class member variable declare : NativeFunctionAliases private { dictionary type : string string string string }
 
         comment line : General information
         class member variable declare : Name private string
@@ -284,10 +284,10 @@ file start : GLS
             
             class member variable set : { this } ValueAliases { dictionary initialize : string string }
 
-            class member variable set incomplete : { this } NativeFunctionAliases { dictionary initialize start : string { dictionary type : string string } }
-                dictionary initialize key : ("array") { dictionary initialize : string string } } ,
-                dictionary initialize key : ("dictionary") { dictionary initialize : string string } } ,
-                dictionary initialize key : ("string") { dictionary initialize : string string } }
+            class member variable set incomplete : { this } NativeFunctionAliases { dictionary initialize start : string string string string }
+                dictionary initialize key : ("array") { dictionary initialize : string string string } } ,
+                dictionary initialize key : ("dictionary") { dictionary initialize : string string string } } ,
+                dictionary initialize key : ("string") { dictionary initialize : string string string } }
             dictionary initialize end
         class constructor end
 
@@ -1581,12 +1581,8 @@ file start : GLS
             return : { this }
         class member function end
         
-        class member function start : Language public getNativeFunctionAlias string className string memberName string
+        class member function start : Language public getNativeFunctionAlias { dictionary type : string string } className string memberName string
             return : { dictionary key get : { dictionary key get : { class member variable get : { this } NativeFunctionAliases } className } memberName }
-        class member function end
-
-        class member function start : Language { dictionary type : string string } getNativeFunctionAliases string className string
-            return : { dictionary key get : { class member variable get : { this } NativeFunctionAliases } className }
         class member function end
 
         class member function start : Language public addNativeFunctionAlias Language className string memberName string alias string
@@ -2903,7 +2899,7 @@ file start : GLS
             class member function call : { this } requireArgumentsLength "NativeFunction" functionArgs 3
 
             variable declare : className string { class member function call : { this } getTypeAlias { array get item : functionArgs 0 } }
-            variable declare : aliasInfo { dictionary type : string string } { class member function call : { this } getNativeFunctionAliases { array get item : functionArgs 0 } { array get item : functionArgs 1 } }
+            variable declare : aliasInfo { dictionary type : string string } { class member function call : { this } getNativeFunctionAlias { array get item : functionArgs 0 } { array get item : functionArgs 1 } }
             variable declare : placement string { dictionary key get : aliasInfo "placement" }
             variable declare : usage string { dictionary key get : aliasInfo "usage" }
             variable declare : caller string

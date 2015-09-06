@@ -1592,7 +1592,7 @@ module GLS {
             return this;
         }
 
-        public getNativeFunctionAlias(className: string, memberName: string): string {
+        public getNativeFunctionAlias(className: string, memberName: string): any {
             return this.NativeFunctionAliases[className][memberName];
         }
 

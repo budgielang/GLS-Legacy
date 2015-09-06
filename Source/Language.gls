@@ -8,7 +8,7 @@ file start : GLS
         class member variable declare : OperationAliases private { dictionary type : string string }
         class member variable declare : TypeAliases private { dictionary type : string string }
         class member variable declare : ValueAliases private { dictionary type : string string }
-        class member variable declare : NativeFunctionAliases private { dictionary type : string string string }
+        class member variable declare : NativeFunctionAliases private { dictionary type : string string string string }
 
         comment line : General information
         class member variable declare : Name private string
@@ -284,10 +284,10 @@ file start : GLS
             
             class member variable set : { this } ValueAliases { dictionary initialize : string string }
 
-            class member variable set incomplete : { this } NativeFunctionAliases { dictionary initialize start : string { dictionary type : string string } }
-                dictionary initialize key : ("array") { dictionary initialize : string string } } ,
-                dictionary initialize key : ("dictionary") { dictionary initialize : string string } } ,
-                dictionary initialize key : ("string") { dictionary initialize : string string } }
+            class member variable set incomplete : { this } NativeFunctionAliases { dictionary initialize start : string string string string }
+                dictionary initialize key : ("array") { dictionary initialize : string string string } } ,
+                dictionary initialize key : ("dictionary") { dictionary initialize : string string string } } ,
+                dictionary initialize key : ("string") { dictionary initialize : string string string } }
             dictionary initialize end
         class constructor end
 
