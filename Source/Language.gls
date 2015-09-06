@@ -182,6 +182,7 @@ file start : GLS
                 dictionary initialize key : ("array initialize") { class member function get : { this } ArrayInitialize } ,
                 dictionary initialize key : ("array initialize sized") { class member function get : { this } ArrayInitializeSized } ,
                 dictionary initialize key : ("array get item") { class member function get : { this } ArrayGetItem } ,
+                dictionary initialize key : ("cast") { class member function get : { this } Cast } ,
                 dictionary initialize key : ("catch") { class member function get : { this } Catch } ,
                 dictionary initialize key : ("class constructor end") { class member function get : { this } ClassConstructorEnd } ,
                 dictionary initialize key : ("class constructor inherited call") { class member function get : { this } ClassConstructorInheritedCall } ,
@@ -1704,8 +1705,8 @@ file start : GLS
             if start : { operation : { operation : { array get item : index 0 } notequalto '-' } or { class member function call : { this } getArrayNegativeIndices }
                 operation : output increaseby  index
             else start
-                operation : index equals { native call : string substring index 1 }
-                operation : output increaseby { array get item : { class member function call : { this } Operation { array initialize : string { array get item : { class member function call : { this } NativeCall { array initialize : string "array" "length" name } true } 0 } "minus" "1" } true } 0 }
+                variable declare : nativePart string { cast : string { array get item : { class member function call : { this } NativeCall { array initialize : string "array" "length" name } true } 0 } }
+                operation : output increaseby { array get item : { class member function call : { this } Operation { array initialize : string nativePart "minus" "1" } true } 0 }
             if end
 
             operation : output increaseby "]"

@@ -182,6 +182,7 @@ module GLS {
                 "array initialize": this.ArrayInitialize.bind(this),
                 "array initialize sized": this.ArrayInitializeSized.bind(this),
                 "array get item": this.ArrayGetItem.bind(this),
+                "cast": this.Cast.bind(this),
                 "catch": this.Catch.bind(this),
                 "class constructor end": this.ClassConstructorEnd.bind(this),
                 "class constructor inherited call": this.ClassConstructorInheritedCall.bind(this),
@@ -1718,8 +1719,8 @@ module GLS {
             if (index[0] != '-' || this.getArrayNegativeIndices()) {
                 output += index;
             } else {
-                index = index.substring(1);
-                output += this.Operation([this.NativeCall(["array", "length", name], true)[0], "minus", "1"], true)[0];
+                var nativePart: string = <string>this.NativeCall(["array", "length", name], true)[0];
+                output += this.Operation([nativePart, "minus", "1"], true)[0];
             }
 
             output += "]";
