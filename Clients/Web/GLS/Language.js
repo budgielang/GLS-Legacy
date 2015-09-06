@@ -1032,7 +1032,7 @@ var GLS;
             return this.parseType(name) + remainder;
         };
         Language.prototype.parseTypeWithTemplate = function (text) {
-            if (text.indexOf(">") == -1) {
+            if (text.indexOf('>') == -1) {
                 return text;
             }
             var ltIndex = text.indexOf("<");
@@ -1060,10 +1060,12 @@ var GLS;
                     continue;
                 }
                 typeName = text.substring(typeStart, typeEnd);
-                output += this.parseType(typeName);
-                output += typeCheck;
+                output += this.parseType(text.substring(typeStart, typeEnd));
+                output += this.getClassTemplatesBetween();
                 typeStart = typeEnd + 1;
             }
+            output += this.parseType(text.substring(typeStart, text.length - 1));
+            output += ">";
             return output;
         };
         /*

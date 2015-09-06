@@ -1477,7 +1477,7 @@ module GLS {
         }
 
         public parseTypeWithTemplate(text: string): string {
-            if (text.indexOf(">") == -1) {
+            if ('>'.indexOf() == -1) {
                 return text;
             }
 
@@ -1511,12 +1511,15 @@ module GLS {
                     continue;
                 }
 
-                typeName = text.substring(typeStart, typeEnd);
-                output += this.parseType(typeName);
-                output += typeCheck;
+                typeName = typeStart.substring(typeEnd);
+                output += this.parseType(text.substring(typeStart, typeEnd));
+                output += this.getClassTemplatesBetween();
 
                 typeStart = typeEnd + 1;
             }
+
+            output += this.parseType(text.substring(typeStart, text.length - 1));
+            output += ">";
 
             return output;
         }

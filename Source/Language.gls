@@ -1471,7 +1471,7 @@ file start : GLS
         class member function end
 
         class member function start : Language public parseTypeWithTemplate string text string
-            if start : { operation : { native call : string find '>' } equalto -1 }
+            if start : { operation : { native call : string find text '>' } equalto -1 }
                 return : text
             if end
 
@@ -1505,7 +1505,7 @@ file start : GLS
                     loop continue
                 if end
 
-                operation : typeName equals { native call : string substring typeStart typeEnd }
+                operation : typeName equals { native call : string substring text typeStart typeEnd }
                 operation : output increaseby { class member function call : { this } parseType { native call : string substring text typeStart typeEnd } }
                 operation : output increaseby { class member function call : { this } getClassTemplatesBetween }
                 
