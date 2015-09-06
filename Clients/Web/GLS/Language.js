@@ -109,7 +109,7 @@ var GLS;
             this.NativeFunctionAliases = {
                 "array": {},
                 "dictionary": {},
-                "string": {}
+                "string": {},
             };
         }
         /*
@@ -1040,9 +1040,9 @@ var GLS;
             if (!this.getClassTemplates()) {
                 return output;
             }
+            var typeCheck = ' ';
             var typeStart = ltIndex;
             var typeEnd;
-            var typeCheck;
             while (typeStart < text.length) {
                 for (typeEnd = typeStart; typeEnd < text.length; typeEnd += 1) {
                     typeCheck = text[typeEnd];
@@ -1126,16 +1126,16 @@ var GLS;
         Language.prototype.getNativeFunctionAlias = function (className, memberName) {
             return this.NativeFunctionAliases[className][memberName];
         };
-        Language.prototype.addNativeFunctionAlias = function (className, memberName, aliasInfo) {
-            this.NativeFunctionAliases[className][memberName] = aliasInfo;
+        Language.prototype.addNativeFunctionAlias = function (className, memberName, alias) {
+            this.NativeFunctionAliases[className][memberName] = alias;
             return this;
         };
-        Language.prototype.addNativeFunctionAliases = function (className, aliasInfos) {
+        Language.prototype.addNativeFunctionAliases = function (className, aliases) {
             var key;
-            var aliasInfo;
-            for (key in aliasInfos) {
-                aliasInfo = aliasInfos[key];
-                this.addNativeFunctionAlias(className, key, aliasInfo);
+            var alias;
+            for (key in aliases) {
+                alias = aliases[key];
+                this.addNativeFunctionAlias(className, key, alias);
             }
             return this;
         };
@@ -1207,7 +1207,7 @@ var GLS;
             var name = functionArgs[0];
             var output = name + "[";
             var index = functionArgs[1];
-            if (index[0] != "-" || this.getArrayNegativeIndices()) {
+            if (index[0] != '-' || this.getArrayNegativeIndices()) {
                 output += index;
             }
             else {
@@ -1642,7 +1642,7 @@ var GLS;
             this.requireArgumentsLength("Comparison", functionArgs, 2);
             var output;
             if (this.getToStringAsFunction()) {
-                output = this.toString() + "(" + functionArgs[0] + ")";
+                output = this.getToString() + "(" + functionArgs[0] + ")";
                 output += " " + this.getOperationAlias("plus") + " ";
                 output += this.getToString() + "(" + functionArgs[1] + ")";
             }
@@ -1868,7 +1868,7 @@ var GLS;
                 line += this.getConditionStartRight();
                 output[0] = line;
                 output[1] = 1;
-                // keyName = pairName.Key
+                //     keyName = pairName.Key
                 variableDeclareArgs = new Array(3);
                 variableDeclareArgs[0] = keyName;
                 variableDeclareArgs[1] = "equals";
@@ -1876,7 +1876,7 @@ var GLS;
                 line = this.Operation(variableDeclareArgs, false)[0];
                 output[2] = line;
                 output[3] = 0;
-                // valueName = pairName.Value
+                //     valueName = pairName.Value
                 variableDeclareArgs = new Array(3);
                 variableDeclareArgs[0] = valueName;
                 variableDeclareArgs[1] = "equals";
@@ -1887,7 +1887,7 @@ var GLS;
             }
             else {
                 // for keyName in container 
-                // valueName = container[keyName]
+                //     valueName = container[keyName]
                 output = new Array(4);
                 // for keyName in container 
                 line = this.getForEachStarter();
@@ -1897,7 +1897,7 @@ var GLS;
                 line += this.getConditionStartRight();
                 output[0] = line;
                 output[1] = 1;
-                // valueName = container[keyName]
+                //     valueName = container[keyName]
                 variableDeclareArgs = new Array(3);
                 variableDeclareArgs[0] = valueName;
                 variableDeclareArgs[1] = "equals";
@@ -1921,8 +1921,8 @@ var GLS;
             var comparison = functionArgs[2];
             var boundary = functionArgs[3];
             var direction = "increaseby";
-            var change;
             var generalArgs;
+            var change;
             if (functionArgs.length > 4) {
                 change = functionArgs[4];
             }
@@ -2161,7 +2161,6 @@ var GLS;
             }
             if (usage == "function") {
                 var functionCallArgs = new Array(numArgs);
-                var i;
                 functionCallArgs[0] = caller;
                 for (i = 1; i < functionArgs.length - start; i += 1) {
                     functionCallArgs[i] = functionArgs[i + start];

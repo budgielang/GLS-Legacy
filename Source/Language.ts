@@ -287,7 +287,7 @@ module GLS {
             this.NativeFunctionAliases = {
                 "array": {},
                 "dictionary": {},
-                "string": {}
+                "string": {},
             };
         }
         
@@ -1488,9 +1488,9 @@ module GLS {
                 return output;
             }
 
+            var typeCheck: string = ' ';
             var typeStart: number = ltIndex;
             var typeEnd: number;
-            var typeCheck: string;
 
             while (typeStart < text.length) {
                 for (typeEnd = typeStart; typeEnd < text.length; typeEnd += 1) {
@@ -1592,21 +1592,21 @@ module GLS {
             return this;
         }
 
-        public getNativeFunctionAlias(className: string, memberName: string): any {
+        public getNativeFunctionAlias(className: string, memberName: string): string {
             return this.NativeFunctionAliases[className][memberName];
         }
 
-        public addNativeFunctionAlias(className: string, memberName: string, aliasInfo: any): Language {
-            this.NativeFunctionAliases[className][memberName] = aliasInfo;
+        public addNativeFunctionAlias(className: string, memberName: string, alias: string): Language {
+            this.NativeFunctionAliases[className][memberName] = alias;
             return this;
         }
 
-        public addNativeFunctionAliases(className: string, aliasInfos: any): Language {
+        public addNativeFunctionAliases(className: string, aliases: any): Language {
             var key: string;
-            var aliasInfo: any;
-            for (key in aliasInfos) {
-                aliasInfo = aliasInfos[key];
-                this.addNativeFunctionAlias(className, key, aliasInfo);
+            var alias: string;
+            for (key in aliases) {
+                alias = aliases[key];
+                this.addNativeFunctionAlias(className, key, alias);
             }
 
             return this;
@@ -1695,7 +1695,7 @@ module GLS {
             var output: string = name + "[";
             var index: string = functionArgs[1];
 
-            if (index[0] != "-" || this.getArrayNegativeIndices()) {
+            if (index[0] != '-' || this.getArrayNegativeIndices()) {
                 output += index;
             } else {
                 index = index.substring(1);
@@ -2273,7 +2273,7 @@ module GLS {
             var output: string;
 
             if (this.getToStringAsFunction()) {
-                output = this.toString() + "(" + functionArgs[0] + ")";
+                output = this.getToString() + "(" + functionArgs[0] + ")";
                 output += " " + this.getOperationAlias("plus") + " ";
                 output += this.getToString() + "(" + functionArgs[1] + ")";
             } else {
@@ -2478,7 +2478,7 @@ module GLS {
         public ForEachKeysStart(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("ForEachKeysStart", functionArgs, 3);
 
-            var variableDeclareArgs: any[] = [functionArgs[0], functionArgs[1]];
+            var variableDeclareArgs: string[] = [functionArgs[0], functionArgs[1]];
             var output: string;
 
             if (this.getForEachAsMethod()) {
@@ -2561,7 +2561,7 @@ module GLS {
                 output[0] = line;
                 output[1] = 1;
                 
-                // keyName = pairName.Key
+                //     keyName = pairName.Key
                 variableDeclareArgs = new Array(3);
                 variableDeclareArgs[0] = keyName;
                 variableDeclareArgs[1] = "equals";
@@ -2570,7 +2570,7 @@ module GLS {
                 output[2] = line;
                 output[3] = 0;
                 
-                // valueName = pairName.Value
+                //     valueName = pairName.Value
                 variableDeclareArgs = new Array(3);
                 variableDeclareArgs[0] = valueName;
                 variableDeclareArgs[1] = "equals";
@@ -2580,7 +2580,7 @@ module GLS {
                 output[5] = 0;
             } else {
                 // for keyName in container 
-                // valueName = container[keyName]
+                //     valueName = container[keyName]
                 output = new Array(4);
                 
                 // for keyName in container 
@@ -2592,7 +2592,7 @@ module GLS {
                 output[0] = line;
                 output[1] = 1;
                 
-                // valueName = container[keyName]
+                //     valueName = container[keyName]
                 variableDeclareArgs = new Array(3);
                 variableDeclareArgs[0] = valueName;
                 variableDeclareArgs[1] = "equals";
@@ -2620,8 +2620,8 @@ module GLS {
             var comparison: string = functionArgs[2];
             var boundary: string = functionArgs[3];
             var direction: string = "increaseby";
+            var generalArgs: string[];
             var change: string;
-            var generalArgs: any[];
 
             if (functionArgs.length > 4) {
                 change = functionArgs[4];
@@ -2938,7 +2938,6 @@ module GLS {
 
             if (usage == "function") {
                 var functionCallArgs: any[] = new Array(numArgs);
-                var i: number;
 
                 functionCallArgs[0] = caller;
 
