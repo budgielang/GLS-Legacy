@@ -182,6 +182,7 @@ module GLS {
                 "array initialize": this.ArrayInitialize.bind(this),
                 "array initialize sized": this.ArrayInitializeSized.bind(this),
                 "array get item": this.ArrayGetItem.bind(this),
+                "cast": this.Cast.bind(this),
                 "catch": this.Catch.bind(this),
                 "class constructor end": this.ClassConstructorEnd.bind(this),
                 "class constructor inherited call": this.ClassConstructorInheritedCall.bind(this),
@@ -1723,6 +1724,22 @@ module GLS {
             }
 
             output += "]";
+            return [output, 0];
+        }
+
+        // string type, string value
+        public Cast(functionArgs: string[], isInline: boolean): any[] {
+            this.requireArgumentsLength("Cast", functionArgs, 2);
+
+            if (!this.getVariableTypesExplicit()) {
+                return [functionArgs[1], 0];
+            }
+
+            var output: string = this.getCastStart();
+            output += this.parseType(functionArgs[0]);
+            output += this.getCastEnd();
+            output += functionArgs[1];
+
             return [output, 0];
         }
         

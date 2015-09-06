@@ -6,6 +6,7 @@ var GLS;
                 "array initialize": this.ArrayInitialize.bind(this),
                 "array initialize sized": this.ArrayInitializeSized.bind(this),
                 "array get item": this.ArrayGetItem.bind(this),
+                "cast": this.Cast.bind(this),
                 "catch": this.Catch.bind(this),
                 "class constructor end": this.ClassConstructorEnd.bind(this),
                 "class constructor inherited call": this.ClassConstructorInheritedCall.bind(this),
@@ -177,6 +178,12 @@ var GLS;
         };
         Language.prototype.getOr = function () {
             return this.Or;
+        };
+        Language.prototype.getCastEnd = function () {
+            return this.CastEnd;
+        };
+        Language.prototype.getCastStart = function () {
+            return this.CastStart;
         };
         Language.prototype.getUndefined = function () {
             return this.Undefined;
@@ -581,6 +588,14 @@ var GLS;
         };
         Language.prototype.setOr = function (value) {
             this.Or = value;
+            return this;
+        };
+        Language.prototype.setCastEnd = function (value) {
+            this.CastEnd = value;
+            return this;
+        };
+        Language.prototype.setCastStart = function (value) {
+            this.CastStart = value;
             return this;
         };
         Language.prototype.setUndefined = function (value) {
@@ -1215,6 +1230,18 @@ var GLS;
                 output += this.Operation([this.NativeCall(["array", "length", name], true)[0], "minus", "1"], true)[0];
             }
             output += "]";
+            return [output, 0];
+        };
+        // string type, string value
+        Language.prototype.Cast = function (functionArgs, isInline) {
+            this.requireArgumentsLength("Cast", functionArgs, 2);
+            if (!this.getVariableTypesExplicit()) {
+                return [functionArgs[1], 0];
+            }
+            var output = this.getCastStart();
+            output += this.parseType(functionArgs[0]);
+            output += this.getCastEnd();
+            output += functionArgs[1];
             return [output, 0];
         };
         // [string name]
