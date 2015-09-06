@@ -176,7 +176,7 @@ file start : GLS
         class static variable declare : INT_MIN public int 9001
 
         class constructor start : Language
-            class member variable set incomplete : { this } Printers { dictionary initialize start : string XXX }
+            class member variable set incomplete : { this } Printers { dictionary initialize start : string Printer }
                 dictionary initialize key : ("array initialize") { class member function get : { this } ArrayInitialize } ,
                 dictionary initialize key : ("array initialize sized") { class member function get : { this } ArrayInitializeSized } ,
                 dictionary initialize key : ("array get item") { class member function get : { this } ArrayGetItem } ,
@@ -1471,6 +1471,10 @@ file start : GLS
         class member function end
 
         class member function start : Language public parseTypeWithTemplate string text string
+            if start : { operation : { native call : string find '>' } equalto -1 }
+                return : text
+            if end
+
             variable declare : ltIndex number { native call : string find text "<" }
             variable declare : output string { native call : string substring text 0 ltIndex }
             
@@ -1478,15 +1482,14 @@ file start : GLS
                 return : output
             if end
 
-            variable declare : typeStart number { operation : ltIndex plus 1 }
+            variable declare : typeStart number ltIndex
             variable declare : typeEnd number
-            variable declare : typeCheck string
-
-            operation : output increaseby "<"
+            variable declare : typeCheck character
+            variable declare : typeName string
 
             while start : { operation : typeStart lessthan { native call : string length text } }
                 for numbers start : typeEnd typeStart lessthan { native call : string length text }
-                    operation : typeCheck equals { array get item : text typeCheck }
+                    operation : typeCheck equals { array get item : text typeEnd }
                     if start : { operation : typeCheck equalto ',' or typeCheck equalto '<' or typeCheck equalto '>' or typeCheck equalto (' ') }
                         loop break
                     if end
@@ -1496,8 +1499,16 @@ file start : GLS
                     loop break
                 if end
 
+                if start : { operation : typeStart equalto typeEnd }
+                    operation : output increaseby typeCheck
+                    operation : typeStart increaseby 1
+                    loop continue
+                if end
+
+                operation : typeName equals { native call : string substring typeStart typeEnd }
                 operation : output increaseby { class member function call : { this } parseType { native call : string substring text typeStart typeEnd } }
                 operation : output increaseby { class member function call : { this } getClassTemplatesBetween }
+                
                 operation : typeStart equals typeEnd plus 1
             while end
 
@@ -1711,7 +1722,7 @@ file start : GLS
             variable declare : callingArgsLength number { native call : array length functionArgs }
             variable declare : loopStart number 0
             variable declare : callingArgs string[]
-            variable declare : callingResult any[]
+            variable declare : callingResult mixed[]
             variable declare : i number
 
             comment line : Blank parentName indicates the super's class name should be used
@@ -2232,7 +2243,7 @@ file start : GLS
 
         comment line : [string message, ...]
         class member function start : Language public CommentInline mixed[] functionArgs string[] isInline boolean
-            variable declare : result any[] { class member function call : { this } CommentLine functionArgs isInline }
+            variable declare : result mixed[] { class member function call : { this } CommentLine functionArgs isInline }
 
             operation : { array get item : result 1 } equals { class static variable get : Language INT_MIN }
 
@@ -2295,7 +2306,13 @@ file start : GLS
         class member function start : Language public DictionaryKeySet mixed[] functionArgs string[] isInline boolean
             class member function call : { this } requireArgumentsLength "DictionaryKeySet" functionArgs 3
 
-            return : { array initialize : mixed { operation : { array get item : functionArgs 0 } plus "[" plus { array get item : functionArgs 1 } plus ("] = ") plus { array get item : functionArgs 2 } } 0 }
+            variable declare : output string { operation : { array get item : functionArgs 0 } plus "[" plus { array get item : functionArgs 1 } plus ("] = ") plus { array get item : functionArgs 2 } }
+
+            if start : { not : isInline }
+                operation : output increaseby { class member function call : { this } getSemiColon }
+            if end
+
+            return : { array initialize : mixed output 0 }
         class member function end
 
         comment line : string key, string value
@@ -2894,6 +2911,7 @@ file start : GLS
             variable declare : numArgs number
             variable declare : start number
             variable declare : output string
+            variable declare : i number
 
             if start : { operation : placement equalto "member" }
                 operation : caller equals { array get item : functionArgs 2 } plus "." plus { dictionary key get : aliasInfo "alias" }
