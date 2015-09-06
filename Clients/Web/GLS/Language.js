@@ -1032,18 +1032,21 @@ var GLS;
             return this.parseType(name) + remainder;
         };
         Language.prototype.parseTypeWithTemplate = function (text) {
+            if (text.indexOf(">") == -1) {
+                return text;
+            }
             var ltIndex = text.indexOf("<");
             var output = text.substring(0, ltIndex);
             if (!this.getClassTemplates()) {
                 return output;
             }
-            var typeStart = ltIndex + 1;
+            var typeStart = ltIndex;
             var typeEnd;
             var typeCheck;
-            output += "<";
+            var typeName;
             while (typeStart < text.length) {
                 for (typeEnd = typeStart; typeEnd < text.length; typeEnd += 1) {
-                    typeCheck = text[typeCheck];
+                    typeCheck = text[typeEnd];
                     if (typeCheck == ',' || typeCheck == '<' || typeCheck == '>' || typeCheck == ' ') {
                         break;
                     }
@@ -1051,12 +1054,16 @@ var GLS;
                 if (typeEnd == text.length) {
                     break;
                 }
-                output += this.parseType(text.substring(typeStart, typeEnd));
-                output += this.getClassTemplatesBetween();
+                if (typeStart == typeEnd) {
+                    output += typeCheck;
+                    typeStart += 1;
+                    continue;
+                }
+                typeName = text.substring(typeStart, typeEnd);
+                output += this.parseType(typeName);
+                output += typeCheck;
                 typeStart = typeEnd + 1;
             }
-            output += this.parseType(text.substring(typeStart, text.length - 1));
-            output += ">";
             return output;
         };
         /*
@@ -1671,7 +1678,11 @@ var GLS;
         // string name, string key, string value
         Language.prototype.DictionaryKeySet = function (functionArgs, isInline) {
             this.requireArgumentsLength("DictionaryKeySet", functionArgs, 3);
-            return [functionArgs[0] + "[" + functionArgs[1] + "] = " + functionArgs[2], 0];
+            var output = functionArgs[0] + "[" + functionArgs[1] + "] = " + functionArgs[2];
+            if (!isInline) {
+                output += this.getSemiColon();
+            }
+            return [output, 0];
         };
         // string key, string value
         Language.prototype.DictionaryInitialize = function (functionArgs, isInline) {
@@ -2134,6 +2145,7 @@ var GLS;
             var numArgs;
             var start;
             var output;
+            var i;
             if (placement == "member") {
                 caller = functionArgs[2] + "." + aliasInfo["alias"];
                 numArgs = functionArgs.length - 3;

@@ -1477,6 +1477,10 @@ module GLS {
         }
 
         public parseTypeWithTemplate(text: string): string {
+            if (text.indexOf(">") == -1) {
+                return text;
+            }
+
             var ltIndex: number = text.indexOf("<");
             var output: string = text.substring(0, ltIndex);
 
@@ -1484,15 +1488,14 @@ module GLS {
                 return output;
             }
 
-            var typeStart: number = ltIndex + 1;
+            var typeStart: number = ltIndex;
             var typeEnd: number;
             var typeCheck: string;
-
-            output += "<";
+            var typeName: string;
 
             while (typeStart < text.length) {
                 for (typeEnd = typeStart; typeEnd < text.length; typeEnd += 1) {
-                    typeCheck = text[typeCheck];
+                    typeCheck = text[typeEnd];
                     if (typeCheck == ',' || typeCheck == '<' || typeCheck == '>' || typeCheck == ' ') {
                         break;
                     }
@@ -1502,13 +1505,18 @@ module GLS {
                     break;
                 }
 
-                output += this.parseType(text.substring(typeStart, typeEnd));
-                output += this.getClassTemplatesBetween();
+                if (typeStart == typeEnd) {
+                    output += typeCheck;
+                    typeStart += 1;
+                    continue;
+                }
+
+                typeName = text.substring(typeStart, typeEnd);
+                output += this.parseType(typeName);
+                output += typeCheck;
+
                 typeStart = typeEnd + 1;
             }
-
-            output += this.parseType(text.substring(typeStart, text.length - 1));
-            output += ">";
 
             return output;
         }
@@ -1539,7 +1547,7 @@ module GLS {
         }
 
         public addTypeAlias(key: string, alias: string): Language {
-            this.TypeAliases[key] = alias
+            this.TypeAliases[key] = alias;
             return this;
         }
 
@@ -1555,7 +1563,7 @@ module GLS {
         }
 
         public addOperationAlias(key: string, alias: string): Language {
-            this.OperationAliases[key] = alias
+            this.OperationAliases[key] = alias;
             return this;
         }
 
@@ -1571,7 +1579,7 @@ module GLS {
         }
 
         public addValueAlias(key: string, alias: string): Language {
-            this.ValueAliases[key] = alias
+            this.ValueAliases[key] = alias;
             return this;
         }
 
@@ -2309,7 +2317,13 @@ module GLS {
         public DictionaryKeySet(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("DictionaryKeySet", functionArgs, 3);
 
-            return [functionArgs[0] + "[" + functionArgs[1] + "] = " + functionArgs[2], 0];
+            var output: string = functionArgs[0] + "[" + functionArgs[1] + "] = " + functionArgs[2];
+
+            if (!isInline) {
+                output += this.getSemiColon();
+            }
+
+            return [output, 0];
         }
         
         // string key, string value
@@ -2908,6 +2922,7 @@ module GLS {
             var numArgs: number;
             var start: number;
             var output: string;
+            var i: number;
 
             if (placement == "member") {
                 caller = functionArgs[2] + "." + aliasInfo["alias"];
