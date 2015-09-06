@@ -1491,7 +1491,6 @@ module GLS {
             var typeStart: number = ltIndex;
             var typeEnd: number;
             var typeCheck: string;
-            var typeName: string;
 
             while (typeStart < text.length) {
                 for (typeEnd = typeStart; typeEnd < text.length; typeEnd += 1) {
@@ -1511,8 +1510,7 @@ module GLS {
                     continue;
                 }
 
-                typeName = text.substring(typeStart, typeEnd);
-                output += this.parseType(typeName);
+                output += this.parseType(text.substring(typeStart, typeEnd));
                 output += typeCheck;
 
                 typeStart = typeEnd + 1;

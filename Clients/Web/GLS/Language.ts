@@ -1477,7 +1477,6 @@ module GLS {
         }
 
         public parseTypeWithTemplate(text: string): string {
-            console.log("START", text);
             if (text.indexOf('>') == -1) {
                 return text;
             }
@@ -1492,7 +1491,6 @@ module GLS {
             var typeStart: number = ltIndex;
             var typeEnd: number;
             var typeCheck: string;
-            var typeName: string;
 
             while (typeStart < text.length) {
                 for (typeEnd = typeStart; typeEnd < text.length; typeEnd += 1) {
@@ -1506,24 +1504,18 @@ module GLS {
                     break;
                 }
 
-                console.log("    add chck", typeCheck);
-
                 if (typeStart == typeEnd) {
                     output += typeCheck;
                     typeStart += 1;
                     continue;
                 }
 
-                typeName = text.substring(typeStart, typeEnd);
-                output += this.parseType(typeName);
+                output += this.parseType(text.substring(typeStart, typeEnd));
                 output += typeCheck;
-
-                console.log("    add name", typeName);
 
                 typeStart = typeEnd + 1;
             }
 
-            console.log(" END", output);
             return output;
         }
         

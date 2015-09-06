@@ -1032,7 +1032,6 @@ var GLS;
             return this.parseType(name) + remainder;
         };
         Language.prototype.parseTypeWithTemplate = function (text) {
-            console.log("START", text);
             if (text.indexOf('>') == -1) {
                 return text;
             }
@@ -1044,7 +1043,6 @@ var GLS;
             var typeStart = ltIndex;
             var typeEnd;
             var typeCheck;
-            var typeName;
             while (typeStart < text.length) {
                 for (typeEnd = typeStart; typeEnd < text.length; typeEnd += 1) {
                     typeCheck = text[typeEnd];
@@ -1055,19 +1053,15 @@ var GLS;
                 if (typeEnd == text.length) {
                     break;
                 }
-                console.log("    add chck", typeCheck);
                 if (typeStart == typeEnd) {
                     output += typeCheck;
                     typeStart += 1;
                     continue;
                 }
-                typeName = text.substring(typeStart, typeEnd);
-                output += this.parseType(typeName);
+                output += this.parseType(text.substring(typeStart, typeEnd));
                 output += typeCheck;
-                console.log("    add name", typeName);
                 typeStart = typeEnd + 1;
             }
-            console.log(" END", output);
             return output;
         };
         /*

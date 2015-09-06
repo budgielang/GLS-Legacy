@@ -1485,7 +1485,6 @@ file start : GLS
             variable declare : typeStart number ltIndex
             variable declare : typeEnd number
             variable declare : typeCheck character
-            variable declare : typeName string
 
             while start : { operation : typeStart lessthan { native call : string length text } }
                 for numbers start : typeEnd typeStart lessthan { native call : string length text }
@@ -1505,15 +1504,11 @@ file start : GLS
                     loop continue
                 if end
 
-                operation : typeName equals { native call : string substring text typeStart typeEnd }
                 operation : output increaseby { class member function call : { this } parseType { native call : string substring text typeStart typeEnd } }
-                operation : output increaseby { class member function call : { this } getClassTemplatesBetween }
+                operation : output increaseby typeCheck
                 
                 operation : typeStart equals typeEnd plus 1
             while end
-
-            operation : output increaseby { class member function call : { this } parseType { native call : string substring text typeStart { operation : { native call : string length text } minus 1 } } }
-            operation : output increaseby ">"
 
             return : output
         class member function end
