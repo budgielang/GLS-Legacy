@@ -3,14 +3,14 @@ include : Language
 file start : GLS
     class start : GLSC
         class member variable declare : Languages private { dictionary type : string Language }
-        class member variable declare : SearchEnds private { dictionary type : string Language }
+        class member variable declare : SearchEnds private { dictionary type : character character }
 
         class constructor start : GLSC
-            class member variable set : { this } Languages { dictionary initialize : string string }
-            class member variable set incomplete : { this } SearchEnds { dictionary initialize start : string string }
-                dictionary initialize key : (" ") (" ") ,
-                dictionary initialize key : "{" "}" ,
-                dictionary initialize key : "(" ")" 
+            class member variable set : { this } Languages { dictionary initialize : string Language }
+            class member variable set incomplete : { this } SearchEnds { dictionary initialize start : character character }
+                dictionary initialize key : (' ') (' ') ,
+                dictionary initialize key : '{' '}' ,
+                dictionary initialize key : '(' ')' 
             dictionary initialize end
         class constructor end
 
@@ -37,25 +37,25 @@ file start : GLS
                 for numbers start : j 0 lessthan { native call : string length command } 2
                     comment line : Special case: a blank line after an inline command is ignored
                     comment line : This is useful for things like lambda types that aren't in every language
-                    if start : { operation : lastTabRequest equalto { class static variable get : Language INT_MIN } and { native call : string length command } equalto 2 and { array get item : command 0 } equalto "" }
+                    if start : { operation : lastTabRequest equalto { class static variable get : Language INT_MIN } and { native call : string length command } equalto 2 and { cast : string { array get item : command 0 } } equalto "" }
                         operation : lastLineSkipped equals true
                         loop continue
                     if end
 
-                    if start : { operation : { array get item : command 1 } equalto { class static variable get : Language INT_MIN } }
-                        if start : { operation : { array get item : command 0 } notequalto "" }
+                    if start : { operation : { cast : number { array get item : command 1 } } equalto { class static variable get : Language INT_MIN } }
+                        if start : { operation : { cast : string { array get item : command 0 } } notequalto "" }
                             operation : output increaseby (" ") plus { array get item : command 0 }
                         if end
                     else start
-                        comment line : Just "\0" changes numTabs without adding a line
-                        if start : { operation : { array get item : command j } notequalto "\0" and { not : lastLineSkipped } }
+                        comment line : Just '\0' changes numTabs without adding a line
+                        if start : { operation : { cast : character { array get item : command j } } notequalto '\0' and { not : lastLineSkipped } }
                             operation : output increaseby "\n"
                         if end
 
-                        if start : { operation : { array get item : command { operation : j plus 1 } } lessthan 0 }
-                            operation : numTabs increaseby { array get item : command { operation : j plus 1 } }
+                        if start : { operation : { cast : number { array get item : command { operation : j plus 1 } } } lessthan 0 }
+                            operation : numTabs increaseby { cast : number { array get item : command { operation : j plus 1 } } }
                             operation : output increaseby { class member function call : { this } generateTabs numTabs }
-                            if start : { operation : { array get item : command j } notequalto "\0" }
+                            if start : { operation : { cast : number { array get item : command j } } notequalto '\0' }
                                 operation : output increaseby { array get item : command j }
                             if end
                         else start
@@ -63,11 +63,11 @@ file start : GLS
                             if start : { operation : { array get item : command j } notequalto "\0" }
                                 operation : output increaseby { array get item : command j }
                             if end
-                            operation : numTabs increaseby { array get item : command { operation : j plus 1 } }
+                            operation : numTabs increaseby { cast : number { array get item : command { operation : j plus 1 } } }
                         if end
                     if end
 
-                    operation : lastTabRequest equals { array get item : command { operation : { native call : array length command } minus 1 } }
+                    operation : lastTabRequest equals { cast : number { array get item : command { operation : { native call : array length command } minus 1 } } }
                     operation : lastLineSkipped equals false
                 for end
             for end
@@ -105,7 +105,7 @@ file start : GLS
             variable declare : numArgs number 0
             variable declare : argumentsConverted string[]
             variable declare : argument string
-            variable declare : starter string
+            variable declare : starter character
             variable declare : end number
             variable declare : i number
 
@@ -157,7 +157,7 @@ file start : GLS
                 operation : i equals end
 
                 if start : { operation : starter equalto commandStarter }
-                    operation : argument equals { array get item : { class member function call : { this } parseCommand language argument true } 0 }
+                    operation : argument equals { cast : string { array get item : { class member function call : { this } parseCommand language argument true } 0 } }
                 if end
 
                 operation : { array get item : argumentsConverted numArgs } equals argument
@@ -193,7 +193,7 @@ file start : GLS
             return : true
         class member function end
 
-        class member function start : GLSC private isCharacterSpace boolean character string
+        class member function start : GLSC private isCharacterSpace boolean character character
             return : { operation : character equalto (' ') or character equalto '\r' or character equalto '\n' }
         class member function end
 
@@ -209,10 +209,10 @@ file start : GLS
             return : { native call : string length haystack }
         class member function end
 
-        class member function start : GLSC private findSearchEnd number haystack string starter string start number
-            variable declare : ender string { dictionary key get : { class member variable get : { this } SearchEnds } starter }
+        class member function start : GLSC private findSearchEnd number haystack string starter character start number
+            variable declare : ender character { dictionary key get : { class member variable get : { this } SearchEnds } starter }
             variable declare : numStarts number 1
-            variable declare : current string
+            variable declare : current character
             variable declare : i number
 
             for numbers start : i { operation : start plus 1 } lessthan { native call : string length haystack }
