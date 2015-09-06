@@ -1512,14 +1512,11 @@ module GLS {
                 }
 
                 typeName = text.substring(typeStart, typeEnd);
-                output += this.parseType(text.substring(typeStart, typeEnd));
-                output += this.getClassTemplatesBetween();
+                output += this.parseType(typeName);
+                output += typeCheck;
 
                 typeStart = typeEnd + 1;
             }
-
-            output += this.parseType(text.substring(typeStart, text.length - 1));
-            output += ">";
 
             return output;
         }
