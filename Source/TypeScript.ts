@@ -7,6 +7,8 @@ module GLS.Languages {
         .setArrayClass("Array")
         .setArrayLength(".length")
         .setBreak("break")
+        .setCastStarter("<")
+        .setCastEnder(">")
         .setClassConstructorName("constructor")
         .setClassEnder("}")
         .setClassExtends("extends")
