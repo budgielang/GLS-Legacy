@@ -1585,15 +1585,15 @@ file start : GLS
             return : { dictionary key get : { dictionary key get : { class member variable get : { this } NativeFunctionAliases } className } memberName }
         class member function end
 
-        class member function start : Language public addNativeFunctionAlias Language className string memberName string alias string
-            class member variable set : { this } { dictionary key get : { dictionary key get : NativeFunctionAliases className } memberName } alias
+        class member function start : Language public addNativeFunctionAlias Language className string memberName string aliasInfo { dictionary type : string string }
+            class member variable set : { this } { dictionary key get : { dictionary key get : NativeFunctionAliases className } memberName } aliasInfo
             return : { this }
         class member function end
 
-        class member function start : Language public addNativeFunctionAliases Language className string aliases { dictionary type : string string }
+        class member function start : Language public addNativeFunctionAliases Language className string aliasInfos { dictionary type : string string string }
             variable declare : key string
-            variable declare : alias string
-            for each pairs start : pair key string alias string aliases
+            variable declare : alias { dictionary type : string string }
+            for each pairs start : pair key string alias { dictionary type : string string } aliasInfos
                 class member function call : { this } addNativeFunctionAlias className key alias
             for end
 
@@ -2464,7 +2464,7 @@ file start : GLS
         class member function start : Language public ForEachKeysStart mixed[] functionArgs string[] isInline boolean
             class member function call : { this } requireArgumentsLength "ForEachKeysStart" functionArgs 3
 
-            variable declare : variableDeclareArgs string[] { array initialize : mixed { array get item : functionArgs 0 } { array get item : functionArgs 1 } }
+            variable declare : variableDeclareArgs string[] { array initialize : string { array get item : functionArgs 0 } { array get item : functionArgs 1 } }
             variable declare : output string
 
             if start : { class member function call : { this } getForEachAsMethod }
@@ -2923,7 +2923,7 @@ file start : GLS
             if end
 
             if start : { operation : usage equalto "function" }
-                variable declare : functionCallArgs mixed[] { array initialize sized : mixed numArgs }
+                variable declare : functionCallArgs string[] { array initialize sized : string numArgs }
 
                 operation : { array get item : functionCallArgs 0 } equals caller
 

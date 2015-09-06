@@ -2464,7 +2464,7 @@ file start : GLS
         class member function start : Language public ForEachKeysStart mixed[] functionArgs string[] isInline boolean
             class member function call : { this } requireArgumentsLength "ForEachKeysStart" functionArgs 3
 
-            variable declare : variableDeclareArgs string[] { array initialize : mixed { array get item : functionArgs 0 } { array get item : functionArgs 1 } }
+            variable declare : variableDeclareArgs string[] { array initialize : string { array get item : functionArgs 0 } { array get item : functionArgs 1 } }
             variable declare : output string
 
             if start : { class member function call : { this } getForEachAsMethod }
@@ -2923,7 +2923,7 @@ file start : GLS
             if end
 
             if start : { operation : usage equalto "function" }
-                variable declare : functionCallArgs mixed[] { array initialize sized : mixed numArgs }
+                variable declare : functionCallArgs string[] { array initialize sized : string numArgs }
 
                 operation : { array get item : functionCallArgs 0 } equals caller
 

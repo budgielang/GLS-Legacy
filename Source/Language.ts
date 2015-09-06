@@ -2937,7 +2937,7 @@ module GLS {
             }
 
             if (usage == "function") {
-                var functionCallArgs: any[] = new Array(numArgs);
+                var functionCallArgs: string[] = new Array(numArgs);
 
                 functionCallArgs[0] = caller;
 

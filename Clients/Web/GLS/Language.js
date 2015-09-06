@@ -1126,15 +1126,15 @@ var GLS;
         Language.prototype.getNativeFunctionAlias = function (className, memberName) {
             return this.NativeFunctionAliases[className][memberName];
         };
-        Language.prototype.addNativeFunctionAlias = function (className, memberName, alias) {
-            this.NativeFunctionAliases[className][memberName] = alias;
+        Language.prototype.addNativeFunctionAlias = function (className, memberName, aliasInfo) {
+            this.NativeFunctionAliases[className][memberName] = aliasInfo;
             return this;
         };
-        Language.prototype.addNativeFunctionAliases = function (className, aliases) {
+        Language.prototype.addNativeFunctionAliases = function (className, aliasInfos) {
             var key;
             var alias;
-            for (key in aliases) {
-                alias = aliases[key];
+            for (key in aliasInfos) {
+                alias = aliasInfos[key];
                 this.addNativeFunctionAlias(className, key, alias);
             }
             return this;
