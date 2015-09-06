@@ -1817,7 +1817,7 @@ file start : GLS
             if start : { class member function call : { this } getClassConstructorInheritedShorthand }
                 comment line : "Shorthand" usage, like in C#, comes before FunctionDefineRight
                 operation : output equals { array initialize sized : string { native call : array length generalCall } }
-                operation : { array get item : output 0 } equals { native call : string substring { array get item : generalCall 0 } 0 { operation : { native call : string length { array get item : generalCall 0 } } minus { native call : string length { class member function call : { this } getFunctionDefineRight } } } }
+                operation : { array get item : output 0 } equals { native call : string substring { parenthesis : { cast : string { array get item : generalCall 0 } } } 0 { operation : { native call : string length { parenthesis : { cast : string { array get item : generalCall 0 } } } } minus { native call : string length { class member function call : { this } getFunctionDefineRight } } } }
                 operation : { array get item : output 0 } increaseby { array get item : functionArgs 1 } plus { class member function call : { this } getFunctionDefineRight }
 
                 for numbers start : i 1 lessthan { native call : array length generalCall }
