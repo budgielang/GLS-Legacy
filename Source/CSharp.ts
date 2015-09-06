@@ -52,7 +52,7 @@ module GLS.Languages {
         .setElif("} else if")
         .setElse("} else")
         .setExceptionCatch("} catch (")
-        .setExceptionClass("Exception")
+        .setExceptionClass("System.Exception")
         .setExceptionErrorPrefix(" ")
         .setExceptionFinally("} finally")
         .setExceptionThrow("throw")

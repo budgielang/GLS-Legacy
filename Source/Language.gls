@@ -1482,9 +1482,9 @@ file start : GLS
                 return : output
             if end
 
+            variable declare : typeCheck character (' ')
             variable declare : typeStart number ltIndex
             variable declare : typeEnd number
-            variable declare : typeCheck character
 
             while start : { operation : typeStart lessthan { native call : string length text } }
                 for numbers start : typeEnd typeStart lessthan { native call : string length text }
@@ -1581,7 +1581,7 @@ file start : GLS
             return : { this }
         class member function end
 
-        class member function start : Language public getNativeFunctionAlias { dictionary type : string string } className string memberName string
+        class member function start : Language public getNativeFunctionAlias string className string memberName string
             return : { dictionary key get : { dictionary key get : { class member variable get : { this } NativeFunctionAliases } className } memberName }
         class member function end
 
@@ -2547,7 +2547,7 @@ file start : GLS
                 operation : { array get item : output 0 } equals line
                 operation : { array get item : output 1 } equals 1
 
-                comment line :     keyName = pairName.Key
+                comment line : (    keyName = pairName.Key)
                 operation : variableDeclareArgs equals { array initialize sized : string 3 }
                 operation : { array get item : variableDeclareArgs 0 } equals keyName
                 operation : { array get item : variableDeclareArgs 1 } equals "equals"
@@ -2556,7 +2556,7 @@ file start : GLS
                 operation : { array get item : output 2 } equals line
                 operation : { array get item : output 3 } equals 0
 
-                comment line :     valueName = pairName.Value
+                comment line : (    valueName = pairName.Value)
                 operation : variableDeclareArgs equals { array initialize sized : string 3 }
                 operation : { array get item : variableDeclareArgs 0 } equals valueName
                 operation : { array get item : variableDeclareArgs 1 } equals "equals"
@@ -2566,7 +2566,7 @@ file start : GLS
                 operation : { array get item : output 5 } equals 0
             else start
                 comment line : for (keyName in container) {
-                comment line :     valueName = container[keyName]
+                comment line : (    valueName = container[keyName])
                 operation : output equals { array initialize sized : mixed 4 }
 
                 comment line : for (keyName in container) {
@@ -2578,8 +2578,8 @@ file start : GLS
                 operation : { array get item : output 0 } equals line
                 operation : { array get item : output 1 } equals 1
 
-                comment line :     valueName = container[keyName]
-                operation : variableDeclareArgs equals { array initialize sized : mixed 3 }
+                comment line : (    valueName = container[keyName])
+                operation : variableDeclareArgs equals { array initialize sized : string 3 }
                 operation : { array get item : variableDeclareArgs 0 } equals valueName
                 operation : { array get item : variableDeclareArgs 1 } equals "equals"
                 operation : { array get item : variableDeclareArgs 2 } equals container plus "[" plus keyName plus "]"
@@ -2924,7 +2924,6 @@ file start : GLS
 
             if start : { operation : usage equalto "function" }
                 variable declare : functionCallArgs mixed[] { array initialize sized : mixed numArgs }
-                variable declare : i number
 
                 operation : { array get item : functionCallArgs 0 } equals caller
 
