@@ -40,6 +40,8 @@ module GLS {
         private Or: string;
         
         // Variables
+        private CastEnder: string;
+        private CastStarter: string;
         private Undefined: string;
         private VariableTypesExplicit: boolean;
         private VariableTypesAfterName: boolean;
@@ -377,6 +379,14 @@ module GLS {
 
         public getOr(): string {
             return this.Or;
+        }
+
+        public getCastEnder(): string {
+            return this.CastEnder;
+        }
+
+        public getCastStarter(): string {
+            return this.CastStarter;
         }
 
         public getUndefined(): string {
@@ -910,6 +920,16 @@ module GLS {
 
         public setOr(value: string): Language {
             this.Or = value;
+            return this;
+        }
+
+        public setCastEnder(value: string): Language {
+            this.CastEnder = value;
+            return this;
+        }
+
+        public setCastStarter(value: string): Language {
+            this.CastStarter = value;
             return this;
         }
 
@@ -1703,6 +1723,22 @@ module GLS {
             }
 
             output += "]";
+            return [output, 0];
+        }
+        
+        // string type, string value
+        public Cast(functionArgs: string[], isInline: boolean): any[] {
+            this.requireArgumentsLength("Cast", functionArgs, 2);
+
+            if (!this.getVariableTypesExplicit()) {
+                return [functionArgs[1], 0];
+            }
+
+            var output: string = this.getCastStarter();
+            output += this.parseType(functionArgs[0]);
+            output += this.getCastEnder();
+            output += functionArgs[1];
+
             return [output, 0];
         }
         

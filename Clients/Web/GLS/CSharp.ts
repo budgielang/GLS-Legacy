@@ -8,6 +8,8 @@ module GLS.Languages {
         .setArrayInitializationAsNewTyped(true)
         .setArrayLength(".Length")
         .setBreak("break")
+        .setCastStarter("(")
+        .setCastEnder(")")
         .setClassConstructorName("")
         .setClassConstructorInheritedShorthand(true)
         .setClassEnder("};")

@@ -178,6 +178,12 @@ var GLS;
         Language.prototype.getOr = function () {
             return this.Or;
         };
+        Language.prototype.getCastEnder = function () {
+            return this.CastEnder;
+        };
+        Language.prototype.getCastStarter = function () {
+            return this.CastStarter;
+        };
         Language.prototype.getUndefined = function () {
             return this.Undefined;
         };
@@ -581,6 +587,14 @@ var GLS;
         };
         Language.prototype.setOr = function (value) {
             this.Or = value;
+            return this;
+        };
+        Language.prototype.setCastEnder = function (value) {
+            this.CastEnder = value;
+            return this;
+        };
+        Language.prototype.setCastStarter = function (value) {
+            this.CastStarter = value;
             return this;
         };
         Language.prototype.setUndefined = function (value) {
@@ -1215,6 +1229,18 @@ var GLS;
                 output += this.Operation([this.NativeCall(["array", "length", name], true)[0], "minus", "1"], true)[0];
             }
             output += "]";
+            return [output, 0];
+        };
+        // string type, string value
+        Language.prototype.Cast = function (functionArgs, isInline) {
+            this.requireArgumentsLength("Cast", functionArgs, 2);
+            if (!this.getVariableTypesExplicit()) {
+                return [functionArgs[1], 0];
+            }
+            var output = this.getCastStarter();
+            output += this.parseType(functionArgs[0]);
+            output += this.getCastEnder();
+            output += functionArgs[1];
             return [output, 0];
         };
         // [string name]

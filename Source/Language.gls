@@ -40,6 +40,8 @@ file start : GLS
         class member variable declare : Or private string
 
         comment line : Variables
+        class member variable declare : CastEnder private string
+        class member variable declare : CastStarter private string
         class member variable declare : Undefined private string
         class member variable declare : VariableTypesExplicit private boolean
         class member variable declare : VariableTypesAfterName private boolean
@@ -375,6 +377,14 @@ file start : GLS
 
         class member function start : Language public getOr string
             return : { class member variable get : { this } Or }
+        class member function end
+
+        class member function start : Language public getCastEnder string
+            return : { class member variable get : { this } CastEnder }
+        class member function end
+
+        class member function start : Language public getCastStarter string
+            return : { class member variable get : { this } CastStarter }
         class member function end
 
         class member function start : Language public getUndefined string
@@ -906,6 +916,16 @@ file start : GLS
 
         class member function start : Language public setOr Language value string
             class member variable set : { this } Or value
+            return : { this }
+        class member function end
+
+        class member function start : Language public setCastEnder Language value string
+            class member variable set : { this } CastEnder value
+            return : { this }
+        class member function end
+
+        class member function start : Language public setCastStarter Language value string
+            class member variable set : { this } CastStarter value
             return : { this }
         class member function end
 
@@ -1689,6 +1709,22 @@ file start : GLS
             if end
 
             operation : output increaseby "]"
+            return : { array initialize : mixed output 0 }
+        class member function end
+
+        comment line : string type, string value
+        class member function start : Language public Cast mixed[] functionArgs string[] isInline boolean
+            class member function call : { this } requireArgumentsLength "Cast" functionArgs 2
+
+            if start : { not : { class member function call : { this } getVariableTypesExplicit } }
+                return : { array initialize : mixed { array get item : functionArgs 1 } 0 }
+            if end
+
+            variable declare : output string { class member function call : { this } getCastStarter }
+            operation : output increaseby { class member function call : { this } parseType { array get item : functionArgs 0 } }
+            operation : output increaseby { class member function call : { this } getCastEnder }
+            operation : output increaseby { array get item : functionArgs 1 }
+
             return : { array initialize : mixed output 0 }
         class member function end
 
