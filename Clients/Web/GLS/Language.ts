@@ -40,8 +40,8 @@ module GLS {
         private Or: string;
         
         // Variables
-        private CastEnd: string;
-        private CastStart: string;
+        private CastEnder: string;
+        private CastStarter: string;
         private Undefined: string;
         private VariableTypesExplicit: boolean;
         private VariableTypesAfterName: boolean;
@@ -182,7 +182,6 @@ module GLS {
                 "array initialize": this.ArrayInitialize.bind(this),
                 "array initialize sized": this.ArrayInitializeSized.bind(this),
                 "array get item": this.ArrayGetItem.bind(this),
-                "cast": this.Cast.bind(this),
                 "catch": this.Catch.bind(this),
                 "class constructor end": this.ClassConstructorEnd.bind(this),
                 "class constructor inherited call": this.ClassConstructorInheritedCall.bind(this),
@@ -382,12 +381,12 @@ module GLS {
             return this.Or;
         }
 
-        public getCastEnd(): string {
-            return this.CastEnd;
+        public getCastEnder(): string {
+            return this.CastEnder;
         }
 
-        public getCastStart(): string {
-            return this.CastStart;
+        public getCastStarter(): string {
+            return this.CastStarter;
         }
 
         public getUndefined(): string {
@@ -924,13 +923,13 @@ module GLS {
             return this;
         }
 
-        public setCastEnd(value: string): Language {
-            this.CastEnd = value;
+        public setCastEnder(value: string): Language {
+            this.CastEnder = value;
             return this;
         }
 
-        public setCastStart(value: string): Language {
-            this.CastStart = value;
+        public setCastStarter(value: string): Language {
+            this.CastStarter = value;
             return this;
         }
 
@@ -1726,7 +1725,7 @@ module GLS {
             output += "]";
             return [output, 0];
         }
-
+        
         // string type, string value
         public Cast(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("Cast", functionArgs, 2);
@@ -1735,9 +1734,9 @@ module GLS {
                 return [functionArgs[1], 0];
             }
 
-            var output: string = this.getCastStart();
+            var output: string = this.getCastStarter();
             output += this.parseType(functionArgs[0]);
-            output += this.getCastEnd();
+            output += this.getCastEnder();
             output += functionArgs[1];
 
             return [output, 0];
