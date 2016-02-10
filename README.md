@@ -50,11 +50,11 @@ Deliverable | Version | Date | Description
 --- | --- | --- | ---
 C++ compiler | 0.1 | May 2015 | Command-line GLS prototype, written in C++
 TypeScript compiler | 0.2 | July 2015 | GLS compiler as a website, written in TypeScript
-Dogfooded C# compiler | 0.3 | January 2016 | GLS compiling itself into itself (meta!); tested in C#
-Ruby, Python, and Java support | 0.4 | February 2016 | Dogfood working correctly in all three languages
-PowerShell, PHP, JavaScript, and misc. | 0.5 | March 2016 | Dogfood or reject those languages
-Language specification finalized | 0.6 | April 2016 | Finalized language spec & cleaned internals of code
-General release 1.0 | May 2016
+Dogfooded C# compiler | 0.3 | March 2016 | GLS compiling itself into itself (meta!); tested in C#
+Ruby, Python, and Java support | 0.4 | April 2016 | Dogfood working correctly in all three languages
+PowerShell, PHP, JavaScript, and misc. | 0.5 | May 2016 | Dogfood or reject those languages
+Language specification finalized | 0.6 | June 2016 | Finalized language spec & cleaned internals of code
+General release 1.0 | July 2016
 
 
 ## Intentionally Missing Features
