@@ -190,6 +190,7 @@ module GLS {
                 "class constructor start": this.ClassConstructorStart.bind(this),
                 "class end": this.ClassEnd.bind(this),
                 "class member function call": this.ClassMemberFunctionCall.bind(this),
+                "class member function call partial": this.ClassMemberFunctionCallPartial.bind(this),
                 "class member function end": this.ClassMemberFunctionEnd.bind(this),
                 "class member function get": this.ClassMemberFunctionGet.bind(this),
                 "class member function start": this.ClassMemberFunctionStart.bind(this),
@@ -197,14 +198,16 @@ module GLS {
                 "class member variable get": this.ClassMemberVariableGet.bind(this),
                 "class member variable set": this.ClassMemberVariableSet.bind(this),
                 "class member variable set incomplete": this.ClassMemberVariableSetIncomplete.bind(this),
+                "class new": this.ClassNew.bind(this),
                 "class static function call": this.ClassStaticFunctionCall.bind(this),
                 "class static function end": this.ClassStaticFunctionEnd.bind(this),
                 "class static function get": this.ClassStaticFunctionGet.bind(this),
                 "class static function start": this.ClassStaticFunctionStart.bind(this),
                 "class static variable declare": this.ClassStaticVariableDeclare.bind(this),
+                "class static variable declare incomplete": this.ClassStaticVariableDeclareIncomplete.bind(this),
                 "class static variable get": this.ClassStaticVariableGet.bind(this),
                 "class static variable set": this.ClassStaticVariableSet.bind(this),
-                "class new": this.ClassNew.bind(this),
+                "class static variable set incomplete": this.ClassStaticVariableSetIncomplete.bind(this),
                 "class start": this.ClassStart.bind(this),
                 "comment block": this.CommentBlock.bind(this),
                 "comment line": this.CommentLine.bind(this),
@@ -1902,6 +1905,19 @@ module GLS {
         public ClassMemberFunctionCall(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("ClassMemberFunctionCall", functionArgs, 2);
 
+            var output: any[] = this.ClassMemberFunctionCallPartial(functionArgs, isInline);
+
+            if (!isInline) {
+                output[0] += this.getSemiColon();
+            }
+
+            return output;
+        }
+        
+        // string variable, string function[, string argumentName, ...]
+        public ClassMemberFunctionCallPartial(functionArgs: string[], isInline: boolean): any[] {
+            this.requireArgumentsLength("ClassMemberFunctionCallPartial", functionArgs, 2);
+
             var output: string = functionArgs[0] + "." + functionArgs[1] + "(";
             var i: number;
 
@@ -1913,10 +1929,6 @@ module GLS {
             }
 
             output += ")";
-
-            if (!isInline) {
-                output += this.getSemiColon();
-            }
 
             return [output, 0];
         }
@@ -2151,6 +2163,18 @@ module GLS {
         public ClassStaticVariableDeclare(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("ClassStaticVariableDeclare", functionArgs, 3);
 
+            var output: any[] = this.ClassStaticVariableDeclareIncomplete(functionArgs, isInline);
+
+            output[0] += this.getSemiColon();
+            output[1] = 0;
+
+            return output;
+        }
+        
+        // string class, string visibility, string type[, string value]
+        public ClassStaticVariableDeclareIncomplete(functionArgs: string[], isInline: boolean): any[] {
+            this.requireArgumentsLength("ClassStaticVariableDeclareIncomplete", functionArgs, 3);
+
             var variableType: string = this.parseType(functionArgs[2]);
             var variableDeclarationArgs: string[];
             var variableDeclared: any[];
@@ -2165,11 +2189,7 @@ module GLS {
 
             variableDeclared = this.VariableDeclarePartial(variableDeclarationArgs, isInline);
             variableDeclared[0] = this.getClassStaticLabel() + variableDeclared[0];
-            variableDeclared[1] = 0;
-
-            if (!isInline) {
-                variableDeclared[0] = variableDeclared[0] + this.getSemiColon();
-            }
+            variableDeclared[1] = 1;
 
             if (this.getClassMemberVariablePrivacy()) {
                 variableDeclared[0] = functionArgs[1] + " " + variableDeclared[0];
@@ -2191,12 +2211,23 @@ module GLS {
         public ClassStaticVariableSet(functionArgs: string[], isInline: boolean): any[] {
             this.requireArgumentsLength("ClassStaticVariableSet", functionArgs, 3);
 
+            var output: any[] = this.ClassMemberVariableSetIncomplete(functionArgs, isInline);
+
+            output[0] += this.getSemiColon();
+            output[1] = 0;
+
+            return output;
+        }
+        
+        // string class, string name, string value
+        public ClassStaticVariableSetIncomplete(functionArgs: string[], isInline: boolean): any[] {
+            this.requireArgumentsLength("ClassStaticVariableSetIncomplete", functionArgs, 3);
+
             var output: string = functionArgs[0] + "." + functionArgs[1] + " ";
 
             output += this.getOperationAlias("equals") + " " + functionArgs[2];
-            output += this.getSemiColon();
 
-            return [output, 0];
+            return [output, 1];
         }
         
         // string name[, string parentClass]

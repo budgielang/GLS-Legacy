@@ -14,6 +14,7 @@ var GLS;
                 "class constructor start": this.ClassConstructorStart.bind(this),
                 "class end": this.ClassEnd.bind(this),
                 "class member function call": this.ClassMemberFunctionCall.bind(this),
+                "class member function call partial": this.ClassMemberFunctionCallPartial.bind(this),
                 "class member function end": this.ClassMemberFunctionEnd.bind(this),
                 "class member function get": this.ClassMemberFunctionGet.bind(this),
                 "class member function start": this.ClassMemberFunctionStart.bind(this),
@@ -21,14 +22,16 @@ var GLS;
                 "class member variable get": this.ClassMemberVariableGet.bind(this),
                 "class member variable set": this.ClassMemberVariableSet.bind(this),
                 "class member variable set incomplete": this.ClassMemberVariableSetIncomplete.bind(this),
+                "class new": this.ClassNew.bind(this),
                 "class static function call": this.ClassStaticFunctionCall.bind(this),
                 "class static function end": this.ClassStaticFunctionEnd.bind(this),
                 "class static function get": this.ClassStaticFunctionGet.bind(this),
                 "class static function start": this.ClassStaticFunctionStart.bind(this),
                 "class static variable declare": this.ClassStaticVariableDeclare.bind(this),
+                "class static variable declare incomplete": this.ClassStaticVariableDeclareIncomplete.bind(this),
                 "class static variable get": this.ClassStaticVariableGet.bind(this),
                 "class static variable set": this.ClassStaticVariableSet.bind(this),
-                "class new": this.ClassNew.bind(this),
+                "class static variable set incomplete": this.ClassStaticVariableSetIncomplete.bind(this),
                 "class start": this.ClassStart.bind(this),
                 "comment block": this.CommentBlock.bind(this),
                 "comment line": this.CommentLine.bind(this),
@@ -1367,6 +1370,15 @@ var GLS;
         // string variable, string function[, string argumentName, ...]
         Language.prototype.ClassMemberFunctionCall = function (functionArgs, isInline) {
             this.requireArgumentsLength("ClassMemberFunctionCall", functionArgs, 2);
+            var output = this.ClassMemberFunctionCallPartial(functionArgs, isInline);
+            if (!isInline) {
+                output[0] += this.getSemiColon();
+            }
+            return output;
+        };
+        // string variable, string function[, string argumentName, ...]
+        Language.prototype.ClassMemberFunctionCallPartial = function (functionArgs, isInline) {
+            this.requireArgumentsLength("ClassMemberFunctionCallPartial", functionArgs, 2);
             var output = functionArgs[0] + "." + functionArgs[1] + "(";
             var i;
             if (functionArgs.length > 2) {
@@ -1376,9 +1388,6 @@ var GLS;
                 output += functionArgs[i];
             }
             output += ")";
-            if (!isInline) {
-                output += this.getSemiColon();
-            }
             return [output, 0];
         };
         Language.prototype.ClassMemberFunctionEnd = function (functionArgs, isInline) {
@@ -1548,6 +1557,14 @@ var GLS;
         // string class, string visibility, string type[, string value]
         Language.prototype.ClassStaticVariableDeclare = function (functionArgs, isInline) {
             this.requireArgumentsLength("ClassStaticVariableDeclare", functionArgs, 3);
+            var output = this.ClassStaticVariableDeclareIncomplete(functionArgs, isInline);
+            output[0] += this.getSemiColon();
+            output[1] = 0;
+            return output;
+        };
+        // string class, string visibility, string type[, string value]
+        Language.prototype.ClassStaticVariableDeclareIncomplete = function (functionArgs, isInline) {
+            this.requireArgumentsLength("ClassStaticVariableDeclareIncomplete", functionArgs, 3);
             var variableType = this.parseType(functionArgs[2]);
             var variableDeclarationArgs;
             var variableDeclared;
@@ -1562,10 +1579,7 @@ var GLS;
             }
             variableDeclared = this.VariableDeclarePartial(variableDeclarationArgs, isInline);
             variableDeclared[0] = this.getClassStaticLabel() + variableDeclared[0];
-            variableDeclared[1] = 0;
-            if (!isInline) {
-                variableDeclared[0] = variableDeclared[0] + this.getSemiColon();
-            }
+            variableDeclared[1] = 1;
             if (this.getClassMemberVariablePrivacy()) {
                 variableDeclared[0] = functionArgs[1] + " " + variableDeclared[0];
             }
@@ -1580,10 +1594,17 @@ var GLS;
         // string class, string name, string value
         Language.prototype.ClassStaticVariableSet = function (functionArgs, isInline) {
             this.requireArgumentsLength("ClassStaticVariableSet", functionArgs, 3);
+            var output = this.ClassMemberVariableSetIncomplete(functionArgs, isInline);
+            output[0] += this.getSemiColon();
+            output[1] = 0;
+            return output;
+        };
+        // string class, string name, string value
+        Language.prototype.ClassStaticVariableSetIncomplete = function (functionArgs, isInline) {
+            this.requireArgumentsLength("ClassStaticVariableSetIncomplete", functionArgs, 3);
             var output = functionArgs[0] + "." + functionArgs[1] + " ";
             output += this.getOperationAlias("equals") + " " + functionArgs[2];
-            output += this.getSemiColon();
-            return [output, 0];
+            return [output, 1];
         };
         // string name[, string parentClass]
         Language.prototype.ClassStart = function (functionArgs, isInline) {

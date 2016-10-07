@@ -190,6 +190,7 @@ file start : GLS
                 dictionary initialize key : ("class constructor start") { class member function get : { this } ClassConstructorStart } ,
                 dictionary initialize key : ("class end") { class member function get : { this } ClassEnd } ,
                 dictionary initialize key : ("class member function call") { class member function get : { this } ClassMemberFunctionCall } ,
+                dictionary initialize key : ("class member function call partial") { class member function get : { this } ClassMemberFunctionCallPartial } ,
                 dictionary initialize key : ("class member function end") { class member function get : { this } ClassMemberFunctionEnd } ,
                 dictionary initialize key : ("class member function get") { class member function get : { this } ClassMemberFunctionGet } ,
                 dictionary initialize key : ("class member function start") { class member function get : { this } ClassMemberFunctionStart } ,
@@ -197,14 +198,16 @@ file start : GLS
                 dictionary initialize key : ("class member variable get") { class member function get : { this } ClassMemberVariableGet } ,
                 dictionary initialize key : ("class member variable set") { class member function get : { this } ClassMemberVariableSet } ,
                 dictionary initialize key : ("class member variable set incomplete") { class member function get : { this } ClassMemberVariableSetIncomplete } ,
+                dictionary initialize key : ("class new") { class member function get : { this } ClassNew } ,
                 dictionary initialize key : ("class static function call") { class member function get : { this } ClassStaticFunctionCall } ,
                 dictionary initialize key : ("class static function end") { class member function get : { this } ClassStaticFunctionEnd } ,
                 dictionary initialize key : ("class static function get") { class member function get : { this } ClassStaticFunctionGet } ,
                 dictionary initialize key : ("class static function start") { class member function get : { this } ClassStaticFunctionStart } ,
                 dictionary initialize key : ("class static variable declare") { class member function get : { this } ClassStaticVariableDeclare } ,
+                dictionary initialize key : ("class static variable declare incomplete") { class member function get : { this } ClassStaticVariableDeclareIncomplete } ,
                 dictionary initialize key : ("class static variable get") { class member function get : { this } ClassStaticVariableGet } ,
                 dictionary initialize key : ("class static variable set") { class member function get : { this } ClassStaticVariableSet } ,
-                dictionary initialize key : ("class new") { class member function get : { this } ClassNew } ,
+                dictionary initialize key : ("class static variable set incomplete") { class member function get : { this } ClassStaticVariableSetIncomplete } ,
                 dictionary initialize key : ("class start") { class member function get : { this } ClassStart } ,
                 dictionary initialize key : ("comment block") { class member function get : { this } CommentBlock } ,
                 dictionary initialize key : ("comment line") { class member function get : { this } CommentLine } ,
@@ -1887,6 +1890,19 @@ file start : GLS
         comment line : string variable, string function[, string argumentName, ...]
         class member function start : Language public ClassMemberFunctionCall mixed[] functionArgs string[] isInline boolean
             class member function call : { this } requireArgumentsLength "ClassMemberFunctionCall" functionArgs 2
+            
+            variable declare : output mixed[] { class member function call : { this } ClassMemberFunctionCallPartial functionArgs isInline }
+            
+            if start : { not : isInline }
+                operation : { array get item : output 0 } increaseby { class member function call : { this } getSemiColon }
+            if end
+
+            return : output
+        class member function end
+        
+        comment line : string variable, string function[, string argumentName, ...]
+        class member function start : Language public ClassMemberFunctionPartial mixed[] functionArgs string[] isInline boolean
+            class member function call : { this } requireArgumentsLength "ClassMemberFunctionCall" functionArgs 2
 
             variable declare : output string { operation : { array get item : functionArgs 0 } plus "." plus { array get item : functionArgs 1 } plus "(" }
             variable declare : i number
@@ -2132,10 +2148,22 @@ file start : GLS
                 return : { array initialize : mixed output 1}
             if end
         class member function end
-
+        
         comment line : string class, string visibility, string type[, string value]
         class member function start : Language public ClassStaticVariableDeclare mixed[] functionArgs string[] isInline boolean
             class member function call : { this } requireArgumentsLength "ClassStaticVariableDeclare" functionArgs 3
+
+            variable declare : output mixed[] { class member function call : { this } ClassStaticVariableDeclareIncomplete functionArgs isInline }
+
+            operation : { array get item : output 0 } increaseby { class member function call : { this } getSemiColon }
+            operation : { array get item : output 1 } equals 0
+
+            return : output
+        class member function end
+
+        comment line : string class, string visibility, string type[, string value]
+        class member function start : Language public ClassStaticVariableDeclareIncomplete mixed[] functionArgs string[] isInline boolean
+            class member function call : { this } requireArgumentsLength "ClassStaticVariableDeclareIncomplete" functionArgs 3
 
             variable declare : variableType string { class member function call : { this } parseType { array get item : functionArgs 2 } }
             variable declare : variableDeclarationArgs string[]
@@ -2151,11 +2179,7 @@ file start : GLS
 
             operation : variableDeclared equals { class member function call : { this } VariableDeclarePartial variableDeclarationArgs isInline }
             operation : { array get item : variableDeclared 0 } equals { class member function call : { this } getClassStaticLabel } plus { array get item : variableDeclared 0 }
-            operation : { array get item : variableDeclared 1 } equals 0
-
-            if start : { not : isInline }
-                operation : { array get item : variableDeclared 0 } equals { array get item : variableDeclared 0 } plus { class member function call : { this } getSemiColon }
-            if end
+            operation : { array get item : variableDeclared 1 } equals 1
 
             if start : { class member function call : { this } getClassMemberVariablePrivacy }
                 operation : { array get item : variableDeclared 0 } equals { array get item : functionArgs 1 } plus (" ") plus { array get item : variableDeclared 0 }
@@ -2177,12 +2201,23 @@ file start : GLS
         class member function start : Language public ClassStaticVariableSet mixed[] functionArgs string[] isInline boolean
             class member function call : { this } requireArgumentsLength "ClassStaticVariableSet" functionArgs 3
 
+            variable declare : output mixed[] { class member function call : { this } ClassMemberVariableSetIncomplete functionArgs isInline }
+
+            operation : { array get item : output 0 } increaseby { class member function call : { this } getSemiColon }
+            operation : { array get item : output 1 } equals 0
+
+            return : output
+        class member function end
+
+        comment line : string class, string name, string value
+        class member function start : Language public ClassStaticVariableSetIncomplete mixed[] functionArgs string[] isInline boolean
+            class member function call : { this } requireArgumentsLength "ClassStaticVariableSetIncomplete" functionArgs 3
+
             variable declare : output string { operation : { array get item : functionArgs 0 } plus "." plus { array get item : functionArgs 1 } plus (" ") }
 
             operation : output increaseby { class member function call : { this } getOperationAlias "equals" } plus (" ") plus { array get item : functionArgs 2 }
-            operation : output increaseby { class member function call : { this } getSemiColon }
 
-            return : { array initialize : mixed output 0 }
+            return : { array initialize : mixed output 1 }
         class member function end
 
         comment line : string name[, string parentClass]
